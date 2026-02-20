@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O2C Nutri | IA para Adesão Nutricional - Otávio Corrêa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Estilos para o Carrossel */
+        .carousel-item { display: none; transition: opacity 0.5s ease-in-out; }
+        .carousel-item.active { display: block; opacity: 1; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-200 selection:text-emerald-900">
+
+    <header class="bg-white border-b border-slate-200 py-16 px-6 sm:px-12 lg:px-24">
+        <div class="max-w-6xl mx-auto flex flex-col items-center gap-12 text-center">
+            <div class="space-y-6 max-w-4xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-sm font-semibold mx-auto">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    MVP em Fase de Validação & Co-criação
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight text-slate-900">
+                    O2C Nutri: Inteligência Artificial para <span class="text-emerald-700">Adesão Nutricional</span>
+                </h1>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    Uma infraestrutura tecnológica projetada para conectar as orientações do profissional de saúde à rotina real do paciente. O MVP atual utiliza Inteligência Artificial e Visão Computacional para facilitar o dia a dia — desde o cálculo basal de macros até a sugestão de receitas customizadas a partir de uma foto da geladeira.
+                </p>
+                <p class="text-md text-slate-500 font-medium">
+                    Meu objetivo não é entregar um app engessado, mas sim <strong class="text-emerald-700">construir junto com profissionais da saúde</strong> um ecossistema seguro de curadoria e supervisão de hábitos.
+                </p>
+                <div class="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://o2cnutri.pages.dev/" target="_blank" class="bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg shadow-emerald-200">
+                        Acessar o MVP Atual
+                    </a>
+                    <a href="https://wa.me/5553981223304" target="_blank" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 px-8 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp text-emerald-600 text-lg"></i>
+                        Iterar e Construir Junto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-16 px-6 sm:px-12 lg:px-24 bg-white">
+        <div class="max-w-6xl mx-auto space-y-16">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-slate-900">As Entregas de Maior Impacto</h2>
+                <p class="text-slate-600 mt-2">Visão geral do controle nutricional e da autonomia gerada pelo motor de IA.</p>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-2xl font-bold text-slate-800 text-center"><i class="fas fa-chart-pie text-emerald-600 mr-2"></i>Dashboard: Resumo da Estratégia e Macros</h3>
+                <img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2002%20-%20Dashboard%20-%20A.png?raw=true" alt="Dashboard do O2C Nutri" class="rounded-2xl shadow-2xl w-full h-auto border-4 border-slate-100 object-cover">
+            </div>
+
+            <div class="space-y-4 pt-8">
+                <h3 class="text-2xl font-bold text-slate-800 text-center"><i class="fas fa-robot text-emerald-600 mr-2"></i>Motor IA: Geração de Receitas (Texto e Foto)</h3>
+                <img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2003%20-%20Gerar%20Refei%C3%A7%C3%A3o%20com%20IA.png?raw=true" alt="Gerar Refeição com IA" class="rounded-2xl shadow-2xl w-full h-auto border-4 border-slate-100 object-cover">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-6 sm:px-12 lg:px-24 bg-slate-100 border-t border-slate-200">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-900">A Jornada Completa do Usuário</h2>
+                <p class="text-slate-600 mt-2">Navegue por todas as telas da versão atual (Fundação Basal), do cadastro ao histórico de receitas.</p>
+            </div>
+
+            <div class="relative w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                
+                <div class="carousel-item active"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2000%20-%20A%20-%20Login.png?raw=true" alt="Login" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">01 - Acesso e Login Simplificado</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2000%20-%20C%20-%20Perfil.png?raw=true" alt="Perfil" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">02 - Gestão do Perfil do Usuário</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2001%20-%20Biometria.png?raw=true" alt="Estratégia Biometria" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">03 - Estratégia (Passo 1): Cadastro de Biometria</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2002%20-%20Objetivo.png?raw=true" alt="Estratégia Objetivo" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">04 - Estratégia (Passo 2): Definição de Objetivo</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2003%20-%20Sa%C3%BAde%20e%20Atividade.png?raw=true" alt="Estratégia Saúde e Atividade" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">05 - Estratégia (Passo 3): Saúde e Atividade Física</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2004%20-%20Culin%C3%A1ria%20e%20Or%C3%A7amento.png?raw=true" alt="Estratégia Culinária e Orçamento" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">06 - Estratégia (Passo 4): Nível de Culinária e Orçamento</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2005%20-%20Equipamentos.png?raw=true" alt="Estratégia Equipamentos" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">07 - Estratégia (Passo 5): Equipamentos Disponíveis</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2006%20-%20Prefer%C3%AAncias%20A.png?raw=true" alt="Estratégia Preferências A" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">08 - Estratégia (Passo 6): Preferências Alimentares A</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2001%20-%20Estrat%C3%A9gia%20-%20Passo%2006%20-%20Prefer%C3%AAncias%20B.png?raw=true" alt="Estratégia Preferências B" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">09 - Estratégia (Passo 6): Preferências Alimentares B</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2002%20-%20Dashboard%20-%20A.png?raw=true" alt="Dashboard A" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">10 - Dashboard Principal: Visão de Macros</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2002%20-%20Dashboard%20-%20B.png?raw=true" alt="Dashboard B" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">11 - Dashboard Secundário: Metas de Hábitos e Top Receitas</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2003%20-%20Gerar%20Refei%C3%A7%C3%A3o%20com%20IA.png?raw=true" alt="Gerar Refeição IA" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">12 - Área do Motor de IA para Geração de Receitas</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2005%20-%20Minhas%20Receitas%20-%20A.png?raw=true" alt="Minhas Receitas" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">13 - Histórico: Galeria de Minhas Receitas Geradas</div></div>
+                <div class="carousel-item"><img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/O2C%20Nutri%20-%2005%20-%20Minhas%20Receitas%20-%20B%20-%20Abrindo%20Receita%20Gerada.png?raw=true" alt="Abrindo Receita" class="w-full h-auto object-cover"><div class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white p-4 text-center text-sm font-medium">14 - Detalhamento Completo da Receita Gerada</div></div>
+
+                <button onclick="moveSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-slate-800 w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition focus:outline-none">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button onclick="moveSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-slate-800 w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition focus:outline-none">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="mt-6 text-center text-sm text-slate-500">
+                <p>Use as setas para navegar pelas 14 telas do MVP atual.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="demonstracao" class="py-16 px-6 sm:px-12 lg:px-24 bg-white border-t border-slate-200">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Vídeos de Demonstração</h2>
+                <p class="text-slate-600 mt-3">A lógica de onboarding e a visão computacional operando no MVP em tempo real.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-slate-50 p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-slate-800">1. IA & Visão Computacional</h3>
+                        <i class="fab fa-instagram text-pink-600 text-2xl"></i>
+                    </div>
+                    <p class="text-slate-600 mb-6 text-sm">Geração de receitas sob medida utilizando dados do paciente e reconhecimento de imagem (foto da despensa ou geladeira).</p>
+                    <a href="https://www.instagram.com/reel/DT4QRPhDD0V/" target="_blank" class="block w-full text-center bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-medium transition">
+                        Assistir ao Vídeo 1
+                    </a>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-slate-800">2. Estratégia & Onboarding</h3>
+                        <i class="fab fa-instagram text-pink-600 text-2xl"></i>
+                    </div>
+                    <p class="text-slate-600 mb-6 text-sm">Fluxo de cadastro do usuário, definição de objetivos e pedido de receitas textuais perfeitamente alinhadas aos macros.</p>
+                    <a href="https://www.instagram.com/reel/DUA5YTCjocM/" target="_blank" class="block w-full text-center bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-medium transition">
+                        Assistir ao Vídeo 2
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 sm:px-12 lg:px-24 bg-slate-100">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900">O que temos hoje vs. O que construiremos amanhã</h2>
+                <p class="text-slate-600 mt-4 max-w-2xl mx-auto text-lg">O O2C Nutri foi desenhado com uma arquitetura flexível. A base já está validada; o próximo passo é plugar a inteligência de negócios dos profissionais de saúde.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">A Fundação (MVP Atual)</h3>
+                    </div>
+                    <ul class="space-y-4 text-slate-600">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-bullseye text-emerald-500 mt-1"></i>
+                            <span><strong>Cálculo de Macros Basal:</strong> Resultados baseados em biometria, saúde, hábitos e objetivo (ganho, perda ou manutenção).</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-robot text-emerald-500 mt-1"></i>
+                            <span><strong>IA Multimodal:</strong> Geração de receitas customizadas interpretando texto, restrições de tempo/orçamento, equipamentos e imagens (foto da geladeira).</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-user-circle text-emerald-500 mt-1"></i>
+                            <span><strong>Gestão de Perfil:</strong> Cadastro focado nas preferências alimentares e rotina do paciente.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-900 rounded-2xl p-8 border border-slate-800 text-slate-300 shadow-xl shadow-slate-900/20">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-emerald-900/50 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Roadmap de Co-Criação</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-stethoscope text-emerald-400 mt-1"></i>
+                            <span><strong>Portal do Profissional:</strong> Gestão de pacientes via Kanban, Calendário e supervisão direta por Nutricionistas, Biohackers e Médicos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-camera text-emerald-400 mt-1"></i>
+                            <span><strong>AI Plate Rater:</strong> Avaliação de pratos ou buffets via foto, recebendo notas e sugestões de substituição com base no contexto do usuário.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-chart-line text-emerald-400 mt-1"></i>
+                            <span><strong>Tracking de Hábitos:</strong> Registro de hidratação (vs. meta diária), diário de refeições e monitoramento de atividades físicas.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-6 sm:px-12 lg:px-24 bg-white border-t border-slate-200">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold text-slate-900 mb-6">Modelo de Negócios & Monetização</h2>
+            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-8 text-left">
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                    <div class="w-16 h-16 shrink-0 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-700 text-2xl">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Tração via Freemium & Upsell de Funcionalidades</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4">
+                            O modelo de negócios base planejado para a aplicação comercial segue a lógica <strong>Freemium</strong>. O usuário final tem acesso gratuito às ferramentas basais (como o cálculo de macros e cadastro de perfil) para gerar volume de aquisição. A monetização ocorre através de assinaturas premium que desbloqueiam funcionalidades avançadas, como limite expandido de geração de receitas via IA, histórico completo e a conexão/curadoria direta com os profissionais de saúde.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed font-medium">
+                            <i class="fas fa-lightbulb text-amber-500 mr-2"></i> Apesar dessa ser a rota principal traçada, a arquitetura do projeto permite flexibilidade total. Estou aberto a discutir adaptações e novos modelos comerciais (como licenciamento B2B) dependendo das alavancas que o parceiro estratégico puder trazer para a mesa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 sm:px-12 lg:px-24 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="md:w-1/3">
+                    <img src="https://github.com/OtavioPelego/portfolio/blob/main/o2cnutri_mvp_presentation/images/San-Francisco-2019-01.webp?raw=true" alt="Dr. Otávio Corrêa no Vale do Silício" class="aspect-square rounded-full border-4 border-emerald-50 shadow-lg object-cover w-full max-w-[300px] mx-auto">
+                </div>
+                <div class="md:w-2/3 space-y-5">
+                    <h2 class="text-3xl font-bold text-slate-900">O Centurião da Transformação Digital</h2>
+                    <p class="text-slate-600 leading-relaxed">
+                        Sou o <strong>Dr. Otávio Corrêa</strong>. Com uma base sólida formada pelo Mestrado e Doutorado, sou apaixonado por ciência, pesquisa, inovação de valor (<em>Golden Circle</em>), novos modelos de negócio, startups e <em>growth marketing</em>. 
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        Logo ao final do Doutorado, embarquei para o Vale do Silício para entender de perto o ecossistema de inovação. Essa imersão marcou o meu pivô definitivo para o mundo Tech, onde atuo há 7 anos. Nesse período, mergulhei em projetos de startups <em>early-stage</em> como a <strong>Vantum</strong> (2020-2021, IA para mapeamento agrícola) e a <strong>GoBora</strong> (2021-2022, conexão de jogadores de Pádel e Beach Tennis). 
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        Com mais de 2 anos e meio dedicados à IA e automações, trago a experiência internacional da <a href="https://machineslikeme.com/" target="_blank" class="text-emerald-700 font-semibold hover:underline">Machines Like Me GmbH</a>, além de ser <strong>Scrum Master (PSM I pela Scrum.org)</strong> e <strong>Product Owner</strong> certificado.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        Há 7 meses opero pela minha própria empresa, a <strong>Phosphorus</strong>. Atuo como um verdadeiro "Centurião": um líder que desce ao campo de batalha das empresas para entender profundamente a operação e identificar exatamente o que deve ser transformado. Desenvolvo soluções digitais customizadas para implementar automações e IA de forma cirúrgica, <strong>liberando pessoas para o que realmente importa</strong> — as decisões estratégicas, táticas e operacionais que verdadeiramente exigem humanos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="bg-slate-900 text-white py-20 px-6 sm:px-12 lg:px-24">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Vamos Iterar Juntos?</h2>
+                <p class="text-slate-300 text-lg mt-4 max-w-2xl mx-auto">
+                    O O2C Nutri é um motor tecnológico robusto e validado. Através da Phosphorus, busco parceiros com audiência e <em>know-how</em> clínico para transformar essa tecnologia em negócios reais.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-8 hover:border-emerald-500 transition duration-300">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-900/50 flex items-center justify-center text-emerald-400 mb-6 text-xl">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Licenciamento & White-Label</h3>
+                    <p class="text-slate-400 mb-4 leading-relaxed">
+                        Integração do motor O2C Nutri ao ecossistema da sua clínica ou agência. Desenvolvemos uma interface customizada com a sua marca (App Oficial), criando um diferencial tecnológico exclusivo para a gestão e retenção dos seus pacientes.
+                    </p>
+                    <ul class="text-slate-300 space-y-2 text-sm">
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Escopo de desenvolvimento fechado</li>
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Software exclusivo para sua operação</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-8 hover:border-emerald-500 transition duration-300">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-900/50 flex items-center justify-center text-emerald-400 mb-6 text-xl">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Co-Desenvolvimento Estratégico</h3>
+                    <p class="text-slate-400 mb-4 leading-relaxed">
+                        União de forças para o lançamento de um novo produto (SaaS) voltado para a sua base de clientes/seguidores. Entro como braço de execução técnica (Tech Partner) através de um modelo de <em>Retainer Fee</em> atrelado a participação nos resultados (<em>Revenue Share / Equity</em>).
+                    </p>
+                    <ul class="text-slate-300 space-y-2 text-sm">
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Lançamento escalável para sua audiência</li>
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Divisão de riscos e lucros estruturada</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center pt-8 border-t border-slate-800">
+                <h3 class="text-xl font-semibold mb-6">Vamos discutir a melhor aplicação para o seu negócio?</h3>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://wa.me/5553981223304" target="_blank" class="inline-flex justify-center items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition shadow-lg shadow-emerald-900">
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                        Agendar Bate-papo de 15 min
+                    </a>
+                    <a href="mailto:pelegocorrea@gmail.com" class="inline-flex justify-center items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-8 py-4 rounded-lg font-bold text-lg transition">
+                        <i class="fas fa-envelope text-xl"></i>
+                        Enviar E-mail
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-950 text-slate-500 py-8 text-center text-sm border-t border-slate-800">
+        <p>&copy; 2026 Otávio Corrêa - Phosphorus Soluções Digitais. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) slide.classList.add('active');
+            });
+        }
+        
+        function moveSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            showSlide(currentSlide);
+        }
+    </script>
+
+</body>
+</html>
