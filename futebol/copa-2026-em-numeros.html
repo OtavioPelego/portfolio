@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copa 2026 em Números — dados reais</title>
+<style>
+  :root {
+    --page: #101210; --surface: #1b1e19; --surface-2: #23271f;
+    --ink: #f5f5f0; --ink-2: #c3c2b7; --muted: #8a8981;
+    --grid: #2c2f2a; --baseline: #3a3d36; --border: rgba(255,255,255,0.10);
+    --accent: #199e70; --blue: #3987e5; --red: #e66767; --gold: #c98500; --violet: #9085e9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--page); color: var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55; }
+  nav { position: sticky; top: 0; z-index: 50; background: rgba(16,18,16,0.93); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 4px; padding: 10px 16px; overflow-x: auto; white-space: nowrap; }
+  nav .brand { font-weight: 700; font-size: 14px; color: var(--accent); margin-right: 12px; letter-spacing: 0.5px; }
+  nav a { color: var(--ink-2); text-decoration: none; font-size: 13px; padding: 4px 10px; border-radius: 99px; }
+  nav a:hover { background: var(--surface-2); color: var(--ink); }
+  header { text-align: center; padding: 70px 20px 36px;
+    background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(25,158,112,0.16), transparent); }
+  header .kicker { color: var(--accent); font-weight: 600; letter-spacing: 3px; font-size: 12.5px; text-transform: uppercase; }
+  header h1 { font-size: clamp(36px, 7vw, 68px); font-weight: 800; line-height: 1.06; margin: 12px 0 8px; }
+  header .sub { color: var(--ink-2); font-size: 16px; max-width: 700px; margin: 0 auto; }
+  .hero-figure { margin-top: 36px; }
+  .hero-figure .num { font-size: clamp(52px, 9vw, 96px); font-weight: 800; color: var(--accent); line-height: 1; }
+  .hero-figure .lbl { color: var(--muted); font-size: 14.5px; margin-top: 4px; }
+  .tiles { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 32px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 24px; min-width: 124px; }
+  .tile .v { font-size: 26px; font-weight: 700; }
+  .tile .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .status-pill { display: inline-block; margin-top: 26px; background: var(--surface-2); border: 1px solid var(--gold);
+    color: var(--gold); border-radius: 99px; padding: 6px 18px; font-size: 13px; font-weight: 600; }
+  section { max-width: 1060px; margin: 0 auto; padding: 62px 20px 12px; }
+  .chapter { color: var(--accent); font-weight: 700; font-size: 12.5px; letter-spacing: 2.5px; text-transform: uppercase; }
+  section h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 800; margin: 6px 0 8px; line-height: 1.15; }
+  .lede { color: var(--ink-2); font-size: 15.5px; max-width: 760px; margin-bottom: 24px; }
+  .lede strong { color: var(--ink); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .card h3 { font-size: 15.5px; font-weight: 650; margin-bottom: 2px; }
+  .card .note { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
+  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .callout { border-left: 3px solid var(--gold); background: var(--surface-2); border-radius: 0 10px 10px 0;
+    padding: 12px 16px; margin: 16px 0; font-size: 14px; color: var(--ink-2); }
+  .callout strong { color: var(--ink); }
+  #tip { position: fixed; z-index: 99; pointer-events: none; display: none; background: #0c0e0c;
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 11px; font-size: 12.5px; color: var(--ink-2);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.5); max-width: 280px; }
+  #tip b { color: var(--ink); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; } }
+  .mini-list { list-style: none; }
+  .mini-list li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 2px; border-bottom: 1px solid var(--grid); font-size: 13.5px; color: var(--ink-2); }
+  .mini-list li b { color: var(--ink); font-weight: 600; }
+  .mini-list li .v { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 650; white-space: nowrap; }
+  /* bracket */
+  .bracket { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 12px; }
+  .bracket .col { flex: 0 0 228px; }
+  .bracket .col h4 { font-size: 13px; color: var(--muted); font-weight: 650; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .bk-match { background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px; padding: 8px 11px; margin-bottom: 8px; font-size: 12.5px; cursor: pointer; }
+  .bk-match:hover { border-color: var(--accent); }
+  .bk-match .row { display: flex; justify-content: space-between; gap: 8px; }
+  .bk-match .row.win { font-weight: 700; color: var(--ink); }
+  .bk-match .row.lose { color: var(--muted); }
+  .bk-match .pens { color: var(--gold); font-size: 11px; }
+  .bk-match .meta { color: var(--muted); font-size: 10.5px; margin-top: 3px; }
+  .bk-tbd { background: var(--surface); border: 1px dashed var(--grid); border-radius: 9px; padding: 12px; margin-bottom: 8px; font-size: 12px; color: var(--muted); text-align: center; }
+  /* explorador */
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .filters select { background: var(--surface-2); color: var(--ink); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; }
+  .match-list { max-height: 420px; overflow-y: auto; border: 1px solid var(--grid); border-radius: 10px; }
+  .match-row { display: grid; grid-template-columns: 88px 1fr auto 1fr 100px; gap: 10px; align-items: center;
+    padding: 9px 14px; border-bottom: 1px solid var(--grid); font-size: 13.5px; cursor: pointer; }
+  .match-row:hover, .match-row.sel { background: var(--surface-2); }
+  .match-row .d { color: var(--muted); font-size: 11.5px; }
+  .match-row .t1 { text-align: right; font-weight: 600; }
+  .match-row .t2 { font-weight: 600; }
+  .match-row .sc { font-weight: 800; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .match-row .rd { color: var(--muted); font-size: 11px; text-align: right; }
+  .detail-head { display: flex; justify-content: center; align-items: baseline; gap: 16px; margin: 6px 0 2px; flex-wrap: wrap; }
+  .detail-head .tm { font-size: 19px; font-weight: 700; }
+  .detail-head .tm.h { color: var(--blue); } .detail-head .tm.a { color: var(--red); }
+  .detail-head .sc { font-size: 34px; font-weight: 800; }
+  .detail-sub { text-align: center; color: var(--muted); font-size: 12.5px; margin-bottom: 16px; }
+  .stat-line { display: grid; grid-template-columns: 52px 1fr 130px 1fr 52px; gap: 10px; align-items: center; margin-bottom: 7px; font-size: 13px; }
+  .stat-line .lbl { text-align: center; color: var(--muted); font-size: 12px; }
+  .stat-line .val { font-variant-numeric: tabular-nums; font-weight: 650; }
+  .stat-line .val.r { text-align: right; }
+  .stat-line .bar { height: 12px; border-radius: 4px; background: var(--page); position: relative; overflow: hidden; }
+  .stat-line .bar i { position: absolute; top: 0; bottom: 0; display: block; }
+  .stat-line .bar.h i { right: 0; background: var(--blue); border-radius: 4px 0 0 4px; }
+  .stat-line .bar.a i { left: 0; background: var(--red); border-radius: 0 4px 4px 0; }
+  /* comparador */
+  .cmp-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .cmp-controls select { background: var(--surface-2); color: var(--ink); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; }
+  details.tbl { margin-top: 10px; }
+  details.tbl summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  details.tbl table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  details.tbl th { text-align: left; color: var(--muted); font-weight: 600; padding: 5px 10px; border-bottom: 1px solid var(--grid); }
+  details.tbl td { padding: 5px 10px; border-bottom: 1px solid var(--grid); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 56px 20px 40px; border-top: 1px solid var(--border); margin-top: 56px; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div id="tip"></div>
+
+<nav>
+  <span class="brand">🏆 COPA 2026</span>
+  <a href="#mata">Mata-mata</a>
+  <a href="#chuteira">Artilharia</a>
+  <a href="#jogos">Jogos</a>
+  <a href="#estilos">Estilos</a>
+  <a href="#goleiros">Goleiros</a>
+  <a href="#disciplina">Disciplina</a>
+  <a href="#palcos">Palcos</a>
+  <a href="#brasil">Brasil</a>
+  <a href="#comparar">Comparar</a>
+</nav>
+
+<header>
+  <div class="kicker">Copa do Mundo FIFA 2026 · Canadá · México · EUA — dados reais</div>
+  <h1>Copa 2026 em Números</h1>
+  <p class="sub">A primeira Copa de <strong style="color:var(--ink)">48 seleções</strong>, dissecada com dados reais partida a partida — da fase de grupos até onde o torneio chegou.</p>
+  <div class="hero-figure">
+    <div class="num" id="hero-goals">0</div>
+    <div class="lbl" id="hero-goals-lbl">gols marcados</div>
+  </div>
+  <div class="tiles" id="hero-tiles"></div>
+  <div><span class="status-pill" id="status-pill"></span></div>
+</header>
+
+<section id="mata">
+  <div class="chapter">O torneio</div>
+  <h2>O mata-mata, jogo a jogo</h2>
+  <p class="lede">Com 48 seleções, 2026 estreou uma fase inédita: os <strong>16-avos de final</strong>. Clique em qualquer jogo para abrir os detalhes no explorador.</p>
+  <div class="bracket" id="bracket"></div>
+</section>
+
+<section id="chuteira">
+  <div class="chapter">Artilharia</div>
+  <h2 id="chuteira-h2">A corrida da Chuteira de Ouro</h2>
+  <p class="lede" id="chuteira-lede"></p>
+  <div class="two-col">
+    <div class="card">
+      <h3>Artilheiros</h3>
+      <div class="note">Barras = gols · passe o mouse para eficiência</div>
+      <div id="scorers-chart"></div>
+    </div>
+    <div class="card">
+      <h3>Garçons (assistências)</h3>
+      <ul class="mini-list" id="assisters"></ul>
+    </div>
+  </div>
+</section>
+
+<section id="jogos">
+  <div class="chapter">Partidas</div>
+  <h2>Explorador de partidas</h2>
+  <p class="lede">Todas as partidas com estatísticas completas. Filtre por fase ou seleção e clique num jogo para abrir o raio-X.</p>
+  <div class="card">
+    <div class="filters">
+      <select id="f-round"></select>
+      <select id="f-team"></select>
+    </div>
+    <div class="match-list" id="match-list"></div>
+  </div>
+  <div class="card" id="match-detail" style="display:none"></div>
+</section>
+
+<section id="estilos">
+  <div class="chapter">Táticas</div>
+  <h2>O mapa dos estilos</h2>
+  <p class="lede">Cada bola é uma seleção: posse de bola contra volume de chutes. Os quadrantes separam quem <strong>propõe</strong> de quem <strong>reage</strong> — e o tamanho mostra os gols marcados.</p>
+  <div class="card">
+    <div class="note" style="margin-bottom:4px">Passe o mouse nas bolhas · <span style="color:var(--gold)">dourado</span> = semifinalistas confirmados no retrato dos dados</div>
+    <div id="styles-chart"></div>
+    <div id="styles-table"></div>
+  </div>
+  <div class="card">
+    <h3>Formações mais usadas</h3>
+    <div class="note">Times que jogaram em cada esquema (mín. 4 jogos) e o que colheram</div>
+    <div id="formations"></div>
+  </div>
+</section>
+
+<section id="goleiros">
+  <div class="chapter">Debaixo das traves</div>
+  <h2>Os paredões</h2>
+  <p class="lede" id="gk-lede"></p>
+  <div class="card">
+    <div class="note">% de defesas (mín. 3 jogos) · 🧱 = jogos sem sofrer gol</div>
+    <div id="gk-chart"></div>
+  </div>
+</section>
+
+<section id="disciplina">
+  <div class="chapter">Cartões</div>
+  <h2>O lado feio do jogo</h2>
+  <div class="two-col" style="margin-top:24px">
+    <div class="card">
+      <h3>Seleções mais indisciplinadas</h3>
+      <div class="note">🟨 amarelos · 🟥 vermelhos (peso 3 no ranking)</div>
+      <ul class="mini-list" id="disc-teams"></ul>
+    </div>
+    <div class="card">
+      <h3>Os jogos mais quentes</h3>
+      <div class="note">Por cartões (vermelho vale 3)</div>
+      <ul class="mini-list" id="disc-matches"></ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Árbitros mais cartoleiros</h3>
+    <div class="note">Cartões amarelos por jogo apitado</div>
+    <ul class="mini-list" id="referees"></ul>
+  </div>
+</section>
+
+<section id="palcos">
+  <div class="chapter">Estádios</div>
+  <h2>Os palcos da Copa</h2>
+  <p class="lede" id="palcos-lede"></p>
+  <div class="card">
+    <div class="note">Público acumulado por estádio · passe o mouse</div>
+    <div id="venues-chart"></div>
+  </div>
+</section>
+
+<section id="brasil">
+  <div class="chapter">🇧🇷</div>
+  <h2>O Brasil em 2026</h2>
+  <p class="lede" id="brasil-lede"></p>
+  <div id="brazil-timeline"></div>
+</section>
+
+<section id="comparar">
+  <div class="chapter">Frente a frente</div>
+  <h2>Comparador de seleções</h2>
+  <p class="lede">Escolha duas seleções e compare o retrato estatístico das duas campanhas — cada uma com a sua <strong>Nota da Copa</strong>, um índice nosso que pondera ataque, defesa, controle, disciplina, profundidade no torneio e a <strong>força do calendário</strong> (ranking FIFA dos adversários enfrentados).</p>
+  <div class="card">
+    <div class="cmp-controls">
+      <select id="cmp-a"></select>
+      <span style="color:var(--muted)">×</span>
+      <select id="cmp-b"></select>
+    </div>
+    <div id="cmp-notas"></div>
+    <div id="cmp-result"></div>
+    <details class="tbl">
+      <summary>Como a nota é calculada (metodologia)</summary>
+      <div style="font-size:13px;color:var(--ink-2);margin-top:10px;line-height:1.7">
+        Cada métrica é padronizada entre as 48 seleções (z-score) e entra com um peso:<br>
+        · <b style="color:var(--ink)">Ataque (26%)</b> — gols/90 (50%), gols por chute (20%), chutes/90 (15%), % no alvo (15%)<br>
+        · <b style="color:var(--ink)">Defesa (24%)</b> — gols sofridos/90 (70%), chutes cedidos/90 (30%), invertidos<br>
+        · <b style="color:var(--ink)">Profundidade (20%)</b> — jogos disputados (quanto mais longe na Copa, maior)<br>
+        · <b style="color:var(--ink)">Calendário (14%)</b> — força média dos adversários enfrentados, pelo ranking FIFA pré-Copa (dez/2025, aproximado): fazer números contra a França vale mais do que contra o Haiti<br>
+        · <b style="color:var(--ink)">Controle (8%)</b> — posse média · <b style="color:var(--ink)">Disciplina (5%)</b> — (amarelos + 3×vermelhos)/jogo, invertido · <b style="color:var(--ink)">Idade (3%)</b> — proximidade do pico de maturidade (~27 anos)<br>
+        A soma ponderada é re-escalonada de <b style="color:var(--ink)">1,0 a 10,0</b> dentro do elenco das 48. Cada barrinha de componente também vai de 0 a 10 na mesma lógica.
+      </div>
+    </details>
+    <details class="tbl">
+      <summary>Ranking completo das 48 notas</summary>
+      <table><thead><tr><th>#</th><th>Seleção</th><th>Nota</th><th>Rank FIFA</th><th>Jogos</th><th>Adv. médio (rank)</th></tr></thead>
+      <tbody id="rating-table"></tbody></table>
+    </details>
+  </div>
+</section>
+
+<footer>
+  Dados reais da Copa do Mundo 2026 raspados do FBref e publicados no Kaggle por <a href="https://www.kaggle.com/datasets/swaptr/fifa-wc-2026-matches" target="_blank" rel="noopener">swaptr</a> (players · teams · matches),
+  usados no notebook "FIFA WorldCup 2026 Deep Analysis &amp; Prediction" de Wasiq Ali Yasir.<br>
+  Retrato do torneio até <span id="foot-date"></span> · sem dados de tracking/GPS (esses são proprietários da FIFA) · arquivo 100% offline.
+</footer>
+
+<script>
+const DATA = {"matches":[{"round":"Group stage","date":"2026-06-11","gw":1,"home":"Mexico","away":"South Africa","hs":2,"as":0,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Wilton Sampaio","hf":"4-1-4-1","af":"5-3-2","stats":{"poss":[61,40],"shots":[16,3],"sot":[4,2],"saves":[2,2],"corners":[3,1],"fouls":[12,11],"yellow":[1,2],"red":[1,2],"crosses":[12,8],"inter":[8,7],"off":[1,1]}},{"round":"Group stage","date":"2026-06-11","gw":1,"home":"Korea Republic","away":"Czechia","hs":2,"as":1,"pens":null,"stadium":"Estadio Akron","city":"Zapopan","att":44985,"ref":"Amin Omar","hf":"3-4-3","af":"3-4-3","stats":{"poss":[62,38],"shots":[15,7],"sot":[6,4],"saves":[3,4],"corners":[4,5],"fouls":[9,16],"yellow":[1,0],"red":[0,0],"crosses":[12,15],"inter":[11,7],"off":[2,2]}},{"round":"Group stage","date":"2026-06-12","gw":1,"home":"Canada","away":"Bosnia–Herz","hs":1,"as":1,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43002,"ref":"Facundo Tello","hf":"4-2-2-2","af":"4-2-2-2","stats":{"poss":[61,39],"shots":[13,8],"sot":[4,3],"saves":[2,1],"corners":[9,4],"fouls":[10,20],"yellow":[2,3],"red":[0,0],"crosses":[24,10],"inter":[4,10],"off":[1,0]}},{"round":"Group stage","date":"2026-06-12","gw":1,"home":"United States","away":"Paraguay","hs":4,"as":1,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70492,"ref":"Danny Makkelie","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[65,35],"shots":[16,9],"sot":[6,1],"saves":[0,3],"corners":[3,1],"fouls":[13,17],"yellow":[1,5],"red":[0,0],"crosses":[17,5],"inter":[11,9],"off":[2,1]}},{"round":"Group stage","date":"2026-06-13","gw":1,"home":"Qatar","away":"Switzerland","hs":1,"as":1,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":67966,"ref":"Said Martínez","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[32,68],"shots":[7,26],"sot":[4,7],"saves":[5,3],"corners":[3,10],"fouls":[12,11],"yellow":[2,1],"red":[0,0],"crosses":[8,35],"inter":[10,7],"off":[0,1]}},{"round":"Group stage","date":"2026-06-13","gw":1,"home":"Brazil","away":"Morocco","hs":1,"as":1,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Slavko Vinčič","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[51,49],"shots":[12,14],"sot":[5,3],"saves":[2,4],"corners":[6,2],"fouls":[16,14],"yellow":[2,0],"red":[0,0],"crosses":[16,15],"inter":[5,4],"off":[0,1]}},{"round":"Group stage","date":"2026-06-13","gw":1,"home":"Australia","away":"Türkiye","hs":2,"as":0,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Jesús Valenzuela","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[28,72],"shots":[9,30],"sot":[4,8],"saves":[8,2],"corners":[5,8],"fouls":[12,4],"yellow":[0,1],"red":[0,0],"crosses":[14,26],"inter":[6,4],"off":[1,3]}},{"round":"Group stage","date":"2026-06-13","gw":1,"home":"Haiti","away":"Scotland","hs":0,"as":1,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":64146,"ref":"Mustapha Ghorbal","hf":"4-2-2-2","af":"4-2-2-2","stats":{"poss":[54,46],"shots":[15,9],"sot":[2,2],"saves":[1,2],"corners":[4,3],"fouls":[23,21],"yellow":[1,3],"red":[0,0],"crosses":[23,14],"inter":[6,6],"off":[3,1]}},{"round":"Group stage","date":"2026-06-14","gw":1,"home":"Germany","away":"Curaçao","hs":7,"as":1,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68021,"ref":"Jalal Jiyed","hf":"4-2-3-1","af":"4-3-1-2","stats":{"poss":[65,35],"shots":[26,8],"sot":[12,2],"saves":[1,4],"corners":[8,1],"fouls":[18,11],"yellow":[0,0],"red":[0,0],"crosses":[12,7],"inter":[10,16],"off":[0,1]}},{"round":"Group stage","date":"2026-06-14","gw":1,"home":"Netherlands","away":"Japan","hs":2,"as":2,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":69285,"ref":"Ismail Elfath","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[60,40],"shots":[10,10],"sot":[6,3],"saves":[1,4],"corners":[5,4],"fouls":[7,7],"yellow":[3,0],"red":[0,0],"crosses":[21,23],"inter":[7,4],"off":[1,0]}},{"round":"Group stage","date":"2026-06-14","gw":1,"home":"Côte d'Ivoire","away":"Ecuador","hs":1,"as":0,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68274,"ref":"François Letexier","hf":"4-2-2-2","af":"4-2-2-2","stats":{"poss":[48,52],"shots":[15,12],"sot":[4,1],"saves":[1,3],"corners":[3,5],"fouls":[10,13],"yellow":[3,1],"red":[0,0],"crosses":[7,14],"inter":[11,13],"off":[0,0]}},{"round":"Group stage","date":"2026-06-14","gw":1,"home":"Sweden","away":"Tunisia","hs":5,"as":1,"pens":null,"stadium":"Estadio BBVA Bancomer","city":"Guadalupe","att":50987,"ref":"Yael Falcón","hf":"3-4-1-2","af":"5-3-2","stats":{"poss":[49,51],"shots":[13,6],"sot":[7,2],"saves":[1,1],"corners":[4,2],"fouls":[10,8],"yellow":[0,1],"red":[0,0],"crosses":[12,13],"inter":[8,5],"off":[3,6]}},{"round":"Group stage","date":"2026-06-15","gw":1,"home":"Belgium","away":"Egypt","hs":1,"as":1,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66775,"ref":"Ramon Abatti","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[54,46],"shots":[15,14],"sot":[3,3],"saves":[2,3],"corners":[2,7],"fouls":[15,15],"yellow":[2,2],"red":[0,0],"crosses":[16,13],"inter":[10,12],"off":[0,1]}},{"round":"Group stage","date":"2026-06-15","gw":1,"home":"Spain","away":"Cabo Verde","hs":0,"as":0,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":67640,"ref":"Adham Makhadmeh","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[74,26],"shots":[27,6],"sot":[7,1],"saves":[1,7],"corners":[11,1],"fouls":[10,1],"yellow":[1,1],"red":[0,0],"crosses":[36,4],"inter":[6,16],"off":[2,3]}},{"round":"Group stage","date":"2026-06-15","gw":1,"home":"Saudi Arabia","away":"Uruguay","hs":1,"as":1,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":62764,"ref":"Maurizio Mariani","hf":"4-2-2-2","af":"4-2-2-2","stats":{"poss":[33,67],"shots":[7,27],"sot":[3,10],"saves":[9,2],"corners":[4,14],"fouls":[11,6],"yellow":[1,0],"red":[0,0],"crosses":[7,47],"inter":[7,10],"off":[0,6]}},{"round":"Group stage","date":"2026-06-15","gw":1,"home":"IR Iran","away":"New Zealand","hs":2,"as":2,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70108,"ref":"César Arturo Ramos","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[48,52],"shots":[17,14],"sot":[4,8],"saves":[6,2],"corners":[4,1],"fouls":[10,8],"yellow":[1,0],"red":[0,0],"crosses":[19,12],"inter":[11,13],"off":[2,0]}},{"round":"Group stage","date":"2026-06-16","gw":1,"home":"France","away":"Senegal","hs":3,"as":1,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80545,"ref":"Alireza Faghani","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[54,46],"shots":[11,6],"sot":[8,2],"saves":[2,5],"corners":[6,4],"fouls":[5,9],"yellow":[0,0],"red":[0,0],"crosses":[9,9],"inter":[7,8],"off":[1,3]}},{"round":"Group stage","date":"2026-06-16","gw":1,"home":"Iraq","away":"Norway","hs":1,"as":4,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":63106,"ref":"Pierre Ghislain Atcho","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[39,61],"shots":[11,12],"sot":[1,5],"saves":[2,0],"corners":[2,5],"fouls":[12,13],"yellow":[1,0],"red":[0,0],"crosses":[13,17],"inter":[5,3],"off":[1,0]}},{"round":"Group stage","date":"2026-06-16","gw":1,"home":"Argentina","away":"Algeria","hs":3,"as":0,"pens":null,"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","att":69045,"ref":"Szymon Marciniak","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[48,52],"shots":[10,7],"sot":[6,0],"saves":[0,3],"corners":[2,2],"fouls":[13,8],"yellow":[0,0],"red":[0,0],"crosses":[5,8],"inter":[12,8],"off":[3,1]}},{"round":"Group stage","date":"2026-06-16","gw":1,"home":"Austria","away":"Jordan","hs":3,"as":1,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":68527,"ref":"Dahane Beida","hf":"4-2-3-1","af":"5-4-1","stats":{"poss":[63,37],"shots":[11,11],"sot":[4,4],"saves":[3,1],"corners":[4,3],"fouls":[12,7],"yellow":[1,0],"red":[0,0],"crosses":[17,15],"inter":[15,12],"off":[3,1]}},{"round":"Group stage","date":"2026-06-17","gw":1,"home":"Portugal","away":"Congo DR","hs":1,"as":1,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Abdulrahman Ibrahim Al Jassim","hf":"4-2-3-1","af":"5-3-2","stats":{"poss":[75,25],"shots":[7,8],"sot":[1,2],"saves":[1,0],"corners":[5,4],"fouls":[9,10],"yellow":[3,1],"red":[0,0],"crosses":[23,9],"inter":[2,5],"off":[3,2]}},{"round":"Group stage","date":"2026-06-17","gw":1,"home":"England","away":"Croatia","hs":4,"as":2,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":70389,"ref":"Clément Turpin","hf":"4-2-3-1","af":"3-4-3","stats":{"poss":[52,48],"shots":[22,10],"sot":[11,5],"saves":[3,7],"corners":[8,2],"fouls":[10,12],"yellow":[0,0],"red":[0,0],"crosses":[13,13],"inter":[7,7],"off":[0,1]}},{"round":"Group stage","date":"2026-06-17","gw":1,"home":"Ghana","away":"Panama","hs":1,"as":0,"pens":null,"stadium":"BMO Field","city":"Toronto","att":42942,"ref":"Glenn Nyberg","hf":"4-2-3-1","af":"3-4-3","stats":{"poss":[38,62],"shots":[8,11],"sot":[2,4],"saves":[4,2],"corners":[2,2],"fouls":[9,11],"yellow":[1,2],"red":[0,0],"crosses":[16,21],"inter":[8,5],"off":[4,1]}},{"round":"Group stage","date":"2026-06-17","gw":1,"home":"Uzbekistan","away":"Colombia","hs":1,"as":3,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Anthony Taylor","hf":"5-4-1","af":"4-1-4-1","stats":{"poss":[39,62],"shots":[8,15],"sot":[2,4],"saves":[1,1],"corners":[3,4],"fouls":[14,11],"yellow":[1,1],"red":[0,0],"crosses":[13,15],"inter":[7,6],"off":[0,3]}},{"round":"Group stage","date":"2026-06-18","gw":2,"home":"Czechia","away":"South Africa","hs":1,"as":1,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":67442,"ref":"Tori Penso","hf":"5-3-2","af":"4-1-4-1","stats":{"poss":[38,62],"shots":[14,17],"sot":[3,4],"saves":[3,2],"corners":[5,5],"fouls":[12,10],"yellow":[1,2],"red":[0,0],"crosses":[16,17],"inter":[9,9],"off":[2,3]}},{"round":"Group stage","date":"2026-06-18","gw":2,"home":"Switzerland","away":"Bosnia–Herz","hs":4,"as":1,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70026,"ref":"João Pinheiro","hf":"4-1-4-1","af":"4-2-2-2","stats":{"poss":[62,38],"shots":[13,5],"sot":[7,3],"saves":[2,3],"corners":[7,3],"fouls":[7,18],"yellow":[1,2],"red":[0,1],"crosses":[22,12],"inter":[4,12],"off":[3,1]}},{"round":"Group stage","date":"2026-06-18","gw":2,"home":"Canada","away":"Qatar","hs":6,"as":0,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Cristián Garay","hf":"4-2-2-2","af":"4-3-2-1","stats":{"poss":[79,21],"shots":[32,2],"sot":[10,0],"saves":[0,4],"corners":[19,1],"fouls":[9,10],"yellow":[1,1],"red":[0,2],"crosses":[55,3],"inter":[6,11],"off":[1,1]}},{"round":"Group stage","date":"2026-06-18","gw":2,"home":"Mexico","away":"Korea Republic","hs":1,"as":0,"pens":null,"stadium":"Estadio Akron","city":"Zapopan","att":45522,"ref":"Gustavo Tejera","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[42,58],"shots":[8,9],"sot":[4,2],"saves":[2,3],"corners":[0,2],"fouls":[9,7],"yellow":[0,2],"red":[0,0],"crosses":[5,9],"inter":[7,5],"off":[3,6]}},{"round":"Group stage","date":"2026-06-19","gw":2,"home":"United States","away":"Australia","hs":2,"as":0,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Felix Zwayer","hf":"3-5-2","af":"5-4-1","stats":{"poss":[62,38],"shots":[10,5],"sot":[2,2],"saves":[2,1],"corners":[7,4],"fouls":[12,16],"yellow":[3,4],"red":[0,0],"crosses":[14,19],"inter":[21,7],"off":[1,0]}},{"round":"Group stage","date":"2026-06-19","gw":2,"home":"Scotland","away":"Morocco","hs":0,"as":1,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":64146,"ref":"Ilgiz Tantashev","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[41,59],"shots":[6,12],"sot":[0,2],"saves":[1,0],"corners":[2,5],"fouls":[11,8],"yellow":[1,1],"red":[0,0],"crosses":[13,10],"inter":[9,5],"off":[1,0]}},{"round":"Group stage","date":"2026-06-19","gw":2,"home":"Türkiye","away":"Paraguay","hs":0,"as":1,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":68827,"ref":"Iván Barton","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[79,22],"shots":[32,7],"sot":[5,2],"saves":[1,5],"corners":[12,0],"fouls":[14,15],"yellow":[2,1],"red":[0,1],"crosses":[42,6],"inter":[6,9],"off":[2,3]}},{"round":"Group stage","date":"2026-06-19","gw":2,"home":"Brazil","away":"Haiti","hs":3,"as":0,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Alejandro Hernández","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[57,43],"shots":[8,7],"sot":[5,3],"saves":[3,2],"corners":[4,4],"fouls":[13,14],"yellow":[1,3],"red":[0,0],"crosses":[9,11],"inter":[10,9],"off":[8,4]}},{"round":"Group stage","date":"2026-06-20","gw":2,"home":"Netherlands","away":"Sweden","hs":5,"as":1,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Michael Oliver","hf":"4-1-4-1","af":"3-1-4-2","stats":{"poss":[51,49],"shots":[10,16],"sot":[7,8],"saves":[7,2],"corners":[2,5],"fouls":[9,12],"yellow":[0,3],"red":[0,0],"crosses":[15,21],"inter":[8,6],"off":[3,3]}},{"round":"Group stage","date":"2026-06-20","gw":2,"home":"Germany","away":"Côte d'Ivoire","hs":2,"as":1,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43036,"ref":"Juan Gabriel Benítez","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[59,41],"shots":[16,9],"sot":[7,2],"saves":[1,5],"corners":[8,3],"fouls":[5,7],"yellow":[0,0],"red":[0,0],"crosses":[21,9],"inter":[7,13],"off":[0,1]}},{"round":"Group stage","date":"2026-06-20","gw":2,"home":"Ecuador","away":"Curaçao","hs":0,"as":0,"pens":null,"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","att":68598,"ref":"Ma Ning","hf":"3-1-4-2","af":"5-4-1","stats":{"poss":[75,25],"shots":[27,10],"sot":[15,3],"saves":[3,15],"corners":[9,0],"fouls":[7,10],"yellow":[1,5],"red":[0,0],"crosses":[32,1],"inter":[7,8],"off":[1,2]}},{"round":"Group stage","date":"2026-06-20","gw":2,"home":"Tunisia","away":"Japan","hs":0,"as":4,"pens":null,"stadium":"Estadio BBVA","city":"Guadalupe","att":51243,"ref":"István Kovács","hf":"5-4-1","af":"3-4-3","stats":{"poss":[38,62],"shots":[2,11],"sot":[0,5],"saves":[1,0],"corners":[3,5],"fouls":[8,15],"yellow":[0,0],"red":[0,0],"crosses":[10,11],"inter":[14,6],"off":[1,1]}},{"round":"Group stage","date":"2026-06-21","gw":2,"home":"Spain","away":"Saudi Arabia","hs":4,"as":0,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"Raphael Claus","hf":"4-1-4-1","af":"5-4-1","stats":{"poss":[67,33],"shots":[22,3],"sot":[8,1],"saves":[1,5],"corners":[6,1],"fouls":[10,2],"yellow":[0,2],"red":[0,0],"crosses":[25,5],"inter":[16,12],"off":[2,3]}},{"round":"Group stage","date":"2026-06-21","gw":2,"home":"Belgium","away":"IR Iran","hs":0,"as":0,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70317,"ref":"Darío Herrera","hf":"4-2-3-1","af":"5-4-1","stats":{"poss":[70,30],"shots":[23,7],"sot":[7,3],"saves":[3,7],"corners":[4,2],"fouls":[7,9],"yellow":[1,1],"red":[1,0],"crosses":[32,8],"inter":[3,13],"off":[3,4]}},{"round":"Group stage","date":"2026-06-21","gw":2,"home":"Uruguay","away":"Cabo Verde","hs":2,"as":2,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":64003,"ref":"Espen Eskås","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[65,35],"shots":[17,12],"sot":[2,4],"saves":[2,0],"corners":[11,4],"fouls":[11,4],"yellow":[2,2],"red":[0,0],"crosses":[29,7],"inter":[8,13],"off":[3,0]}},{"round":"Group stage","date":"2026-06-21","gw":2,"home":"New Zealand","away":"Egypt","hs":1,"as":3,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Omar Mohamed Al Ali","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[44,56],"shots":[11,19],"sot":[5,7],"saves":[4,4],"corners":[4,3],"fouls":[14,8],"yellow":[2,1],"red":[0,0],"crosses":[15,22],"inter":[5,7],"off":[3,0]}},{"round":"Group stage","date":"2026-06-22","gw":2,"home":"Argentina","away":"Austria","hs":2,"as":0,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":70649,"ref":"Amin Omar","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[54,46],"shots":[12,6],"sot":[5,1],"saves":[1,2],"corners":[1,3],"fouls":[13,13],"yellow":[2,2],"red":[0,0],"crosses":[4,16],"inter":[8,9],"off":[2,0]}},{"round":"Group stage","date":"2026-06-22","gw":2,"home":"France","away":"Iraq","hs":3,"as":0,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Drew Fischer","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[56,45],"shots":[19,4],"sot":[5,0],"saves":[0,2],"corners":[4,2],"fouls":[8,4],"yellow":[0,1],"red":[0,0],"crosses":[14,9],"inter":[5,11],"off":[1,0]}},{"round":"Group stage","date":"2026-06-22","gw":2,"home":"Norway","away":"Senegal","hs":3,"as":2,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Wilton Sampaio","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[42,58],"shots":[13,16],"sot":[7,4],"saves":[2,3],"corners":[5,4],"fouls":[13,5],"yellow":[0,0],"red":[0,0],"crosses":[10,23],"inter":[8,10],"off":[0,4]}},{"round":"Group stage","date":"2026-06-22","gw":2,"home":"Jordan","away":"Algeria","hs":1,"as":2,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":68371,"ref":"Slavko Vinčič","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[28,72],"shots":[8,17],"sot":[4,8],"saves":[6,3],"corners":[1,10],"fouls":[11,6],"yellow":[1,1],"red":[0,0],"crosses":[5,21],"inter":[2,10],"off":[1,0]}},{"round":"Group stage","date":"2026-06-23","gw":2,"home":"Portugal","away":"Uzbekistan","hs":5,"as":0,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Jalal Jayed","hf":"4-2-3-1","af":"5-4-1","stats":{"poss":[66,34],"shots":[17,7],"sot":[9,2],"saves":[2,4],"corners":[3,2],"fouls":[14,15],"yellow":[1,1],"red":[0,0],"crosses":[22,8],"inter":[5,14],"off":[2,2]}},{"round":"Group stage","date":"2026-06-23","gw":2,"home":"England","away":"Ghana","hs":0,"as":0,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":63983,"ref":"Said Martínez","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[79,21],"shots":[19,2],"sot":[3,1],"saves":[0,3],"corners":[9,2],"fouls":[14,24],"yellow":[1,1],"red":[0,0],"crosses":[30,5],"inter":[1,8],"off":[2,2]}},{"round":"Group stage","date":"2026-06-23","gw":2,"home":"Panama","away":"Croatia","hs":0,"as":1,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43036,"ref":"Pierre Ghislain Atcho","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[42,58],"shots":[8,6],"sot":[1,2],"saves":[1,1],"corners":[7,2],"fouls":[19,12],"yellow":[1,1],"red":[0,0],"crosses":[29,17],"inter":[4,5],"off":[1,2]}},{"round":"Group stage","date":"2026-06-23","gw":2,"home":"Colombia","away":"Congo DR","hs":1,"as":0,"pens":null,"stadium":"Estadio Akron","city":"Zapopan","att":45358,"ref":"Maurizio Mariani","hf":"4-1-4-1","af":"5-3-2","stats":{"poss":[64,37],"shots":[20,7],"sot":[9,1],"saves":[1,8],"corners":[5,4],"fouls":[12,16],"yellow":[2,1],"red":[0,0],"crosses":[12,14],"inter":[10,7],"off":[7,0]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"Switzerland","away":"Canada","hs":2,"as":1,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Ramon Abatti","hf":"4-2-2-2","af":"4-2-2-2","stats":{"poss":[55,45],"shots":[6,13],"sot":[4,7],"saves":[6,2],"corners":[2,7],"fouls":[19,13],"yellow":[1,2],"red":[0,0],"crosses":[6,26],"inter":[5,13],"off":[1,3]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"Bosnia–Herz","away":"Qatar","hs":3,"as":1,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Jesús Valenzuela","hf":"4-2-2-2","af":"4-3-2-1","stats":{"poss":[55,46],"shots":[14,9],"sot":[5,3],"saves":[2,3],"corners":[5,5],"fouls":[9,14],"yellow":[1,1],"red":[0,0],"crosses":[22,17],"inter":[4,4],"off":[1,3]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"Scotland","away":"Brazil","hs":0,"as":3,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":64478,"ref":"César Arturo Ramos","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[46,54],"shots":[14,21],"sot":[5,9],"saves":[5,5],"corners":[7,6],"fouls":[10,11],"yellow":[1,2],"red":[0,0],"crosses":[23,12],"inter":[2,13],"off":[0,1]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"Morocco","away":"Haiti","hs":4,"as":2,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"Danny Makkelie","hf":"4-2-2-2","af":"4-2-2-2","stats":{"poss":[69,31],"shots":[22,9],"sot":[11,2],"saves":[1,8],"corners":[9,1],"fouls":[10,18],"yellow":[0,3],"red":[0,0],"crosses":[22,3],"inter":[7,14],"off":[5,0]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"South Africa","away":"Korea Republic","hs":1,"as":0,"pens":null,"stadium":"Estadio BBVA","city":"Guadalupe","att":51243,"ref":"Facundo Tello","hf":"4-2-3-1","af":"3-4-3","stats":{"poss":[32,69],"shots":[13,8],"sot":[4,3],"saves":[2,3],"corners":[4,6],"fouls":[7,9],"yellow":[1,1],"red":[0,0],"crosses":[8,33],"inter":[15,4],"off":[3,0]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"Czechia","away":"Mexico","hs":0,"as":3,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Yael Falcón","hf":"3-4-3","af":"4-1-4-1","stats":{"poss":[52,48],"shots":[13,11],"sot":[1,5],"saves":[2,1],"corners":[5,1],"fouls":[9,13],"yellow":[0,1],"red":[0,0],"crosses":[26,13],"inter":[3,7],"off":[1,0]}},{"round":"Group stage","date":"2026-06-25","gw":3,"home":"Curaçao","away":"Côte d'Ivoire","hs":0,"as":2,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Glenn Nyberg","hf":"5-4-1","af":"4-2-2-2","stats":{"poss":[37,63],"shots":[11,7],"sot":[2,3],"saves":[1,2],"corners":[4,6],"fouls":[11,6],"yellow":[2,1],"red":[0,0],"crosses":[15,16],"inter":[15,12],"off":[2,1]}},{"round":"Group stage","date":"2026-06-25","gw":3,"home":"Ecuador","away":"Germany","hs":2,"as":1,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Tori Penso","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[39,61],"shots":[7,11],"sot":[3,3],"saves":[2,1],"corners":[3,2],"fouls":[15,10],"yellow":[3,1],"red":[0,0],"crosses":[12,16],"inter":[12,4],"off":[0,0]}},{"round":"Group stage","date":"2026-06-25","gw":3,"home":"Tunisia","away":"Netherlands","hs":1,"as":3,"pens":null,"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","att":68391,"ref":"Katia García","hf":"5-4-1","af":"4-1-4-1","stats":{"poss":[29,72],"shots":[10,20],"sot":[4,7],"saves":[4,3],"corners":[4,6],"fouls":[11,10],"yellow":[0,0],"red":[0,0],"crosses":[13,28],"inter":[8,10],"off":[2,1]}},{"round":"Group stage","date":"2026-06-25","gw":3,"home":"Japan","away":"Sweden","hs":1,"as":1,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":70137,"ref":"Iván Barton","hf":"3-4-3","af":"3-4-3","stats":{"poss":[52,48],"shots":[8,11],"sot":[3,5],"saves":[4,2],"corners":[2,8],"fouls":[20,11],"yellow":[1,2],"red":[0,0],"crosses":[13,16],"inter":[4,5],"off":[3,2]}},{"round":"Group stage","date":"2026-06-25","gw":3,"home":"Türkiye","away":"United States","hs":3,"as":2,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70492,"ref":"Mustapha Ghorbal","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[48,53],"shots":[9,18],"sot":[3,7],"saves":[5,0],"corners":[2,9],"fouls":[13,13],"yellow":[0,1],"red":[0,0],"crosses":[11,18],"inter":[8,11],"off":[2,5]}},{"round":"Group stage","date":"2026-06-25","gw":3,"home":"Paraguay","away":"Australia","hs":0,"as":0,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":68827,"ref":"Clément Turpin","hf":"5-3-2","af":"3-4-3","stats":{"poss":[44,56],"shots":[7,12],"sot":[2,5],"saves":[5,2],"corners":[1,3],"fouls":[9,6],"yellow":[1,1],"red":[0,0],"crosses":[7,13],"inter":[8,7],"off":[0,0]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"Norway","away":"France","hs":1,"as":4,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":64146,"ref":"Michael Oliver","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[43,57],"shots":[10,18],"sot":[4,9],"saves":[5,2],"corners":[4,5],"fouls":[9,11],"yellow":[1,1],"red":[0,0],"crosses":[9,9],"inter":[13,11],"off":[1,2]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"Senegal","away":"Iraq","hs":5,"as":0,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43036,"ref":"Anthony Taylor","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[69,31],"shots":[28,6],"sot":[12,1],"saves":[1,7],"corners":[12,3],"fouls":[10,11],"yellow":[2,2],"red":[0,1],"crosses":[25,6],"inter":[2,7],"off":[1,0]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"Uruguay","away":"Spain","hs":0,"as":1,"pens":null,"stadium":"Estadio Akron","city":"Zapopan","att":45065,"ref":"Ismail Elfath","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[33,67],"shots":[5,6],"sot":[1,1],"saves":[0,1],"corners":[1,6],"fouls":[14,14],"yellow":[3,1],"red":[1,0],"crosses":[16,12],"inter":[14,9],"off":[5,2]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"Cabo Verde","away":"Saudi Arabia","hs":0,"as":0,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68278,"ref":"François Letexier","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[51,49],"shots":[15,7],"sot":[2,3],"saves":[3,2],"corners":[4,2],"fouls":[10,16],"yellow":[1,3],"red":[0,0],"crosses":[18,10],"inter":[13,10],"off":[2,0]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"Egypt","away":"IR Iran","hs":1,"as":1,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Szymon Marciniak","hf":"4-2-2-2","af":"5-4-1","stats":{"poss":[61,39],"shots":[15,13],"sot":[3,4],"saves":[1,2],"corners":[8,2],"fouls":[11,16],"yellow":[3,4],"red":[0,0],"crosses":[15,10],"inter":[7,8],"off":[0,3]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"New Zealand","away":"Belgium","hs":1,"as":5,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Adham Makhadmeh","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[45,55],"shots":[6,35],"sot":[2,10],"saves":[5,1],"corners":[5,8],"fouls":[10,7],"yellow":[2,0],"red":[0,0],"crosses":[17,16],"inter":[6,10],"off":[1,1]}},{"round":"Group stage","date":"2026-06-27","gw":3,"home":"Croatia","away":"Ghana","hs":2,"as":1,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Drew Fischer","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[53,47],"shots":[8,6],"sot":[4,1],"saves":[0,2],"corners":[3,2],"fouls":[9,13],"yellow":[1,1],"red":[0,0],"crosses":[15,12],"inter":[4,10],"off":[1,2]}},{"round":"Group stage","date":"2026-06-27","gw":3,"home":"Panama","away":"England","hs":0,"as":2,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Abdulrahman Ibrahim Al Jassim","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[33,67],"shots":[13,17],"sot":[2,6],"saves":[4,2],"corners":[3,7],"fouls":[16,13],"yellow":[2,1],"red":[0,0],"crosses":[9,25],"inter":[6,5],"off":[4,4]}},{"round":"Group stage","date":"2026-06-27","gw":3,"home":"Congo DR","away":"Uzbekistan","hs":3,"as":1,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"Felix Zwayer","hf":"4-2-2-2","af":"3-4-3","stats":{"poss":[58,42],"shots":[19,3],"sot":[4,1],"saves":[1,1],"corners":[2,4],"fouls":[6,16],"yellow":[3,2],"red":[0,0],"crosses":[21,16],"inter":[7,12],"off":[3,1]}},{"round":"Group stage","date":"2026-06-27","gw":3,"home":"Colombia","away":"Portugal","hs":0,"as":0,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":64478,"ref":"Alireza Faghani","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[55,45],"shots":[24,13],"sot":[6,2],"saves":[2,6],"corners":[5,2],"fouls":[12,6],"yellow":[1,0],"red":[0,0],"crosses":[10,14],"inter":[5,11],"off":[3,2]}},{"round":"Group stage","date":"2026-06-27","gw":3,"home":"Jordan","away":"Argentina","hs":1,"as":3,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":70649,"ref":"István Kovács","hf":"5-4-1","af":"4-1-4-1","stats":{"poss":[27,73],"shots":[5,12],"sot":[1,4],"saves":[1,0],"corners":[2,6],"fouls":[13,7],"yellow":[3,0],"red":[0,0],"crosses":[7,5],"inter":[19,12],"off":[1,3]}},{"round":"Group stage","date":"2026-06-27","gw":3,"home":"Algeria","away":"Austria","hs":3,"as":3,"pens":null,"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","att":69045,"ref":"Ilgiz Tantashev","hf":"4-2-3-1","af":"4-1-3-2","stats":{"poss":[65,35],"shots":[12,10],"sot":[5,3],"saves":[0,2],"corners":[0,3],"fouls":[3,7],"yellow":[0,1],"red":[0,0],"crosses":[5,13],"inter":[3,10],"off":[1,3]}},{"round":"Round of 32","date":"2026-06-28","gw":0,"home":"South Africa","away":"Canada","hs":0,"as":1,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":69237,"ref":"João Pinheiro","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[58,42],"shots":[6,12],"sot":[1,7],"saves":[5,1],"corners":[1,4],"fouls":[10,16],"yellow":[0,2],"red":[0,0],"crosses":[8,12],"inter":[16,8],"off":[1,0]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Brazil","away":"Japan","hs":2,"as":1,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Maurizio Mariani","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[69,31],"shots":[19,5],"sot":[7,2],"saves":[1,4],"corners":[6,2],"fouls":[4,13],"yellow":[2,3],"red":[0,0],"crosses":[40,10],"inter":[9,5],"off":[1,0]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Germany","away":"Paraguay","hs":0,"as":0,"pens":[3,4],"stadium":"Gillette Stadium","city":"Foxborough","att":63945,"ref":"Jalal Jayed","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[75,25],"shots":[21,7],"sot":[6,3],"saves":[2,6],"corners":[16,6],"fouls":[18,12],"yellow":[3,3],"red":[0,0],"crosses":[56,21],"inter":[4,13],"off":[4,1]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Netherlands","away":"Morocco","hs":0,"as":0,"pens":[2,3],"stadium":"Estadio BBVA","city":"Guadalupe","att":51243,"ref":"Wilton Sampaio","hf":"3-4-3","af":"4-2-3-1","stats":{"poss":[30,70],"shots":[6,11],"sot":[2,5],"saves":[5,1],"corners":[5,8],"fouls":[18,15],"yellow":[0,1],"red":[0,0],"crosses":[10,18],"inter":[11,10],"off":[3,0]}},{"round":"Round of 32","date":"2026-06-30","gw":0,"home":"Côte d'Ivoire","away":"Norway","hs":1,"as":2,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":69665,"ref":"Jesús Valenzuela","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[47,53],"shots":[14,9],"sot":[5,4],"saves":[1,4],"corners":[14,3],"fouls":[6,7],"yellow":[0,1],"red":[0,0],"crosses":[29,10],"inter":[4,6],"off":[2,2]}},{"round":"Round of 32","date":"2026-06-30","gw":0,"home":"France","away":"Sweden","hs":3,"as":0,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Danny Makkelie","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[61,39],"shots":[25,8],"sot":[12,3],"saves":[3,9],"corners":[9,1],"fouls":[14,10],"yellow":[0,0],"red":[0,0],"crosses":[16,10],"inter":[5,12],"off":[3,1]}},{"round":"Round of 32","date":"2026-06-30","gw":0,"home":"Mexico","away":"Ecuador","hs":2,"as":0,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Slavko Vinčič","hf":"4-1-4-1","af":"4-2-2-2","stats":{"poss":[43,57],"shots":[15,7],"sot":[3,1],"saves":[1,1],"corners":[3,8],"fouls":[10,14],"yellow":[0,3],"red":[0,1],"crosses":[7,25],"inter":[7,6],"off":[0,1]}},{"round":"Round of 32","date":"2026-07-01","gw":0,"home":"England","away":"Congo DR","hs":2,"as":1,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"Adham Makhadmeh","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[60,40],"shots":[16,7],"sot":[7,2],"saves":[1,5],"corners":[5,3],"fouls":[10,12],"yellow":[1,1],"red":[0,0],"crosses":[43,13],"inter":[7,3],"off":[0,4]}},{"round":"Round of 32","date":"2026-07-01","gw":0,"home":"Belgium","away":"Senegal","hs":3,"as":2,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Said Martínez","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[52,48],"shots":[19,19],"sot":[5,5],"saves":[3,3],"corners":[4,2],"fouls":[22,12],"yellow":[2,1],"red":[0,0],"crosses":[26,22],"inter":[8,11],"off":[2,2]}},{"round":"Round of 32","date":"2026-07-01","gw":0,"home":"United States","away":"Bosnia–Herz","hs":2,"as":0,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":68827,"ref":"Raphael Claus","hf":"4-1-4-1","af":"5-3-2","stats":{"poss":[48,52],"shots":[8,10],"sot":[2,3],"saves":[3,0],"corners":[4,3],"fouls":[7,13],"yellow":[0,2],"red":[1,0],"crosses":[14,13],"inter":[8,8],"off":[3,0]}},{"round":"Round of 32","date":"2026-07-02","gw":0,"home":"Spain","away":"Austria","hs":3,"as":0,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70492,"ref":"Glenn Nyberg","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[65,36],"shots":[23,5],"sot":[10,0],"saves":[0,6],"corners":[9,0],"fouls":[8,15],"yellow":[0,1],"red":[0,0],"crosses":[22,13],"inter":[6,7],"off":[2,5]}},{"round":"Round of 32","date":"2026-07-02","gw":0,"home":"Portugal","away":"Croatia","hs":2,"as":1,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43036,"ref":"Espen Eskås","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[61,40],"shots":[15,13],"sot":[3,6],"saves":[5,2],"corners":[9,5],"fouls":[6,12],"yellow":[1,2],"red":[0,0],"crosses":[20,22],"inter":[5,9],"off":[1,4]}},{"round":"Round of 32","date":"2026-07-02","gw":0,"home":"Switzerland","away":"Algeria","hs":2,"as":0,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Yael Falcón","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[45,55],"shots":[11,8],"sot":[5,2],"saves":[2,2],"corners":[4,2],"fouls":[10,12],"yellow":[0,2],"red":[0,0],"crosses":[14,6],"inter":[17,9],"off":[0,2]}},{"round":"Round of 32","date":"2026-07-03","gw":0,"home":"Australia","away":"Egypt","hs":0,"as":0,"pens":[2,4],"stadium":"AT&T Stadium","city":"Arlington","att":70244,"ref":"Gustavo Tejera","hf":"3-4-3","af":"4-2-2-2","stats":{"poss":[42,58],"shots":[16,14],"sot":[1,3],"saves":[3,1],"corners":[4,7],"fouls":[12,14],"yellow":[0,2],"red":[0,0],"crosses":[24,24],"inter":[9,8],"off":[0,3]}},{"round":"Round of 32","date":"2026-07-03","gw":0,"home":"Argentina","away":"Cabo Verde","hs":3,"as":2,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":64478,"ref":"Drew Fischer","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[64,37],"shots":[22,16],"sot":[10,5],"saves":[3,8],"corners":[8,8],"fouls":[13,12],"yellow":[1,1],"red":[0,0],"crosses":[15,21],"inter":[9,10],"off":[3,2]}},{"round":"Round of 32","date":"2026-07-03","gw":0,"home":"Colombia","away":"Ghana","hs":1,"as":0,"pens":null,"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","att":69045,"ref":"Clément Turpin","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[61,39],"shots":[20,8],"sot":[8,0],"saves":[0,7],"corners":[3,2],"fouls":[14,10],"yellow":[2,3],"red":[0,0],"crosses":[15,15],"inter":[5,5],"off":[2,0]}},{"round":"Round of 16","date":"2026-07-04","gw":0,"home":"Canada","away":"Morocco","hs":0,"as":3,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Michael Oliver","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[45,55],"shots":[10,5],"sot":[3,4],"saves":[1,3],"corners":[11,1],"fouls":[24,14],"yellow":[4,4],"red":[0,0],"crosses":[29,5],"inter":[5,8],"off":[2,3]}},{"round":"Round of 16","date":"2026-07-04","gw":0,"home":"Paraguay","away":"France","hs":0,"as":1,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Ilgiz Tantashev","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[24,76],"shots":[5,15],"sot":[0,5],"saves":[4,0],"corners":[2,12],"fouls":[13,11],"yellow":[0,3],"red":[0,0],"crosses":[4,23],"inter":[14,10],"off":[0,0]}},{"round":"Round of 16","date":"2026-07-05","gw":0,"home":"Brazil","away":"Norway","hs":1,"as":2,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Ismail Elfath","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[34,66],"shots":[14,9],"sot":[4,5],"saves":[3,3],"corners":[5,5],"fouls":[7,6],"yellow":[1,0],"red":[0,0],"crosses":[16,13],"inter":[11,6],"off":[1,1]}},{"round":"Round of 16","date":"2026-07-05","gw":0,"home":"Mexico","away":"England","hs":2,"as":3,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Alireza Faghani","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[67,33],"shots":[20,6],"sot":[5,5],"saves":[2,3],"corners":[12,2],"fouls":[14,7],"yellow":[2,4],"red":[0,1],"crosses":[49,4],"inter":[7,4],"off":[1,0]}},{"round":"Round of 16","date":"2026-07-06","gw":0,"home":"Portugal","away":"Spain","hs":0,"as":1,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":70649,"ref":"Anthony Taylor","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[45,56],"shots":[10,15],"sot":[2,6],"saves":[5,2],"corners":[3,7],"fouls":[9,13],"yellow":[2,1],"red":[0,0],"crosses":[13,16],"inter":[7,5],"off":[2,1]}},{"round":"Round of 16","date":"2026-07-06","gw":0,"home":"United States","away":"Belgium","hs":1,"as":4,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Adham Makhadmeh","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[56,44],"shots":[7,15],"sot":[2,7],"saves":[3,1],"corners":[3,5],"fouls":[11,9],"yellow":[2,0],"red":[0,0],"crosses":[11,14],"inter":[9,9],"off":[0,1]}},{"round":"Round of 16","date":"2026-07-07","gw":0,"home":"Argentina","away":"Egypt","hs":3,"as":2,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"François Letexier","hf":"4-1-3-2","af":"4-2-2-2","stats":{"poss":[64,36],"shots":[19,5],"sot":[7,2],"saves":[0,3],"corners":[6,1],"fouls":[13,11],"yellow":[0,5],"red":[0,0],"crosses":[26,8],"inter":[7,10],"off":[3,0]}},{"round":"Round of 16","date":"2026-07-07","gw":0,"home":"Switzerland","away":"Colombia","hs":0,"as":0,"pens":[4,3],"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Iván Barton","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[53,47],"shots":[7,15],"sot":[2,3],"saves":[3,2],"corners":[3,7],"fouls":[22,21],"yellow":[3,2],"red":[0,0],"crosses":[15,18],"inter":[13,12],"off":[5,4]}},{"round":"Quarter-finals","date":"2026-07-09","gw":0,"home":"France","away":"Morocco","hs":2,"as":0,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":63811,"ref":"Facundo Tello","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[48,52],"shots":[22,5],"sot":[8,1],"saves":[1,5],"corners":[5,5],"fouls":[10,13],"yellow":[0,1],"red":[0,0],"crosses":[12,13],"inter":[11,6],"off":[0,0]}},{"round":"Quarter-finals","date":"2026-07-10","gw":0,"home":"Spain","away":"Belgium","hs":2,"as":1,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70492,"ref":"Michael Oliver","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[68,32],"shots":[17,5],"sot":[8,2],"saves":[1,6],"corners":[5,1],"fouls":[13,18],"yellow":[2,2],"red":[0,0],"crosses":[19,10],"inter":[4,10],"off":[3,1]}}],"meta":{"games":98,"goals":279,"gpm":2.85,"att_total":6393887,"att_avg":65243,"att_max":80824,"last_date":"2026-07-10","teams":48,"players":1248,"rounds":{"Group stage":72,"Round of 32":16,"Round of 16":8,"Quarter-finals":2}},"scorers":[{"player":"Lionel Messi","team":"Argentina","goals":8,"assists":1,"min":410,"shots":29,"per90":1.76},{"player":"Kylian Mbappé","team":"France","goals":8,"assists":3,"min":515,"shots":30,"per90":1.4},{"player":"Erling Haaland","team":"Norway","goals":7,"assists":0,"min":360,"shots":18,"per90":1.75},{"player":"Harry Kane","team":"England","goals":6,"assists":1,"min":442,"shots":19,"per90":1.22},{"player":"Ousmane Dembélé","team":"France","goals":5,"assists":2,"min":457,"shots":16,"per90":0.98},{"player":"Ismaila Sarr","team":"Senegal","goals":4,"assists":1,"min":364,"shots":17,"per90":0.99},{"player":"Jude Bellingham","team":"England","goals":4,"assists":1,"min":402,"shots":12,"per90":0.9},{"player":"Julián Quiñones","team":"Mexico","goals":4,"assists":1,"min":410,"shots":14,"per90":0.88},{"player":"Vinicius Júnior","team":"Brazil","goals":4,"assists":1,"min":440,"shots":17,"per90":0.82},{"player":"Mikel Oyarzabal","team":"Spain","goals":4,"assists":1,"min":467,"shots":20,"per90":0.77},{"player":"Deniz Undav","team":"Germany","goals":3,"assists":2,"min":151,"shots":6,"per90":1.79},{"player":"Johan Manzambi","team":"Switzerland","goals":3,"assists":2,"min":199,"shots":6,"per90":1.36},{"player":"Brian Brobbey","team":"Netherlands","goals":3,"assists":0,"min":223,"shots":4,"per90":1.21},{"player":"Romelu Lukaku","team":"Belgium","goals":3,"assists":1,"min":233,"shots":6,"per90":1.16}],"assisters":[{"player":"Michael Olise","team":"France","assists":5,"goals":0},{"player":"Bruno Guimarães","team":"Brazil","assists":4,"goals":0},{"player":"Brahim Díaz","team":"Morocco","assists":4,"goals":0},{"player":"Andreas Schjelderup","team":"Norway","assists":3,"goals":0},{"player":"Bukayo Saka","team":"England","assists":3,"goals":0},{"player":"Martin Ødegaard","team":"Norway","assists":3,"goals":0},{"player":"Alexander Isak","team":"Sweden","assists":3,"goals":1},{"player":"Florian Wirtz","team":"Germany","assists":3,"goals":0},{"player":"Roberto Alvarado","team":"Mexico","assists":3,"goals":0},{"player":"Kylian Mbappé","team":"France","assists":3,"goals":8}],"gks":[{"player":"Unai Simón","team":"Spain","games":6,"saves":6,"pct":87.5,"cs":5,"ga":1},{"player":"Diogo Costa","team":"Portugal","games":5,"saves":19,"pct":86.4,"cs":2,"ga":3},{"player":"Camilo Vargas","team":"Colombia","games":5,"saves":6,"pct":85.7,"cs":4,"ga":1},{"player":"Gregor Kobel","team":"Switzerland","games":5,"saves":16,"pct":84.2,"cs":2,"ga":3},{"player":"Alireza Beiranvand","team":"IR Iran","games":3,"saves":15,"pct":83.3,"cs":1,"ga":3},{"player":"Patrick Beach","team":"Australia","games":4,"saves":14,"pct":82.4,"cs":2,"ga":3},{"player":"Mike Maignan","team":"France","games":6,"saves":8,"pct":80.0,"cs":4,"ga":2},{"player":"Benjamin Asare","team":"Ghana","games":3,"saves":8,"pct":80.0,"cs":2,"ga":2},{"player":"Orlando Gill","team":"Paraguay","games":5,"saves":23,"pct":79.3,"cs":2,"ga":6},{"player":"Vozinha","team":"Cabo Verde","games":4,"saves":18,"pct":78.3,"cs":2,"ga":5},{"player":"Alisson","team":"Brazil","games":5,"saves":14,"pct":77.8,"cs":2,"ga":4},{"player":"Bart Verbruggen","team":"Netherlands","games":4,"saves":16,"pct":76.2,"cs":0,"ga":5},{"player":"Mohammed Al-Owais","team":"Saudi Arabia","games":3,"saves":16,"pct":76.2,"cs":1,"ga":5},{"player":"Kim Seung-gyu","team":"Korea Republic","games":3,"saves":9,"pct":75.0,"cs":0,"ga":3},{"player":"Lionel Mpasi","team":"Congo DR","games":4,"saves":14,"pct":73.7,"cs":0,"ga":5},{"player":"Ronwen Williams","team":"South Africa","games":4,"saves":11,"pct":73.3,"cs":1,"ga":4},{"player":"Raúl Rangel","team":"Mexico","games":5,"saves":8,"pct":72.7,"cs":4,"ga":3},{"player":"Zion Suzuki","team":"Japan","games":4,"saves":12,"pct":70.6,"cs":1,"ga":5},{"player":"Yassine Bounou","team":"Morocco","games":6,"saves":14,"pct":70.0,"cs":2,"ga":6},{"player":"Thibaut Courtois","team":"Belgium","games":6,"saves":14,"pct":70.0,"cs":1,"ga":6},{"player":"Hernán Galíndez","team":"Ecuador","games":4,"saves":9,"pct":69.2,"cs":1,"ga":4},{"player":"Yahia Fofana","team":"Côte d'Ivoire","games":4,"saves":9,"pct":69.2,"cs":2,"ga":4},{"player":"Eloy Room","team":"Curaçao","games":3,"saves":20,"pct":69.0,"cs":1,"ga":9},{"player":"Angus Gunn","team":"Scotland","games":3,"saves":8,"pct":66.7,"cs":1,"ga":4},{"player":"Ørjan Nyland","team":"Norway","games":4,"saves":9,"pct":64.3,"cs":0,"ga":5},{"player":"Jordan Pickford","team":"England","games":5,"saves":9,"pct":64.3,"cs":2,"ga":5},{"player":"Orlando Mosquera","team":"Panama","games":3,"saves":7,"pct":63.6,"cs":0,"ga":4},{"player":"Mostafa Shobeir","team":"Egypt","games":5,"saves":12,"pct":63.2,"cs":0,"ga":7},{"player":"Uğurcan Çakır","team":"Türkiye","games":3,"saves":8,"pct":61.5,"cs":0,"ga":5},{"player":"Matt Freese","team":"United States","games":4,"saves":8,"pct":61.5,"cs":2,"ga":5},{"player":"Matej Kovar","team":"Czechia","games":3,"saves":9,"pct":60.0,"cs":0,"ga":6},{"player":"Alexander Schlager","team":"Austria","games":4,"saves":13,"pct":59.1,"cs":0,"ga":9},{"player":"Dominik Livaković","team":"Croatia","games":4,"saves":10,"pct":58.8,"cs":1,"ga":7},{"player":"Johny Placide","team":"Haiti","games":3,"saves":11,"pct":57.9,"cs":0,"ga":8},{"player":"Mory Diaw","team":"Senegal","games":3,"saves":4,"pct":57.1,"cs":1,"ga":3},{"player":"Luca Zidane","team":"Algeria","games":3,"saves":8,"pct":57.1,"cs":0,"ga":6},{"player":"Mahmoud Abunada","team":"Qatar","games":3,"saves":12,"pct":54.5,"cs":0,"ga":10},{"player":"Max Crocombe","team":"New Zealand","games":3,"saves":11,"pct":52.4,"cs":0,"ga":10},{"player":"Yazeed Abulaila","team":"Jordan","games":3,"saves":8,"pct":50.0,"cs":0,"ga":8},{"player":"Manuel Neuer","team":"Germany","games":4,"saves":5,"pct":50.0,"cs":0,"ga":5},{"player":"Maxime Crépeau","team":"Canada","games":5,"saves":6,"pct":50.0,"cs":2,"ga":6},{"player":"Fernando Muslera","team":"Uruguay","games":3,"saves":4,"pct":50.0,"cs":0,"ga":4},{"player":"Emiliano Martínez","team":"Argentina","games":5,"saves":4,"pct":44.4,"cs":2,"ga":5},{"player":"Nikola Vasilj","team":"Bosnia–Herz","games":4,"saves":6,"pct":42.9,"cs":0,"ga":8}],"teams":[{"team":"Algeria","games":4,"poss":61.0,"shots90":11.0,"goals":5,"ga":9,"gps":0.11,"age":27.7,"yellow":3,"red":0,"sot_pct":34.1},{"team":"Argentina","games":5,"poss":60.6,"shots90":14.1,"goals":13,"ga":5,"gps":0.16,"age":29.8,"yellow":3,"red":0,"sot_pct":42.7},{"team":"Australia","games":4,"poss":41.0,"shots90":9.7,"goals":2,"ga":2,"gps":0.05,"age":25.8,"yellow":5,"red":0,"sot_pct":28.6},{"team":"Austria","games":4,"poss":45.0,"shots90":8.0,"goals":5,"ga":9,"gps":0.13,"age":29.2,"yellow":5,"red":0,"sot_pct":25.0},{"team":"Belgium","games":6,"poss":51.2,"shots90":17.7,"goals":13,"ga":7,"gps":0.11,"age":29.6,"yellow":6,"red":1,"sot_pct":30.4},{"team":"Bosnia and Herzegovina","games":4,"poss":46.0,"shots90":9.2,"goals":4,"ga":8,"gps":0.11,"age":27.0,"yellow":7,"red":1,"sot_pct":37.8},{"team":"Brazil","games":5,"poss":53.0,"shots90":14.8,"goals":10,"ga":4,"gps":0.12,"age":29.6,"yellow":8,"red":0,"sot_pct":40.5},{"team":"Cape Verde","games":4,"poss":37.3,"shots90":11.3,"goals":4,"ga":4,"gps":0.08,"age":31.2,"yellow":5,"red":0,"sot_pct":24.5},{"team":"Canada","games":5,"poss":54.4,"shots90":16.0,"goals":8,"ga":6,"gps":0.1,"age":27.4,"yellow":11,"red":0,"sot_pct":38.8},{"team":"Colombia","games":5,"poss":57.8,"shots90":17.6,"goals":5,"ga":1,"gps":0.05,"age":30.4,"yellow":8,"red":0,"sot_pct":31.9},{"team":"Congo DR","games":4,"poss":40.0,"shots90":10.2,"goals":5,"ga":5,"gps":0.1,"age":29.2,"yellow":6,"red":0,"sot_pct":22.0},{"team":"Croatia","games":4,"poss":49.8,"shots90":9.2,"goals":6,"ga":7,"gps":0.16,"age":29.6,"yellow":4,"red":0,"sot_pct":45.9},{"team":"Curaçao","games":3,"poss":32.3,"shots90":9.7,"goals":1,"ga":9,"gps":0.03,"age":29.3,"yellow":7,"red":0,"sot_pct":24.1},{"team":"Czech Republic","games":3,"poss":42.7,"shots90":11.3,"goals":2,"ga":6,"gps":0.06,"age":28.2,"yellow":1,"red":0,"sot_pct":23.5},{"team":"Côte d'Ivoire","games":4,"poss":49.8,"shots90":11.2,"goals":5,"ga":4,"gps":0.11,"age":25.9,"yellow":4,"red":0,"sot_pct":31.1},{"team":"Ecuador","games":4,"poss":55.8,"shots90":13.2,"goals":2,"ga":4,"gps":0.04,"age":27.2,"yellow":8,"red":1,"sot_pct":37.7},{"team":"Egypt","games":5,"poss":51.4,"shots90":12.6,"goals":8,"ga":5,"gps":0.12,"age":29.7,"yellow":12,"red":0,"sot_pct":26.9},{"team":"England","games":5,"poss":58.2,"shots90":16.0,"goals":11,"ga":5,"gps":0.11,"age":26.8,"yellow":7,"red":1,"sot_pct":40.0},{"team":"France","games":6,"poss":58.7,"shots90":18.3,"goals":16,"ga":2,"gps":0.14,"age":27.4,"yellow":4,"red":0,"sot_pct":42.7},{"team":"Germany","games":4,"poss":65.0,"shots90":17.1,"goals":11,"ga":5,"gps":0.14,"age":28.6,"yellow":3,"red":0,"sot_pct":37.8},{"team":"Ghana","games":4,"poss":36.3,"shots90":6.0,"goals":2,"ga":3,"gps":0.08,"age":27.8,"yellow":6,"red":0,"sot_pct":16.7},{"team":"Haiti","games":3,"poss":42.7,"shots90":10.3,"goals":1,"ga":8,"gps":0.03,"age":29.0,"yellow":7,"red":0,"sot_pct":22.6},{"team":"Iran","games":3,"poss":39.0,"shots90":12.3,"goals":3,"ga":3,"gps":0.08,"age":32.2,"yellow":6,"red":0,"sot_pct":29.7},{"team":"Iraq","games":3,"poss":38.3,"shots90":7.0,"goals":1,"ga":11,"gps":0.05,"age":26.9,"yellow":4,"red":1,"sot_pct":9.5},{"team":"Japan","games":4,"poss":46.3,"shots90":8.5,"goals":8,"ga":5,"gps":0.24,"age":28.0,"yellow":4,"red":0,"sot_pct":38.2},{"team":"Jordan","games":3,"poss":30.7,"shots90":8.0,"goals":3,"ga":7,"gps":0.13,"age":28.7,"yellow":4,"red":0,"sot_pct":37.5},{"team":"Korea Republic","games":3,"poss":63.0,"shots90":10.7,"goals":2,"ga":3,"gps":0.06,"age":28.6,"yellow":4,"red":0,"sot_pct":34.4},{"team":"Mexico","games":5,"poss":52.2,"shots90":14.0,"goals":10,"ga":3,"gps":0.13,"age":28.1,"yellow":4,"red":1,"sot_pct":30.0},{"team":"Morocco","games":6,"poss":59.0,"shots90":10.9,"goals":10,"ga":5,"gps":0.14,"age":26.4,"yellow":7,"red":0,"sot_pct":37.7},{"team":"Netherlands","games":4,"poss":53.3,"shots90":10.6,"goals":10,"ga":5,"gps":0.22,"age":27.6,"yellow":3,"red":0,"sot_pct":47.8},{"team":"New Zealand","games":3,"poss":47.0,"shots90":10.3,"goals":4,"ga":10,"gps":0.13,"age":28.5,"yellow":4,"red":0,"sot_pct":48.4},{"team":"Norway","games":5,"poss":53.0,"shots90":10.6,"goals":11,"ga":9,"gps":0.21,"age":27.5,"yellow":2,"red":0,"sot_pct":47.2},{"team":"Panama","games":3,"poss":45.7,"shots90":10.7,"goals":0,"ga":4,"gps":0.0,"age":29.3,"yellow":5,"red":0,"sot_pct":21.9},{"team":"Paraguay","games":5,"poss":30.0,"shots90":6.6,"goals":3,"ga":5,"gps":0.09,"age":28.5,"yellow":9,"red":1,"sot_pct":22.9},{"team":"Portugal","games":5,"poss":58.4,"shots90":12.4,"goals":7,"ga":3,"gps":0.1,"age":28.2,"yellow":7,"red":0,"sot_pct":27.4},{"team":"Qatar","games":3,"poss":33.0,"shots90":6.0,"goals":2,"ga":8,"gps":0.11,"age":30.2,"yellow":4,"red":2,"sot_pct":38.9},{"team":"Saudi Arabia","games":3,"poss":38.3,"shots90":5.7,"goals":1,"ga":4,"gps":0.06,"age":29.0,"yellow":6,"red":0,"sot_pct":41.2},{"team":"Scotland","games":3,"poss":44.3,"shots90":9.7,"goals":1,"ga":4,"gps":0.03,"age":29.6,"yellow":5,"red":0,"sot_pct":24.1},{"team":"Senegal","games":4,"poss":55.3,"shots90":15.9,"goals":10,"ga":9,"gps":0.14,"age":29.0,"yellow":3,"red":0,"sot_pct":33.3},{"team":"South Africa","games":4,"poss":48.0,"shots90":9.8,"goals":2,"ga":4,"gps":0.03,"age":27.1,"yellow":5,"red":2,"sot_pct":28.2},{"team":"Spain","games":6,"poss":66.2,"shots90":18.3,"goals":10,"ga":1,"gps":0.09,"age":26.8,"yellow":5,"red":0,"sot_pct":36.4},{"team":"Sweden","games":4,"poss":46.3,"shots90":12.0,"goals":7,"ga":10,"gps":0.15,"age":27.1,"yellow":5,"red":0,"sot_pct":47.9},{"team":"Switzerland","games":5,"poss":56.6,"shots90":11.8,"goals":9,"ga":3,"gps":0.11,"age":29.8,"yellow":6,"red":0,"sot_pct":39.7},{"team":"Tunisia","games":3,"poss":39.3,"shots90":6.0,"goals":2,"ga":11,"gps":0.11,"age":27.9,"yellow":1,"red":0,"sot_pct":33.3},{"team":"Turkey","games":3,"poss":66.3,"shots90":23.7,"goals":3,"ga":5,"gps":0.04,"age":27.0,"yellow":2,"red":0,"sot_pct":22.5},{"team":"United States","games":5,"poss":56.8,"shots90":11.8,"goals":9,"ga":8,"gps":0.15,"age":27.1,"yellow":7,"red":1,"sot_pct":32.2},{"team":"Uruguay","games":3,"poss":55.0,"shots90":16.3,"goals":3,"ga":4,"gps":0.06,"age":29.1,"yellow":5,"red":1,"sot_pct":26.5},{"team":"Uzbekistan","games":3,"poss":38.3,"shots90":6.0,"goals":2,"ga":10,"gps":0.11,"age":27.4,"yellow":4,"red":0,"sot_pct":27.8}],"compare":{"Algeria":{"possession":61.0,"goals_per90":1.25,"goals_per90_against":2.25,"shots_per90":11.0,"shots_per90_against":9.75,"shots_on_target_pct":34.1,"goals_per_shot":0.11,"cards_yellow":3.0,"cards_red":0.0,"avg_age":27.7,"games":4.0,"goals":5.0,"goals_against":9.0,"pens_made":0.0,"pens_att":0.0},"Argentina":{"possession":60.6,"goals_per90":2.44,"goals_per90_against":0.94,"shots_per90":14.06,"shots_per90_against":7.31,"shots_on_target_pct":42.7,"goals_per_shot":0.16,"cards_yellow":3.0,"cards_red":0.0,"avg_age":29.8,"games":5.0,"goals":13.0,"goals_against":5.0,"pens_made":1.0,"pens_att":3.0},"Australia":{"possession":41.0,"goals_per90":0.46,"goals_per90_against":0.46,"shots_per90":9.69,"shots_per90_against":14.08,"shots_on_target_pct":28.6,"goals_per_shot":0.05,"cards_yellow":5.0,"cards_red":0.0,"avg_age":25.8,"games":4.0,"goals":2.0,"goals_against":2.0,"pens_made":0.0,"pens_att":0.0},"Austria":{"possession":45.0,"goals_per90":1.25,"goals_per90_against":2.25,"shots_per90":8.0,"shots_per90_against":14.5,"shots_on_target_pct":25.0,"goals_per_shot":0.13,"cards_yellow":5.0,"cards_red":0.0,"avg_age":29.2,"games":4.0,"goals":5.0,"goals_against":9.0,"pens_made":1.0,"pens_att":1.0},"Belgium":{"possession":51.2,"goals_per90":2.05,"goals_per90_against":1.11,"shots_per90":17.68,"shots_per90_against":11.05,"shots_on_target_pct":30.4,"goals_per_shot":0.11,"cards_yellow":6.0,"cards_red":1.0,"avg_age":29.6,"games":6.0,"goals":13.0,"goals_against":7.0,"pens_made":1.0,"pens_att":1.0},"Bosnia and Herzegovina":{"possession":46.0,"goals_per90":1.0,"goals_per90_against":2.0,"shots_per90":9.25,"shots_per90_against":10.75,"shots_on_target_pct":37.8,"goals_per_shot":0.11,"cards_yellow":7.0,"cards_red":1.0,"avg_age":27.0,"games":4.0,"goals":4.0,"goals_against":8.0,"pens_made":0.0,"pens_att":0.0},"Brazil":{"possession":53.0,"goals_per90":2.0,"goals_per90_against":0.8,"shots_per90":14.8,"shots_per90_against":9.8,"shots_on_target_pct":40.5,"goals_per_shot":0.12,"cards_yellow":8.0,"cards_red":0.0,"avg_age":29.6,"games":5.0,"goals":10.0,"goals_against":4.0,"pens_made":1.0,"pens_att":2.0},"Cape Verde":{"possession":37.3,"goals_per90":0.92,"goals_per90_against":0.92,"shots_per90":11.31,"shots_per90_against":16.85,"shots_on_target_pct":24.5,"goals_per_shot":0.08,"cards_yellow":5.0,"cards_red":0.0,"avg_age":31.2,"games":4.0,"goals":4.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Canada":{"possession":54.4,"goals_per90":1.6,"goals_per90_against":1.2,"shots_per90":16.0,"shots_per90_against":5.4,"shots_on_target_pct":38.8,"goals_per_shot":0.1,"cards_yellow":11.0,"cards_red":0.0,"avg_age":27.4,"games":5.0,"goals":8.0,"goals_against":6.0,"pens_made":0.0,"pens_att":0.0},"Colombia":{"possession":57.8,"goals_per90":0.94,"goals_per90_against":0.19,"shots_per90":17.62,"shots_per90_against":8.06,"shots_on_target_pct":31.9,"goals_per_shot":0.05,"cards_yellow":8.0,"cards_red":0.0,"avg_age":30.4,"games":5.0,"goals":5.0,"goals_against":1.0,"pens_made":0.0,"pens_att":0.0},"Congo DR":{"possession":40.0,"goals_per90":1.25,"goals_per90_against":1.25,"shots_per90":10.25,"shots_per90_against":11.5,"shots_on_target_pct":22.0,"goals_per_shot":0.1,"cards_yellow":6.0,"cards_red":0.0,"avg_age":29.2,"games":4.0,"goals":5.0,"goals_against":5.0,"pens_made":1.0,"pens_att":1.0},"Croatia":{"possession":49.8,"goals_per90":1.5,"goals_per90_against":1.75,"shots_per90":9.25,"shots_per90_against":12.75,"shots_on_target_pct":45.9,"goals_per_shot":0.16,"cards_yellow":4.0,"cards_red":0.0,"avg_age":29.6,"games":4.0,"goals":6.0,"goals_against":7.0,"pens_made":0.0,"pens_att":0.0},"Curaçao":{"possession":32.3,"goals_per90":0.33,"goals_per90_against":3.0,"shots_per90":9.67,"shots_per90_against":20.0,"shots_on_target_pct":24.1,"goals_per_shot":0.03,"cards_yellow":7.0,"cards_red":0.0,"avg_age":29.3,"games":3.0,"goals":1.0,"goals_against":9.0,"pens_made":0.0,"pens_att":0.0},"Czech Republic":{"possession":42.7,"goals_per90":0.67,"goals_per90_against":2.0,"shots_per90":11.33,"shots_per90_against":14.33,"shots_on_target_pct":23.5,"goals_per_shot":0.06,"cards_yellow":1.0,"cards_red":0.0,"avg_age":28.2,"games":3.0,"goals":2.0,"goals_against":6.0,"pens_made":0.0,"pens_att":0.0},"Côte d'Ivoire":{"possession":49.8,"goals_per90":1.25,"goals_per90_against":1.0,"shots_per90":11.25,"shots_per90_against":12.0,"shots_on_target_pct":31.1,"goals_per_shot":0.11,"cards_yellow":4.0,"cards_red":0.0,"avg_age":25.9,"games":4.0,"goals":5.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Ecuador":{"possession":55.8,"goals_per90":0.5,"goals_per90_against":1.0,"shots_per90":13.25,"shots_per90_against":12.75,"shots_on_target_pct":37.7,"goals_per_shot":0.04,"cards_yellow":8.0,"cards_red":1.0,"avg_age":27.2,"games":4.0,"goals":2.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Egypt":{"possession":51.4,"goals_per90":1.5,"goals_per90_against":0.94,"shots_per90":12.56,"shots_per90_against":13.87,"shots_on_target_pct":26.9,"goals_per_shot":0.12,"cards_yellow":12.0,"cards_red":0.0,"avg_age":29.7,"games":5.0,"goals":8.0,"goals_against":5.0,"pens_made":0.0,"pens_att":0.0},"England":{"possession":58.2,"goals_per90":2.2,"goals_per90_against":1.0,"shots_per90":16.0,"shots_per90_against":10.4,"shots_on_target_pct":40.0,"goals_per_shot":0.11,"cards_yellow":7.0,"cards_red":1.0,"avg_age":26.8,"games":5.0,"goals":11.0,"goals_against":5.0,"pens_made":2.0,"pens_att":2.0},"France":{"possession":58.7,"goals_per90":2.67,"goals_per90_against":0.33,"shots_per90":18.33,"shots_per90_against":6.33,"shots_on_target_pct":42.7,"goals_per_shot":0.14,"cards_yellow":4.0,"cards_red":0.0,"avg_age":27.4,"games":6.0,"goals":16.0,"goals_against":2.0,"pens_made":1.0,"pens_att":2.0},"Germany":{"possession":65.0,"goals_per90":2.54,"goals_per90_against":1.15,"shots_per90":17.08,"shots_per90_against":7.15,"shots_on_target_pct":37.8,"goals_per_shot":0.14,"cards_yellow":3.0,"cards_red":0.0,"avg_age":28.6,"games":4.0,"goals":11.0,"goals_against":5.0,"pens_made":1.0,"pens_att":1.0},"Ghana":{"possession":36.3,"goals_per90":0.5,"goals_per90_against":0.75,"shots_per90":6.0,"shots_per90_against":14.5,"shots_on_target_pct":16.7,"goals_per_shot":0.08,"cards_yellow":6.0,"cards_red":0.0,"avg_age":27.8,"games":4.0,"goals":2.0,"goals_against":3.0,"pens_made":0.0,"pens_att":0.0},"Haiti":{"possession":42.7,"goals_per90":0.33,"goals_per90_against":2.67,"shots_per90":10.33,"shots_per90_against":13.0,"shots_on_target_pct":22.6,"goals_per_shot":0.03,"cards_yellow":7.0,"cards_red":0.0,"avg_age":29.0,"games":3.0,"goals":1.0,"goals_against":8.0,"pens_made":0.0,"pens_att":0.0},"Iran":{"possession":39.0,"goals_per90":1.0,"goals_per90_against":1.0,"shots_per90":12.33,"shots_per90_against":17.33,"shots_on_target_pct":29.7,"goals_per_shot":0.08,"cards_yellow":6.0,"cards_red":0.0,"avg_age":32.2,"games":3.0,"goals":3.0,"goals_against":3.0,"pens_made":0.0,"pens_att":1.0},"Iraq":{"possession":38.3,"goals_per90":0.33,"goals_per90_against":3.67,"shots_per90":7.0,"shots_per90_against":19.67,"shots_on_target_pct":9.5,"goals_per_shot":0.05,"cards_yellow":4.0,"cards_red":1.0,"avg_age":26.9,"games":3.0,"goals":1.0,"goals_against":11.0,"pens_made":0.0,"pens_att":0.0},"Japan":{"possession":46.3,"goals_per90":2.0,"goals_per90_against":1.25,"shots_per90":8.5,"shots_per90_against":10.5,"shots_on_target_pct":38.2,"goals_per_shot":0.24,"cards_yellow":4.0,"cards_red":0.0,"avg_age":28.0,"games":4.0,"goals":8.0,"goals_against":5.0,"pens_made":0.0,"pens_att":0.0},"Jordan":{"possession":30.7,"goals_per90":1.0,"goals_per90_against":2.33,"shots_per90":8.0,"shots_per90_against":13.33,"shots_on_target_pct":37.5,"goals_per_shot":0.13,"cards_yellow":4.0,"cards_red":0.0,"avg_age":28.7,"games":3.0,"goals":3.0,"goals_against":7.0,"pens_made":0.0,"pens_att":0.0},"Korea Republic":{"possession":63.0,"goals_per90":0.67,"goals_per90_against":1.0,"shots_per90":10.67,"shots_per90_against":9.33,"shots_on_target_pct":34.4,"goals_per_shot":0.06,"cards_yellow":4.0,"cards_red":0.0,"avg_age":28.6,"games":3.0,"goals":2.0,"goals_against":3.0,"pens_made":0.0,"pens_att":0.0},"Mexico":{"possession":52.2,"goals_per90":2.0,"goals_per90_against":0.6,"shots_per90":14.0,"shots_per90_against":7.6,"shots_on_target_pct":30.0,"goals_per_shot":0.13,"cards_yellow":4.0,"cards_red":1.0,"avg_age":28.1,"games":5.0,"goals":10.0,"goals_against":3.0,"pens_made":1.0,"pens_att":1.0},"Morocco":{"possession":59.0,"goals_per90":1.58,"goals_per90_against":0.79,"shots_per90":10.89,"shots_per90_against":10.26,"shots_on_target_pct":37.7,"goals_per_shot":0.14,"cards_yellow":7.0,"cards_red":0.0,"avg_age":26.4,"games":6.0,"goals":10.0,"goals_against":5.0,"pens_made":0.0,"pens_att":0.0},"Netherlands":{"possession":53.3,"goals_per90":2.31,"goals_per90_against":1.15,"shots_per90":10.62,"shots_per90_against":10.85,"shots_on_target_pct":47.8,"goals_per_shot":0.22,"cards_yellow":3.0,"cards_red":0.0,"avg_age":27.6,"games":4.0,"goals":10.0,"goals_against":5.0,"pens_made":0.0,"pens_att":0.0},"New Zealand":{"possession":47.0,"goals_per90":1.33,"goals_per90_against":3.33,"shots_per90":10.33,"shots_per90_against":23.67,"shots_on_target_pct":48.4,"goals_per_shot":0.13,"cards_yellow":4.0,"cards_red":0.0,"avg_age":28.5,"games":3.0,"goals":4.0,"goals_against":10.0,"pens_made":0.0,"pens_att":0.0},"Norway":{"possession":53.0,"goals_per90":2.2,"goals_per90_against":1.8,"shots_per90":10.6,"shots_per90_against":14.6,"shots_on_target_pct":47.2,"goals_per_shot":0.21,"cards_yellow":2.0,"cards_red":0.0,"avg_age":27.5,"games":5.0,"goals":11.0,"goals_against":9.0,"pens_made":0.0,"pens_att":1.0},"Panama":{"possession":45.7,"goals_per90":0.0,"goals_per90_against":1.33,"shots_per90":10.67,"shots_per90_against":10.33,"shots_on_target_pct":21.9,"goals_per_shot":0.0,"cards_yellow":5.0,"cards_red":0.0,"avg_age":29.3,"games":3.0,"goals":0.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Paraguay":{"possession":30.0,"goals_per90":0.56,"goals_per90_against":0.94,"shots_per90":6.56,"shots_per90_against":18.0,"shots_on_target_pct":22.9,"goals_per_shot":0.09,"cards_yellow":9.0,"cards_red":1.0,"avg_age":28.5,"games":5.0,"goals":3.0,"goals_against":5.0,"pens_made":0.0,"pens_att":0.0},"Portugal":{"possession":58.4,"goals_per90":1.4,"goals_per90_against":0.6,"shots_per90":12.4,"shots_per90_against":13.4,"shots_on_target_pct":27.4,"goals_per_shot":0.1,"cards_yellow":7.0,"cards_red":0.0,"avg_age":28.2,"games":5.0,"goals":7.0,"goals_against":3.0,"pens_made":1.0,"pens_att":1.0},"Qatar":{"possession":33.0,"goals_per90":0.67,"goals_per90_against":2.67,"shots_per90":6.0,"shots_per90_against":24.0,"shots_on_target_pct":38.9,"goals_per_shot":0.11,"cards_yellow":4.0,"cards_red":2.0,"avg_age":30.2,"games":3.0,"goals":2.0,"goals_against":8.0,"pens_made":0.0,"pens_att":0.0},"Saudi Arabia":{"possession":38.3,"goals_per90":0.33,"goals_per90_against":1.33,"shots_per90":5.67,"shots_per90_against":21.33,"shots_on_target_pct":41.2,"goals_per_shot":0.06,"cards_yellow":6.0,"cards_red":0.0,"avg_age":29.0,"games":3.0,"goals":1.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Scotland":{"possession":44.3,"goals_per90":0.33,"goals_per90_against":1.33,"shots_per90":9.67,"shots_per90_against":16.0,"shots_on_target_pct":24.1,"goals_per_shot":0.03,"cards_yellow":5.0,"cards_red":0.0,"avg_age":29.6,"games":3.0,"goals":1.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Senegal":{"possession":55.3,"goals_per90":2.31,"goals_per90_against":2.08,"shots_per90":15.92,"shots_per90_against":11.31,"shots_on_target_pct":33.3,"goals_per_shot":0.14,"cards_yellow":3.0,"cards_red":0.0,"avg_age":29.0,"games":4.0,"goals":10.0,"goals_against":9.0,"pens_made":0.0,"pens_att":0.0},"South Africa":{"possession":48.0,"goals_per90":0.5,"goals_per90_against":1.0,"shots_per90":9.75,"shots_per90_against":12.5,"shots_on_target_pct":28.2,"goals_per_shot":0.03,"cards_yellow":5.0,"cards_red":2.0,"avg_age":27.1,"games":4.0,"goals":2.0,"goals_against":4.0,"pens_made":1.0,"pens_att":1.0},"Spain":{"possession":66.2,"goals_per90":1.67,"goals_per90_against":0.17,"shots_per90":18.33,"shots_per90_against":5.67,"shots_on_target_pct":36.4,"goals_per_shot":0.09,"cards_yellow":5.0,"cards_red":0.0,"avg_age":26.8,"games":6.0,"goals":10.0,"goals_against":1.0,"pens_made":0.0,"pens_att":0.0},"Sweden":{"possession":46.3,"goals_per90":1.75,"goals_per90_against":2.5,"shots_per90":12.0,"shots_per90_against":12.25,"shots_on_target_pct":47.9,"goals_per_shot":0.15,"cards_yellow":5.0,"cards_red":0.0,"avg_age":27.1,"games":4.0,"goals":7.0,"goals_against":10.0,"pens_made":0.0,"pens_att":0.0},"Switzerland":{"possession":56.6,"goals_per90":1.69,"goals_per90_against":0.56,"shots_per90":11.81,"shots_per90_against":9.0,"shots_on_target_pct":39.7,"goals_per_shot":0.11,"cards_yellow":6.0,"cards_red":0.0,"avg_age":29.8,"games":5.0,"goals":9.0,"goals_against":3.0,"pens_made":2.0,"pens_att":2.0},"Tunisia":{"possession":39.3,"goals_per90":0.67,"goals_per90_against":3.67,"shots_per90":6.0,"shots_per90_against":14.67,"shots_on_target_pct":33.3,"goals_per_shot":0.11,"cards_yellow":1.0,"cards_red":0.0,"avg_age":27.9,"games":3.0,"goals":2.0,"goals_against":11.0,"pens_made":0.0,"pens_att":0.0},"Turkey":{"possession":66.3,"goals_per90":1.0,"goals_per90_against":1.67,"shots_per90":23.67,"shots_per90_against":11.33,"shots_on_target_pct":22.5,"goals_per_shot":0.04,"cards_yellow":2.0,"cards_red":0.0,"avg_age":27.0,"games":3.0,"goals":3.0,"goals_against":5.0,"pens_made":0.0,"pens_att":0.0},"United States":{"possession":56.8,"goals_per90":1.8,"goals_per90_against":1.6,"shots_per90":11.8,"shots_per90_against":9.6,"shots_on_target_pct":32.2,"goals_per_shot":0.15,"cards_yellow":7.0,"cards_red":1.0,"avg_age":27.1,"games":5.0,"goals":9.0,"goals_against":8.0,"pens_made":0.0,"pens_att":0.0},"Uruguay":{"possession":55.0,"goals_per90":1.0,"goals_per90_against":1.33,"shots_per90":16.33,"shots_per90_against":8.33,"shots_on_target_pct":26.5,"goals_per_shot":0.06,"cards_yellow":5.0,"cards_red":1.0,"avg_age":29.1,"games":3.0,"goals":3.0,"goals_against":4.0,"pens_made":0.0,"pens_att":0.0},"Uzbekistan":{"possession":38.3,"goals_per90":0.67,"goals_per90_against":3.33,"shots_per90":6.0,"shots_per90_against":17.0,"shots_on_target_pct":27.8,"goals_per_shot":0.11,"cards_yellow":4.0,"cards_red":0.0,"avg_age":27.4,"games":3.0,"goals":2.0,"goals_against":10.0,"pens_made":0.0,"pens_att":0.0}},"discipline":[{"team":"Egypt","y":12,"r":0,"games":5},{"team":"Paraguay","y":9,"r":1,"games":5},{"team":"Canada","y":11,"r":0,"games":5},{"team":"Ecuador","y":8,"r":1,"games":4},{"team":"South Africa","y":5,"r":2,"games":4},{"team":"Bosnia and Herzegovina","y":7,"r":1,"games":4},{"team":"England","y":7,"r":1,"games":5},{"team":"Qatar","y":4,"r":2,"games":3},{"team":"United States","y":7,"r":1,"games":5},{"team":"Belgium","y":6,"r":1,"games":6},{"team":"Brazil","y":8,"r":0,"games":5},{"team":"Colombia","y":8,"r":0,"games":5}],"violent_matches":[{"round":"Group stage","date":"2026-06-11","gw":1,"home":"Mexico","away":"South Africa","hs":2,"as":0,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Wilton Sampaio","hf":"4-1-4-1","af":"5-3-2","stats":{"poss":[61,40],"shots":[16,3],"sot":[4,2],"saves":[2,2],"corners":[3,1],"fouls":[12,11],"yellow":[1,2],"red":[1,2],"crosses":[12,8],"inter":[8,7],"off":[1,1]}},{"round":"Round of 16","date":"2026-07-05","gw":0,"home":"Mexico","away":"England","hs":2,"as":3,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Alireza Faghani","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[67,33],"shots":[20,6],"sot":[5,5],"saves":[2,3],"corners":[12,2],"fouls":[14,7],"yellow":[2,4],"red":[0,1],"crosses":[49,4],"inter":[7,4],"off":[1,0]}},{"round":"Group stage","date":"2026-06-18","gw":2,"home":"Canada","away":"Qatar","hs":6,"as":0,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Cristián Garay","hf":"4-2-2-2","af":"4-3-2-1","stats":{"poss":[79,21],"shots":[32,2],"sot":[10,0],"saves":[0,4],"corners":[19,1],"fouls":[9,10],"yellow":[1,1],"red":[0,2],"crosses":[55,3],"inter":[6,11],"off":[1,1]}},{"round":"Round of 16","date":"2026-07-04","gw":0,"home":"Canada","away":"Morocco","hs":0,"as":3,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Michael Oliver","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[45,55],"shots":[10,5],"sot":[3,4],"saves":[1,3],"corners":[11,1],"fouls":[24,14],"yellow":[4,4],"red":[0,0],"crosses":[29,5],"inter":[5,8],"off":[2,3]}},{"round":"Group stage","date":"2026-06-19","gw":2,"home":"United States","away":"Australia","hs":2,"as":0,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Felix Zwayer","hf":"3-5-2","af":"5-4-1","stats":{"poss":[62,38],"shots":[10,5],"sot":[2,2],"saves":[2,1],"corners":[7,4],"fouls":[12,16],"yellow":[3,4],"red":[0,0],"crosses":[14,19],"inter":[21,7],"off":[1,0]}},{"round":"Group stage","date":"2026-06-26","gw":3,"home":"Senegal","away":"Iraq","hs":5,"as":0,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43036,"ref":"Anthony Taylor","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[69,31],"shots":[28,6],"sot":[12,1],"saves":[1,7],"corners":[12,3],"fouls":[10,11],"yellow":[2,2],"red":[0,1],"crosses":[25,6],"inter":[2,7],"off":[1,0]}}],"referees":[{"ref":"Felix Zwayer","games":2,"y":12,"r":0},{"ref":"Ma Ning","games":1,"y":6,"r":0},{"ref":"François Letexier","games":3,"y":13,"r":0},{"ref":"Michael Oliver","games":4,"y":17,"r":0},{"ref":"Alejandro Hernández","games":1,"y":4,"r":0},{"ref":"Jalal Jayed","games":2,"y":8,"r":0},{"ref":"Iván Barton","games":3,"y":11,"r":1},{"ref":"Ramon Abatti","games":2,"y":7,"r":0},{"ref":"Szymon Marciniak","games":2,"y":7,"r":0},{"ref":"Abdulrahman Ibrahim Al Jassim","games":2,"y":7,"r":0}],"venues":[{"stadium":"MetLife Stadium","city":"East Rutherford","games":7,"att":564523,"max":80663,"avg":80646},{"stadium":"AT&T Stadium","city":"Arlington","games":8,"att":561667,"max":70649,"avg":70208},{"stadium":"SoFi Stadium","city":"Inglewood","games":8,"att":561656,"max":70492,"avg":70207},{"stadium":"Reliant Stadium","city":"Houston","games":7,"att":480184,"max":68777,"avg":68598},{"stadium":"Mercedes-Benz Stadium","city":"Atlanta","games":7,"att":476277,"max":68239,"avg":68040},{"stadium":"Gillette Stadium","city":"Foxborough","games":7,"att":447283,"max":64146,"avg":63898},{"stadium":"Levi's Stadium","city":"Santa Clara","games":6,"att":411345,"max":68827,"avg":68558},{"stadium":"Lincoln Financial Field","city":"Philadelphia","games":6,"att":409894,"max":68324,"avg":68316},{"stadium":"Estadio Banorte","city":"Coyoacán","games":5,"att":404120,"max":80824,"avg":80824},{"stadium":"Lumen Field","city":"Seattle","games":6,"att":401400,"max":66925,"avg":66900},{"stadium":"BC Place Stadium","city":"Vancouver","games":7,"att":367479,"max":52497,"avg":52497},{"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","games":5,"att":344124,"max":69045,"avg":68825},{"stadium":"Hard Rock Stadium","city":"Miami Gardens","games":5,"att":320201,"max":64478,"avg":64040},{"stadium":"BMO Field","city":"Toronto","games":6,"att":258088,"max":43036,"avg":43015},{"stadium":"Estadio Akron","city":"Zapopan","games":4,"att":180930,"max":45522,"avg":45232},{"stadium":"Estadio BBVA","city":"Guadalupe","games":3,"att":153729,"max":51243,"avg":51243},{"stadium":"Estadio BBVA Bancomer","city":"Guadalupe","games":1,"att":50987,"max":50987,"avg":50987}],"formations":[{"f":"4-2-3-1","games":61,"w":30,"d":13,"l":18,"gf":101},{"f":"4-1-4-1","games":48,"w":22,"d":12,"l":14,"gf":79},{"f":"4-2-2-2","games":36,"w":15,"d":9,"l":12,"gf":54},{"f":"5-4-1","games":18,"w":2,"d":3,"l":13,"gf":11},{"f":"3-4-3","games":17,"w":2,"d":6,"l":9,"gf":15},{"f":"5-3-2","games":7,"w":0,"d":3,"l":4,"gf":3}],"ratings":{"Algeria":{"nota":5.8,"rank":35,"opp_rank_avg":27.2,"games":4,"comps":{"atk":5.0,"def":4.9,"prog":3.3,"cal":6.4,"ctrl":8.5,"disc":8.6,"age":8.7}},"Argentina":{"nota":7.7,"rank":2,"opp_rank_avg":46.4,"games":5,"comps":{"atk":9.2,"def":8.1,"prog":6.7,"cal":1.0,"ctrl":8.4,"disc":9.1,"age":4.6}},"Australia":{"nota":4.4,"rank":25,"opp_rank_avg":41.2,"games":4,"comps":{"atk":1.9,"def":7.8,"prog":3.3,"cal":2.4,"ctrl":3.0,"disc":6.9,"age":7.7}},"Austria":{"nota":4.7,"rank":24,"opp_rank_avg":26.0,"games":4,"comps":{"atk":4.4,"def":4.0,"prog":3.3,"cal":6.7,"ctrl":4.1,"disc":6.9,"age":5.8}},"Belgium":{"nota":7.5,"rank":8,"opp_rank_avg":38.5,"games":6,"comps":{"atk":7.4,"def":7.0,"prog":10.0,"cal":3.2,"ctrl":5.8,"disc":6.1,"age":5.0}},"Bosnia and Herzegovina":{"nota":3.9,"rank":64,"opp_rank_avg":75,"games":4,"comps":{"atk":4.4,"def":5.2,"prog":3.3,"cal":1.3,"ctrl":4.4,"disc":2.8,"age":10.0}},"Brazil":{"nota":7.2,"rank":5,"opp_rank_avg":36.4,"games":5,"comps":{"atk":7.7,"def":7.9,"prog":6.7,"cal":3.8,"ctrl":6.3,"disc":5.8,"age":5.0}},"Cape Verde":{"nota":3.7,"rank":70,"opp_rank_avg":75,"games":4,"comps":{"atk":3.4,"def":6.3,"prog":3.3,"cal":1.3,"ctrl":2.0,"disc":6.9,"age":1.9}},"Canada":{"nota":6.6,"rank":27,"opp_rank_avg":42.8,"games":5,"comps":{"atk":6.5,"def":7.9,"prog":6.7,"cal":2.0,"ctrl":6.7,"disc":3.8,"age":9.2}},"Colombia":{"nota":6.5,"rank":13,"opp_rank_avg":41.4,"games":5,"comps":{"atk":4.2,"def":9.5,"prog":6.7,"cal":2.4,"ctrl":7.7,"disc":5.8,"age":3.5}},"Congo DR":{"nota":5.6,"rank":56,"opp_rank_avg":19.5,"games":4,"comps":{"atk":4.1,"def":6.6,"prog":3.3,"cal":8.5,"ctrl":2.8,"disc":6.1,"age":5.8}},"Croatia":{"nota":5.8,"rank":10,"opp_rank_avg":28.2,"games":4,"comps":{"atk":6.6,"def":5.4,"prog":3.3,"cal":6.1,"ctrl":5.5,"disc":7.8,"age":5.0}},"Curaçao":{"nota":1.5,"rank":82,"opp_rank_avg":25.3,"games":3,"comps":{"atk":1.1,"def":1.4,"prog":0.0,"cal":6.9,"ctrl":0.6,"disc":3.3,"age":5.6}},"Czech Republic":{"nota":2.7,"rank":46,"opp_rank_avg":75,"games":3,"comps":{"atk":2.5,"def":4.5,"prog":0.0,"cal":1.3,"ctrl":3.5,"disc":10.0,"age":7.7}},"Côte d'Ivoire":{"nota":5.6,"rank":44,"opp_rank_avg":35.8,"games":4,"comps":{"atk":4.8,"def":7.1,"prog":3.3,"cal":4.0,"ctrl":5.5,"disc":7.8,"age":7.9}},"Ecuador":{"nota":4.7,"rank":23,"opp_rank_avg":37.2,"games":4,"comps":{"atk":2.8,"def":6.9,"prog":3.3,"cal":3.6,"ctrl":7.1,"disc":1.9,"age":9.6}},"Egypt":{"nota":5.8,"rank":32,"opp_rank_avg":39.6,"games":5,"comps":{"atk":5.5,"def":6.9,"prog":6.7,"cal":2.9,"ctrl":5.9,"disc":3.1,"age":4.8}},"England":{"nota":7.5,"rank":4,"opp_rank_avg":36.6,"games":5,"comps":{"atk":8.1,"def":7.4,"prog":6.7,"cal":3.7,"ctrl":7.8,"disc":4.4,"age":9.6}},"France":{"nota":10.0,"rank":3,"opp_rank_avg":33.2,"games":6,"comps":{"atk":10.0,"def":9.5,"prog":10.0,"cal":4.7,"ctrl":7.9,"disc":8.9,"age":9.2}},"Germany":{"nota":6.9,"rank":9,"opp_rank_avg":47.8,"games":4,"comps":{"atk":9.3,"def":7.7,"prog":3.3,"cal":0.6,"ctrl":9.6,"disc":8.6,"age":6.9}},"Ghana":{"nota":5.2,"rank":73,"opp_rank_avg":14.2,"games":4,"comps":{"atk":1.3,"def":7.1,"prog":3.3,"cal":10.0,"ctrl":1.7,"disc":6.1,"age":8.5}},"Haiti":{"nota":2.8,"rank":86,"opp_rank_avg":18.0,"games":3,"comps":{"atk":1.1,"def":3.4,"prog":0.0,"cal":9.0,"ctrl":3.5,"disc":3.3,"age":6.2}},"Iran":{"nota":2.8,"rank":21,"opp_rank_avg":75,"games":3,"comps":{"atk":3.9,"def":6.1,"prog":0.0,"cal":1.3,"ctrl":2.5,"disc":4.4,"age":0.0}},"Iraq":{"nota":1.6,"rank":58,"opp_rank_avg":17.0,"games":3,"comps":{"atk":0.3,"def":0.0,"prog":0.0,"cal":9.2,"ctrl":2.3,"disc":3.3,"age":9.8}},"Japan":{"nota":7.1,"rank":18,"opp_rank_avg":23.8,"games":4,"comps":{"atk":8.3,"def":6.8,"prog":3.3,"cal":7.3,"ctrl":4.5,"disc":7.8,"age":8.1}},"Jordan":{"nota":3.8,"rank":66,"opp_rank_avg":20.3,"games":3,"comps":{"atk":4.5,"def":4.0,"prog":0.0,"cal":8.3,"ctrl":0.2,"disc":6.7,"age":6.7}},"Korea Republic":{"nota":4.0,"rank":22,"opp_rank_avg":50.0,"games":3,"comps":{"atk":3.0,"def":7.6,"prog":0.0,"cal":0.0,"ctrl":9.1,"disc":6.7,"age":6.9}},"Mexico":{"nota":7.5,"rank":14,"opp_rank_avg":37.0,"games":5,"comps":{"atk":7.1,"def":8.7,"prog":6.7,"cal":3.6,"ctrl":6.1,"disc":6.4,"age":7.9}},"Morocco":{"nota":8.5,"rank":11,"opp_rank_avg":27.7,"games":6,"comps":{"atk":6.3,"def":7.8,"prog":10.0,"cal":6.2,"ctrl":8.0,"disc":7.2,"age":8.8}},"Netherlands":{"nota":7.6,"rank":7,"opp_rank_avg":28.0,"games":4,"comps":{"atk":9.5,"def":7.0,"prog":3.3,"cal":6.2,"ctrl":6.4,"disc":8.6,"age":8.8}},"New Zealand":{"nota":2.6,"rank":88,"opp_rank_avg":38.3,"games":3,"comps":{"atk":6.1,"def":0.0,"prog":0.0,"cal":3.3,"ctrl":4.7,"disc":6.7,"age":7.1}},"Norway":{"nota":7.7,"rank":29,"opp_rank_avg":25.8,"games":5,"comps":{"atk":9.1,"def":4.9,"prog":6.7,"cal":6.8,"ctrl":6.3,"disc":9.8,"age":9.0}},"Panama":{"nota":3.2,"rank":30,"opp_rank_avg":29.0,"games":3,"comps":{"atk":0.0,"def":6.7,"prog":0.0,"cal":5.9,"ctrl":4.3,"disc":5.6,"age":5.6}},"Paraguay":{"nota":4.7,"rank":42,"opp_rank_avg":25.6,"games":5,"comps":{"atk":2.0,"def":6.1,"prog":6.7,"cal":6.8,"ctrl":0.0,"disc":3.1,"age":7.1}},"Portugal":{"nota":7.2,"rank":6,"opp_rank_avg":27.0,"games":5,"comps":{"atk":5.0,"def":7.7,"prog":6.7,"cal":6.4,"ctrl":7.8,"disc":6.4,"age":7.7}},"Qatar":{"nota":1.0,"rank":50,"opp_rank_avg":39.7,"games":3,"comps":{"atk":3.3,"def":1.3,"prog":0.0,"cal":2.9,"ctrl":0.8,"disc":0.0,"age":3.8}},"Saudi Arabia":{"nota":2.8,"rank":60,"opp_rank_avg":30.3,"games":3,"comps":{"atk":2.0,"def":4.6,"prog":0.0,"cal":5.5,"ctrl":2.3,"disc":4.4,"age":6.2}},"Scotland":{"nota":2.9,"rank":38,"opp_rank_avg":34.0,"games":3,"comps":{"atk":1.1,"def":5.6,"prog":0.0,"cal":4.5,"ctrl":3.9,"disc":5.6,"age":5.0}},"Senegal":{"nota":6.7,"rank":19,"opp_rank_avg":24.5,"games":4,"comps":{"atk":8.4,"def":4.9,"prog":3.3,"cal":7.1,"ctrl":7.0,"disc":8.6,"age":6.2}},"South Africa":{"nota":4.3,"rank":61,"opp_rank_avg":34.5,"games":4,"comps":{"atk":1.8,"def":7.0,"prog":3.3,"cal":4.3,"ctrl":5.0,"disc":1.9,"age":9.8}},"Spain":{"nota":9.5,"rank":1,"opp_rank_avg":31.3,"games":6,"comps":{"atk":6.7,"def":10.0,"prog":10.0,"cal":5.2,"ctrl":10.0,"disc":8.3,"age":9.6}},"Sweden":{"nota":6.2,"rank":40,"opp_rank_avg":17.8,"games":4,"comps":{"atk":7.5,"def":3.9,"prog":3.3,"cal":9.0,"ctrl":4.5,"disc":6.9,"age":9.8}},"Switzerland":{"nota":7.1,"rank":17,"opp_rank_avg":40.0,"games":5,"comps":{"atk":6.4,"def":8.6,"prog":6.7,"cal":2.8,"ctrl":7.3,"disc":7.1,"age":4.6}},"Tunisia":{"nota":2.9,"rank":43,"opp_rank_avg":21.7,"games":3,"comps":{"atk":3.0,"def":1.0,"prog":0.0,"cal":7.9,"ctrl":2.6,"disc":10.0,"age":8.3}},"Turkey":{"nota":4.5,"rank":26,"opp_rank_avg":75,"games":3,"comps":{"atk":4.4,"def":5.8,"prog":0.0,"cal":1.3,"ctrl":10.0,"disc":8.9,"age":10.0}},"United States":{"nota":6.2,"rank":16,"opp_rank_avg":45.0,"games":5,"comps":{"atk":6.7,"def":6.3,"prog":6.7,"cal":1.4,"ctrl":7.4,"disc":4.4,"age":9.8}},"Uruguay":{"nota":3.7,"rank":15,"opp_rank_avg":45.3,"games":3,"comps":{"atk":4.0,"def":7.1,"prog":0.0,"cal":1.3,"ctrl":6.9,"disc":2.2,"age":6.0}},"Uzbekistan":{"nota":2.5,"rank":55,"opp_rank_avg":25.0,"games":3,"comps":{"atk":2.7,"def":1.2,"prog":0.0,"cal":7.0,"ctrl":2.3,"disc":6.7,"age":9.2}}},"rating_weights":{"atk":0.26,"def":0.24,"prog":0.2,"cal":0.14,"ctrl":0.08,"disc":0.05,"age":0.03},"rating_table":[{"team":"France","nota":10.0,"rank":3,"opp_rank_avg":33.2,"games":6},{"team":"Spain","nota":9.5,"rank":1,"opp_rank_avg":31.3,"games":6},{"team":"Morocco","nota":8.5,"rank":11,"opp_rank_avg":27.7,"games":6},{"team":"Argentina","nota":7.7,"rank":2,"opp_rank_avg":46.4,"games":5},{"team":"Norway","nota":7.7,"rank":29,"opp_rank_avg":25.8,"games":5},{"team":"Netherlands","nota":7.6,"rank":7,"opp_rank_avg":28.0,"games":4},{"team":"Belgium","nota":7.5,"rank":8,"opp_rank_avg":38.5,"games":6},{"team":"England","nota":7.5,"rank":4,"opp_rank_avg":36.6,"games":5},{"team":"Mexico","nota":7.5,"rank":14,"opp_rank_avg":37.0,"games":5},{"team":"Brazil","nota":7.2,"rank":5,"opp_rank_avg":36.4,"games":5},{"team":"Portugal","nota":7.2,"rank":6,"opp_rank_avg":27.0,"games":5},{"team":"Japan","nota":7.1,"rank":18,"opp_rank_avg":23.8,"games":4},{"team":"Switzerland","nota":7.1,"rank":17,"opp_rank_avg":40.0,"games":5},{"team":"Germany","nota":6.9,"rank":9,"opp_rank_avg":47.8,"games":4},{"team":"Senegal","nota":6.7,"rank":19,"opp_rank_avg":24.5,"games":4},{"team":"Canada","nota":6.6,"rank":27,"opp_rank_avg":42.8,"games":5},{"team":"Colombia","nota":6.5,"rank":13,"opp_rank_avg":41.4,"games":5},{"team":"Sweden","nota":6.2,"rank":40,"opp_rank_avg":17.8,"games":4},{"team":"United States","nota":6.2,"rank":16,"opp_rank_avg":45.0,"games":5},{"team":"Algeria","nota":5.8,"rank":35,"opp_rank_avg":27.2,"games":4},{"team":"Croatia","nota":5.8,"rank":10,"opp_rank_avg":28.2,"games":4},{"team":"Egypt","nota":5.8,"rank":32,"opp_rank_avg":39.6,"games":5},{"team":"Congo DR","nota":5.6,"rank":56,"opp_rank_avg":19.5,"games":4},{"team":"Côte d'Ivoire","nota":5.6,"rank":44,"opp_rank_avg":35.8,"games":4},{"team":"Ghana","nota":5.2,"rank":73,"opp_rank_avg":14.2,"games":4},{"team":"Austria","nota":4.7,"rank":24,"opp_rank_avg":26.0,"games":4},{"team":"Ecuador","nota":4.7,"rank":23,"opp_rank_avg":37.2,"games":4},{"team":"Paraguay","nota":4.7,"rank":42,"opp_rank_avg":25.6,"games":5},{"team":"Turkey","nota":4.5,"rank":26,"opp_rank_avg":75,"games":3},{"team":"Australia","nota":4.4,"rank":25,"opp_rank_avg":41.2,"games":4},{"team":"South Africa","nota":4.3,"rank":61,"opp_rank_avg":34.5,"games":4},{"team":"Korea Republic","nota":4.0,"rank":22,"opp_rank_avg":50.0,"games":3},{"team":"Bosnia and Herzegovina","nota":3.9,"rank":64,"opp_rank_avg":75,"games":4},{"team":"Jordan","nota":3.8,"rank":66,"opp_rank_avg":20.3,"games":3},{"team":"Cape Verde","nota":3.7,"rank":70,"opp_rank_avg":75,"games":4},{"team":"Uruguay","nota":3.7,"rank":15,"opp_rank_avg":45.3,"games":3},{"team":"Panama","nota":3.2,"rank":30,"opp_rank_avg":29.0,"games":3},{"team":"Scotland","nota":2.9,"rank":38,"opp_rank_avg":34.0,"games":3},{"team":"Tunisia","nota":2.9,"rank":43,"opp_rank_avg":21.7,"games":3},{"team":"Haiti","nota":2.8,"rank":86,"opp_rank_avg":18.0,"games":3},{"team":"Iran","nota":2.8,"rank":21,"opp_rank_avg":75,"games":3},{"team":"Saudi Arabia","nota":2.8,"rank":60,"opp_rank_avg":30.3,"games":3},{"team":"Czech Republic","nota":2.7,"rank":46,"opp_rank_avg":75,"games":3},{"team":"New Zealand","nota":2.6,"rank":88,"opp_rank_avg":38.3,"games":3},{"team":"Uzbekistan","nota":2.5,"rank":55,"opp_rank_avg":25.0,"games":3},{"team":"Iraq","nota":1.6,"rank":58,"opp_rank_avg":17.0,"games":3},{"team":"Curaçao","nota":1.5,"rank":82,"opp_rank_avg":25.3,"games":3},{"team":"Qatar","nota":1.0,"rank":50,"opp_rank_avg":39.7,"games":3}],"brazil":[{"round":"Group stage","date":"2026-06-13","gw":1,"home":"Brazil","away":"Morocco","hs":1,"as":1,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Slavko Vinčič","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[51,49],"shots":[12,14],"sot":[5,3],"saves":[2,4],"corners":[6,2],"fouls":[16,14],"yellow":[2,0],"red":[0,0],"crosses":[16,15],"inter":[5,4],"off":[0,1]}},{"round":"Group stage","date":"2026-06-19","gw":2,"home":"Brazil","away":"Haiti","hs":3,"as":0,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Alejandro Hernández","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[57,43],"shots":[8,7],"sot":[5,3],"saves":[3,2],"corners":[4,4],"fouls":[13,14],"yellow":[1,3],"red":[0,0],"crosses":[9,11],"inter":[10,9],"off":[8,4]}},{"round":"Group stage","date":"2026-06-24","gw":3,"home":"Scotland","away":"Brazil","hs":0,"as":3,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":64478,"ref":"César Arturo Ramos","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[46,54],"shots":[14,21],"sot":[5,9],"saves":[5,5],"corners":[7,6],"fouls":[10,11],"yellow":[1,2],"red":[0,0],"crosses":[23,12],"inter":[2,13],"off":[0,1]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Brazil","away":"Japan","hs":2,"as":1,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Maurizio Mariani","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[69,31],"shots":[19,5],"sot":[7,2],"saves":[1,4],"corners":[6,2],"fouls":[4,13],"yellow":[2,3],"red":[0,0],"crosses":[40,10],"inter":[9,5],"off":[1,0]}},{"round":"Round of 16","date":"2026-07-05","gw":0,"home":"Brazil","away":"Norway","hs":1,"as":2,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Ismail Elfath","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[34,66],"shots":[14,9],"sot":[4,5],"saves":[3,3],"corners":[5,5],"fouls":[7,6],"yellow":[1,0],"red":[0,0],"crosses":[16,13],"inter":[11,6],"off":[1,1]}}],"bracket":{"Round of 32":[{"round":"Round of 32","date":"2026-06-28","gw":0,"home":"South Africa","away":"Canada","hs":0,"as":1,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":69237,"ref":"João Pinheiro","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[58,42],"shots":[6,12],"sot":[1,7],"saves":[5,1],"corners":[1,4],"fouls":[10,16],"yellow":[0,2],"red":[0,0],"crosses":[8,12],"inter":[16,8],"off":[1,0]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Brazil","away":"Japan","hs":2,"as":1,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Maurizio Mariani","hf":"4-1-4-1","af":"3-4-3","stats":{"poss":[69,31],"shots":[19,5],"sot":[7,2],"saves":[1,4],"corners":[6,2],"fouls":[4,13],"yellow":[2,3],"red":[0,0],"crosses":[40,10],"inter":[9,5],"off":[1,0]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Germany","away":"Paraguay","hs":0,"as":0,"pens":[3,4],"stadium":"Gillette Stadium","city":"Foxborough","att":63945,"ref":"Jalal Jayed","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[75,25],"shots":[21,7],"sot":[6,3],"saves":[2,6],"corners":[16,6],"fouls":[18,12],"yellow":[3,3],"red":[0,0],"crosses":[56,21],"inter":[4,13],"off":[4,1]}},{"round":"Round of 32","date":"2026-06-29","gw":0,"home":"Netherlands","away":"Morocco","hs":0,"as":0,"pens":[2,3],"stadium":"Estadio BBVA","city":"Guadalupe","att":51243,"ref":"Wilton Sampaio","hf":"3-4-3","af":"4-2-3-1","stats":{"poss":[30,70],"shots":[6,11],"sot":[2,5],"saves":[5,1],"corners":[5,8],"fouls":[18,15],"yellow":[0,1],"red":[0,0],"crosses":[10,18],"inter":[11,10],"off":[3,0]}},{"round":"Round of 32","date":"2026-06-30","gw":0,"home":"Côte d'Ivoire","away":"Norway","hs":1,"as":2,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":69665,"ref":"Jesús Valenzuela","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[47,53],"shots":[14,9],"sot":[5,4],"saves":[1,4],"corners":[14,3],"fouls":[6,7],"yellow":[0,1],"red":[0,0],"crosses":[29,10],"inter":[4,6],"off":[2,2]}},{"round":"Round of 32","date":"2026-06-30","gw":0,"home":"France","away":"Sweden","hs":3,"as":0,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Danny Makkelie","hf":"4-2-3-1","af":"4-2-2-2","stats":{"poss":[61,39],"shots":[25,8],"sot":[12,3],"saves":[3,9],"corners":[9,1],"fouls":[14,10],"yellow":[0,0],"red":[0,0],"crosses":[16,10],"inter":[5,12],"off":[3,1]}},{"round":"Round of 32","date":"2026-06-30","gw":0,"home":"Mexico","away":"Ecuador","hs":2,"as":0,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Slavko Vinčič","hf":"4-1-4-1","af":"4-2-2-2","stats":{"poss":[43,57],"shots":[15,7],"sot":[3,1],"saves":[1,1],"corners":[3,8],"fouls":[10,14],"yellow":[0,3],"red":[0,1],"crosses":[7,25],"inter":[7,6],"off":[0,1]}},{"round":"Round of 32","date":"2026-07-01","gw":0,"home":"England","away":"Congo DR","hs":2,"as":1,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"Adham Makhadmeh","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[60,40],"shots":[16,7],"sot":[7,2],"saves":[1,5],"corners":[5,3],"fouls":[10,12],"yellow":[1,1],"red":[0,0],"crosses":[43,13],"inter":[7,3],"off":[0,4]}},{"round":"Round of 32","date":"2026-07-01","gw":0,"home":"Belgium","away":"Senegal","hs":3,"as":2,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Said Martínez","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[52,48],"shots":[19,19],"sot":[5,5],"saves":[3,3],"corners":[4,2],"fouls":[22,12],"yellow":[2,1],"red":[0,0],"crosses":[26,22],"inter":[8,11],"off":[2,2]}},{"round":"Round of 32","date":"2026-07-01","gw":0,"home":"United States","away":"Bosnia–Herz","hs":2,"as":0,"pens":null,"stadium":"Levi's Stadium","city":"Santa Clara","att":68827,"ref":"Raphael Claus","hf":"4-1-4-1","af":"5-3-2","stats":{"poss":[48,52],"shots":[8,10],"sot":[2,3],"saves":[3,0],"corners":[4,3],"fouls":[7,13],"yellow":[0,2],"red":[1,0],"crosses":[14,13],"inter":[8,8],"off":[3,0]}},{"round":"Round of 32","date":"2026-07-02","gw":0,"home":"Spain","away":"Austria","hs":3,"as":0,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70492,"ref":"Glenn Nyberg","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[65,36],"shots":[23,5],"sot":[10,0],"saves":[0,6],"corners":[9,0],"fouls":[8,15],"yellow":[0,1],"red":[0,0],"crosses":[22,13],"inter":[6,7],"off":[2,5]}},{"round":"Round of 32","date":"2026-07-02","gw":0,"home":"Portugal","away":"Croatia","hs":2,"as":1,"pens":null,"stadium":"BMO Field","city":"Toronto","att":43036,"ref":"Espen Eskås","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[61,40],"shots":[15,13],"sot":[3,6],"saves":[5,2],"corners":[9,5],"fouls":[6,12],"yellow":[1,2],"red":[0,0],"crosses":[20,22],"inter":[5,9],"off":[1,4]}},{"round":"Round of 32","date":"2026-07-02","gw":0,"home":"Switzerland","away":"Algeria","hs":2,"as":0,"pens":null,"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Yael Falcón","hf":"4-2-3-1","af":"4-1-4-1","stats":{"poss":[45,55],"shots":[11,8],"sot":[5,2],"saves":[2,2],"corners":[4,2],"fouls":[10,12],"yellow":[0,2],"red":[0,0],"crosses":[14,6],"inter":[17,9],"off":[0,2]}},{"round":"Round of 32","date":"2026-07-03","gw":0,"home":"Australia","away":"Egypt","hs":0,"as":0,"pens":[2,4],"stadium":"AT&T Stadium","city":"Arlington","att":70244,"ref":"Gustavo Tejera","hf":"3-4-3","af":"4-2-2-2","stats":{"poss":[42,58],"shots":[16,14],"sot":[1,3],"saves":[3,1],"corners":[4,7],"fouls":[12,14],"yellow":[0,2],"red":[0,0],"crosses":[24,24],"inter":[9,8],"off":[0,3]}},{"round":"Round of 32","date":"2026-07-03","gw":0,"home":"Argentina","away":"Cabo Verde","hs":3,"as":2,"pens":null,"stadium":"Hard Rock Stadium","city":"Miami Gardens","att":64478,"ref":"Drew Fischer","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[64,37],"shots":[22,16],"sot":[10,5],"saves":[3,8],"corners":[8,8],"fouls":[13,12],"yellow":[1,1],"red":[0,0],"crosses":[15,21],"inter":[9,10],"off":[3,2]}},{"round":"Round of 32","date":"2026-07-03","gw":0,"home":"Colombia","away":"Ghana","hs":1,"as":0,"pens":null,"stadium":"GEHA Field at Arrowhead Stadium","city":"Kansas City","att":69045,"ref":"Clément Turpin","hf":"4-1-4-1","af":"4-1-4-1","stats":{"poss":[61,39],"shots":[20,8],"sot":[8,0],"saves":[0,7],"corners":[3,2],"fouls":[14,10],"yellow":[2,3],"red":[0,0],"crosses":[15,15],"inter":[5,5],"off":[2,0]}}],"Round of 16":[{"round":"Round of 16","date":"2026-07-04","gw":0,"home":"Canada","away":"Morocco","hs":0,"as":3,"pens":null,"stadium":"Reliant Stadium","city":"Houston","att":68777,"ref":"Michael Oliver","hf":"4-2-2-2","af":"4-2-3-1","stats":{"poss":[45,55],"shots":[10,5],"sot":[3,4],"saves":[1,3],"corners":[11,1],"fouls":[24,14],"yellow":[4,4],"red":[0,0],"crosses":[29,5],"inter":[5,8],"off":[2,3]}},{"round":"Round of 16","date":"2026-07-04","gw":0,"home":"Paraguay","away":"France","hs":0,"as":1,"pens":null,"stadium":"Lincoln Financial Field","city":"Philadelphia","att":68324,"ref":"Ilgiz Tantashev","hf":"5-4-1","af":"4-2-3-1","stats":{"poss":[24,76],"shots":[5,15],"sot":[0,5],"saves":[4,0],"corners":[2,12],"fouls":[13,11],"yellow":[0,3],"red":[0,0],"crosses":[4,23],"inter":[14,10],"off":[0,0]}},{"round":"Round of 16","date":"2026-07-05","gw":0,"home":"Brazil","away":"Norway","hs":1,"as":2,"pens":null,"stadium":"MetLife Stadium","city":"East Rutherford","att":80663,"ref":"Ismail Elfath","hf":"4-2-2-2","af":"4-1-4-1","stats":{"poss":[34,66],"shots":[14,9],"sot":[4,5],"saves":[3,3],"corners":[5,5],"fouls":[7,6],"yellow":[1,0],"red":[0,0],"crosses":[16,13],"inter":[11,6],"off":[1,1]}},{"round":"Round of 16","date":"2026-07-05","gw":0,"home":"Mexico","away":"England","hs":2,"as":3,"pens":null,"stadium":"Estadio Banorte","city":"Coyoacán","att":80824,"ref":"Alireza Faghani","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[67,33],"shots":[20,6],"sot":[5,5],"saves":[2,3],"corners":[12,2],"fouls":[14,7],"yellow":[2,4],"red":[0,1],"crosses":[49,4],"inter":[7,4],"off":[1,0]}},{"round":"Round of 16","date":"2026-07-06","gw":0,"home":"Portugal","away":"Spain","hs":0,"as":1,"pens":null,"stadium":"AT&T Stadium","city":"Arlington","att":70649,"ref":"Anthony Taylor","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[45,56],"shots":[10,15],"sot":[2,6],"saves":[5,2],"corners":[3,7],"fouls":[9,13],"yellow":[2,1],"red":[0,0],"crosses":[13,16],"inter":[7,5],"off":[2,1]}},{"round":"Round of 16","date":"2026-07-06","gw":0,"home":"United States","away":"Belgium","hs":1,"as":4,"pens":null,"stadium":"Lumen Field","city":"Seattle","att":66925,"ref":"Adham Makhadmeh","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[56,44],"shots":[7,15],"sot":[2,7],"saves":[3,1],"corners":[3,5],"fouls":[11,9],"yellow":[2,0],"red":[0,0],"crosses":[11,14],"inter":[9,9],"off":[0,1]}},{"round":"Round of 16","date":"2026-07-07","gw":0,"home":"Argentina","away":"Egypt","hs":3,"as":2,"pens":null,"stadium":"Mercedes-Benz Stadium","city":"Atlanta","att":68239,"ref":"François Letexier","hf":"4-1-3-2","af":"4-2-2-2","stats":{"poss":[64,36],"shots":[19,5],"sot":[7,2],"saves":[0,3],"corners":[6,1],"fouls":[13,11],"yellow":[0,5],"red":[0,0],"crosses":[26,8],"inter":[7,10],"off":[3,0]}},{"round":"Round of 16","date":"2026-07-07","gw":0,"home":"Switzerland","away":"Colombia","hs":0,"as":0,"pens":[4,3],"stadium":"BC Place Stadium","city":"Vancouver","att":52497,"ref":"Iván Barton","hf":"4-1-4-1","af":"4-2-3-1","stats":{"poss":[53,47],"shots":[7,15],"sot":[2,3],"saves":[3,2],"corners":[3,7],"fouls":[22,21],"yellow":[3,2],"red":[0,0],"crosses":[15,18],"inter":[13,12],"off":[5,4]}}],"Quarter-finals":[{"round":"Quarter-finals","date":"2026-07-09","gw":0,"home":"France","away":"Morocco","hs":2,"as":0,"pens":null,"stadium":"Gillette Stadium","city":"Foxborough","att":63811,"ref":"Facundo Tello","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[48,52],"shots":[22,5],"sot":[8,1],"saves":[1,5],"corners":[5,5],"fouls":[10,13],"yellow":[0,1],"red":[0,0],"crosses":[12,13],"inter":[11,6],"off":[0,0]}},{"round":"Quarter-finals","date":"2026-07-10","gw":0,"home":"Spain","away":"Belgium","hs":2,"as":1,"pens":null,"stadium":"SoFi Stadium","city":"Inglewood","att":70492,"ref":"Michael Oliver","hf":"4-2-3-1","af":"4-2-3-1","stats":{"poss":[68,32],"shots":[17,5],"sot":[8,2],"saves":[1,6],"corners":[5,1],"fouls":[13,18],"yellow":[2,2],"red":[0,0],"crosses":[19,10],"inter":[4,10],"off":[3,1]}}],"Semi-finals":[],"Final":[]}};
+
+const $ = (s) => document.querySelector(s);
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const C = { accent: css('--accent'), blue: css('--blue'), red: css('--red'), gold: css('--gold'),
+  violet: css('--violet'), ink: css('--ink'), ink2: css('--ink-2'), muted: css('--muted'),
+  grid: css('--grid'), baseline: css('--baseline'), surface: css('--surface') };
+const fmt = (n) => n.toLocaleString('pt-BR');
+const pt1 = (n) => String(n).replace('.', ',');
+
+const PT = {
+  'Brazil':'Brasil','Germany':'Alemanha','Italy':'Itália','France':'França','Argentina':'Argentina',
+  'Uruguay':'Uruguai','England':'Inglaterra','Spain':'Espanha','Netherlands':'Holanda','Sweden':'Suécia',
+  'Mexico':'México','United States':'Estados Unidos','Belgium':'Bélgica','Switzerland':'Suíça',
+  'Poland':'Polônia','Austria':'Áustria','Portugal':'Portugal','Chile':'Chile','Paraguay':'Paraguai',
+  'Colombia':'Colômbia','Ecuador':'Equador','Japan':'Japão','South Korea':'Coreia do Sul','Korea Republic':'Coreia do Sul',
+  'Saudi Arabia':'Arábia Saudita','Iran':'Irã','IR Iran':'Irã','Cameroon':'Camarões','Nigeria':'Nigéria',
+  'Senegal':'Senegal','Ghana':'Gana','Morocco':'Marrocos','Tunisia':'Tunísia','Algeria':'Argélia',
+  'Egypt':'Egito','South Africa':'África do Sul','Croatia':'Croácia','Serbia':'Sérvia','Denmark':'Dinamarca',
+  'Norway':'Noruega','Scotland':'Escócia','Wales':'País de Gales','Ireland':'Irlanda','Greece':'Grécia',
+  'Turkey':'Turquia','Türkiye':'Turquia','Romania':'Romênia','Ukraine':'Ucrânia','Slovakia':'Eslováquia',
+  'Slovenia':'Eslovênia','Czech Republic':'Rep. Tcheca','Czechia':'Rep. Tcheca','Australia':'Austrália',
+  'New Zealand':'Nova Zelândia','Costa Rica':'Costa Rica','Honduras':'Honduras','Jamaica':'Jamaica',
+  'Panama':'Panamá','Canada':'Canadá','Haiti':'Haiti','Iceland':'Islândia','Qatar':'Catar',
+  'United Arab Emirates':'Emirados Árabes','Uzbekistan':'Uzbequistão','Jordan':'Jordânia',
+  'Cape Verde':'Cabo Verde','Ivory Coast':'Costa do Marfim','Côte d’Ivoire':'Costa do Marfim',
+  'Curacao':'Curaçao','Curaçao':'Curaçao','Bolivia':'Bolívia','Venezuela':'Venezuela','Peru':'Peru'
+};
+const pt = (n) => PT[n] || n;
+const RD = { 'Group stage': 'Fase de grupos', 'Round of 32': '16-avos', 'Round of 16': 'Oitavas',
+             'Quarter-finals': 'Quartas', 'Semi-finals': 'Semifinais', 'Final': 'Final' };
+
+const tip = $('#tip');
+function showTip(html, ev) {
+  tip.innerHTML = html; tip.style.display = 'block';
+  const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - pad;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - pad;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+function hideTip() { tip.style.display = 'none'; }
+const NS = 'http://www.w3.org/2000/svg';
+function el(name, attrs, parent) {
+  const e = document.createElementNS(NS, name);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function txt(s, x, y, str, attrs) {
+  const t = el('text', Object.assign({ x, y, fill: C.muted, 'font-size': 12 }, attrs || {}), s);
+  t.textContent = str; return t;
+}
+function svgRoot(vw, vh, container) {
+  const s = el('svg', { viewBox: `0 0 ${vw} ${vh}`, width: '100%' });
+  container.appendChild(s); return s;
+}
+function roundBarH(x, y, w, h, r) {
+  r = Math.min(r, w);
+  return `M${x},${y} h${w - r} a${r},${r} 0 0 1 ${r},${r} v${h - 2*r} a${r},${r} 0 0 1 ${-r},${r} h${-(w - r)} z`;
+}
+function scoreStr(x) {
+  let s = `${x.hs}–${x['as']}`;
+  if (x.pens) s += ` (${x.pens[0]}–${x.pens[1]} pên.)`;
+  return s;
+}
+const dateBr = (d) => { const [y, m2, dd] = d.split('-'); return `${dd}/${m2}`; };
+
+/* ============ hero ============ */
+(function hero() {
+  const M = DATA.meta;
+  $('#hero-goals-lbl').textContent = `gols em ${M.games} partidas`;
+  $('#status-pill').textContent = `⏳ Torneio em andamento — retrato dos dados até ${dateBr(M.last_date)}/2026 (quartas de final)`;
+  $('#foot-date').textContent = dateBr(M.last_date) + '/2026';
+  const tiles = [
+    [M.teams, 'seleções (recorde)'],
+    [pt1(M.gpm), 'gols por jogo'],
+    [(M.att_total / 1e6).toFixed(1).replace('.', ',') + ' mi', 'torcedores nos estádios'],
+    [fmt(M.att_avg), 'público médio'],
+    [fmt(M.players), 'jogadores'],
+  ];
+  $('#hero-tiles').innerHTML = tiles.map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  const target = M.goals, elx = $('#hero-goals');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { elx.textContent = fmt(target); return; }
+  const t0 = performance.now(), dur = 1600;
+  (function tick(t) {
+    const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    elx.textContent = fmt(Math.round(target * e));
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+  setTimeout(() => { elx.textContent = fmt(target); }, dur + 400); // garantia se o rAF for suprimido
+})();
+
+/* ============ mata-mata ============ */
+(function bracket() {
+  const B = DATA.bracket;
+  const slots = { 'Round of 32': 16, 'Round of 16': 8, 'Quarter-finals': 4, 'Semi-finals': 2, 'Final': 1 };
+  const box = $('#bracket');
+  box.innerHTML = Object.keys(slots).map(rd => {
+    const games = B[rd] || [];
+    const cards = games.map(x => {
+      const hw = x.hs > x['as'] || (x.pens && x.pens[0] > x.pens[1]);
+      return `<div class="bk-match" data-key="${x.date}|${x.home}|${x.away}">
+        <div class="row ${hw ? 'win' : 'lose'}"><span>${pt(x.home)}</span><span>${x.hs}${x.pens ? `<span class="pens"> (${x.pens[0]})</span>` : ''}</span></div>
+        <div class="row ${hw ? 'lose' : 'win'}"><span>${pt(x.away)}</span><span>${x['as']}${x.pens ? `<span class="pens"> (${x.pens[1]})</span>` : ''}</span></div>
+        <div class="meta">${dateBr(x.date)} · ${x.city}</div>
+      </div>`;
+    }).join('');
+    const tbd = Array(Math.max(0, slots[rd] - games.length)).fill(`<div class="bk-tbd">a definir</div>`).join('');
+    return `<div class="col"><h4>${RD[rd]}</h4>${cards}${tbd}</div>`;
+  }).join('');
+  box.addEventListener('click', (e) => {
+    const card = e.target.closest('.bk-match');
+    if (!card) return;
+    openMatch(card.dataset.key);
+    document.getElementById('jogos').scrollIntoView();
+  });
+})();
+
+/* ============ artilharia ============ */
+(function scorers() {
+  const S = DATA.scorers;
+  const top = S[0];
+  $('#chuteira-lede').innerHTML = `Aos 39 anos, <strong>Lionel Messi</strong> divide a ponta com <strong>Kylian Mbappé</strong> — e com a melhor média por 90 minutos do pelotão da frente. Erling Haaland vem logo atrás, depois de atropelar o Brasil nas oitavas.`;
+  const box = $('#scorers-chart');
+  const rowH = 33, mL = 190, mR = 56, W = 520, data = S.slice(0, 12);
+  const H = data.length * rowH + 8;
+  const s = svgRoot(W, H, box);
+  const max = data[0].goals;
+  const xw = (W - mL - mR) / max;
+  data.forEach((d, i) => {
+    const y = i * rowH + 6, bh = 18;
+    txt(s, mL - 10, y + bh - 4, `${d.player}`, { 'text-anchor': 'end', fill: C.ink2, 'font-size': 13 });
+    const bw = Math.max(d.goals * xw, 2);
+    const bar = el('path', { d: roundBarH(mL, y, bw, bh, 4), fill: i < 2 ? C.gold : C.accent }, s);
+    txt(s, mL + bw + 8, y + bh - 4, d.goals, { fill: C.ink, 'font-size': 13, 'font-weight': 700 });
+    bar.addEventListener('mousemove', (ev) => showTip(
+      `<b>${d.player}</b> (${pt(d.team)})<br>${d.goals} gols · ${d.assists} assist. · ${d.min} min<br>${pt1(d.per90)} gols/90 · ${d.shots} chutes`, ev));
+    bar.addEventListener('mouseleave', hideTip);
+  });
+  $('#assisters').innerHTML = DATA.assisters.map(a =>
+    `<li><span><b>${a.player}</b> · ${pt(a.team)}</span><span class="v">${a.assists} assist.</span></li>`).join('');
+})();
+
+/* ============ explorador ============ */
+const matchKey = (x) => `${x.date}|${x.home}|${x.away}`;
+let selectedKey = null;
+function openMatch(key) {
+  selectedKey = key;
+  const x = DATA.matches.find(mm => matchKey(mm) === key);
+  if (!x) return;
+  document.querySelectorAll('.match-row').forEach(r => r.classList.toggle('sel', r.dataset.key === key));
+  const D = $('#match-detail');
+  D.style.display = '';
+  const rows = [
+    ['poss', 'posse (%)'], ['shots', 'finalizações'], ['sot', 'no alvo'], ['saves', 'defesas'],
+    ['corners', 'escanteios'], ['crosses', 'cruzamentos'], ['inter', 'interceptações'],
+    ['fouls', 'faltas'], ['yellow', 'amarelos'], ['red', 'vermelhos'], ['off', 'impedimentos'],
+  ];
+  D.innerHTML = `
+    <div class="detail-head">
+      <span class="tm h">${pt(x.home)}</span>
+      <span class="sc">${x.hs}–${x['as']}</span>
+      <span class="tm a">${pt(x.away)}</span>
+    </div>
+    ${x.pens ? `<div class="detail-sub" style="color:var(--gold);font-weight:700">${x.pens[0]}–${x.pens[1]} nos pênaltis</div>` : ''}
+    <div class="detail-sub">${RD[x.round]} · ${dateBr(x.date)}/2026 · ${x.stadium}, ${x.city} · público ${fmt(x.att)}${x.ref ? ' · árbitro: ' + x.ref : ''}<br>formações: ${x.hf} × ${x.af}</div>
+    ${rows.map(([k, lbl]) => {
+      const [h, a] = x.stats[k];
+      const tot = Math.max(h + a, 1);
+      return `<div class="stat-line">
+        <span class="val r">${h}</span>
+        <span class="bar h"><i style="width:${h / tot * 100}%"></i></span>
+        <span class="lbl">${lbl}</span>
+        <span class="bar a"><i style="width:${a / tot * 100}%"></i></span>
+        <span class="val">${a}</span>
+      </div>`;
+    }).join('')}`;
+}
+(function explorer() {
+  const M = DATA.matches;
+  const rounds = [...new Set(M.map(x => x.round))];
+  const teams = [...new Set(M.flatMap(x => [x.home, x.away]))].sort((a, b) => pt(a).localeCompare(pt(b)));
+  $('#f-round').innerHTML = `<option value="">Todas as fases</option>` + rounds.map(r => `<option value="${r}">${RD[r]}</option>`).join('');
+  $('#f-team').innerHTML = `<option value="">Todas as seleções</option>` + teams.map(tn => `<option value="${tn}">${pt(tn)}</option>`).join('');
+  function renderList() {
+    const fr = $('#f-round').value, ft = $('#f-team').value;
+    const list = M.filter(x => (!fr || x.round === fr) && (!ft || x.home === ft || x.away === ft));
+    $('#match-list').innerHTML = list.map(x => `
+      <div class="match-row" data-key="${matchKey(x)}">
+        <span class="d">${dateBr(x.date)}</span>
+        <span class="t1">${pt(x.home)}</span>
+        <span class="sc">${scoreStr(x)}</span>
+        <span class="t2">${pt(x.away)}</span>
+        <span class="rd">${RD[x.round]}</span>
+      </div>`).join('');
+  }
+  $('#f-round').onchange = renderList;
+  $('#f-team').onchange = renderList;
+  $('#match-list').addEventListener('click', (e) => {
+    const r = e.target.closest('.match-row');
+    if (r) openMatch(r.dataset.key);
+  });
+  renderList();
+  openMatch(matchKey(M[M.length - 1]));  // abre o jogo mais recente
+})();
+
+/* ============ estilos (scatter) ============ */
+(function styles() {
+  const T = DATA.teams;
+  const semis = ['France', 'Spain'];
+  const W = 900, H = 480, mL = 56, mR = 24, mT = 20, mB = 46;
+  const s = svgRoot(W, H, $('#styles-chart'));
+  const xs = T.map(d => d.poss), ys = T.map(d => d.shots90);
+  const x0 = Math.floor(Math.min(...xs) / 5) * 5 - 2, x1 = Math.ceil(Math.max(...xs) / 5) * 5 + 2;
+  const y0 = Math.max(0, Math.floor(Math.min(...ys)) - 2), y1 = Math.ceil(Math.max(...ys)) + 2;
+  const X = (v) => mL + (v - x0) / (x1 - x0) * (W - mL - mR);
+  const Y = (v) => mT + (1 - (v - y0) / (y1 - y0)) * (H - mT - mB);
+  for (let v = x0 + 2; v <= x1; v += 10) {
+    el('line', { x1: X(v), x2: X(v), y1: mT, y2: H - mB, stroke: C.grid, 'stroke-width': 1 }, s);
+    txt(s, X(v), H - mB + 20, v + '%', { 'text-anchor': 'middle' });
+  }
+  for (let v = Math.ceil(y0 / 5) * 5; v <= y1; v += 5) {
+    el('line', { x1: mL, x2: W - mR, y1: Y(v), y2: Y(v), stroke: C.grid, 'stroke-width': 1 }, s);
+    txt(s, mL - 8, Y(v) + 4, v, { 'text-anchor': 'end' });
+  }
+  txt(s, (mL + W - mR) / 2, H - 8, 'posse de bola média →', { 'text-anchor': 'middle', 'font-size': 12.5 });
+  txt(s, 14, (mT + H - mB) / 2, 'chutes por 90 min →', { 'font-size': 12.5, transform: `rotate(-90 14 ${(mT + H - mB) / 2})` });
+  // medianas
+  const medX = xs.slice().sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+  const medY = ys.slice().sort((a, b) => a - b)[Math.floor(ys.length / 2)];
+  el('line', { x1: X(medX), x2: X(medX), y1: mT, y2: H - mB, stroke: C.baseline, 'stroke-width': 1.5 }, s);
+  el('line', { x1: mL, x2: W - mR, y1: Y(medY), y2: Y(medY), stroke: C.baseline, 'stroke-width': 1.5 }, s);
+  T.forEach(d => {
+    const semi = semis.includes(d.team);
+    const r = 5 + Math.sqrt(d.goals) * 2.2;
+    const c = el('circle', { cx: X(d.poss), cy: Y(d.shots90), r,
+      fill: semi ? C.gold : C.accent, opacity: semi ? 0.95 : 0.6, stroke: C.surface, 'stroke-width': 2 }, s);
+    if (semi || d.goals >= 12 || d.team === 'Brazil')
+      txt(s, X(d.poss), Y(d.shots90) - r - 5, pt(d.team), { 'text-anchor': 'middle', fill: C.ink, 'font-size': 11.5, 'font-weight': 650 });
+    c.addEventListener('mousemove', (ev) => showTip(
+      `<b>${pt(d.team)}</b> · ${d.games} jogos<br>posse ${pt1(d.poss)}% · ${pt1(d.shots90)} chutes/90<br>${d.goals} gols marcados · ${d.ga} sofridos<br>aproveitamento: ${pt1(d.sot_pct)}% no alvo`, ev));
+    c.addEventListener('mouseleave', hideTip);
+  });
+  const tbl = document.createElement('details'); tbl.className = 'tbl';
+  tbl.innerHTML = `<summary>Ver como tabela</summary><table><thead><tr><th>Seleção</th><th>Jogos</th><th>Posse</th><th>Chutes/90</th><th>Gols</th><th>Sofridos</th></tr></thead><tbody>${
+    T.slice().sort((a, b) => b.goals - a.goals).map(d =>
+      `<tr><td>${pt(d.team)}</td><td>${d.games}</td><td>${pt1(d.poss)}%</td><td>${pt1(d.shots90)}</td><td>${d.goals}</td><td>${d.ga}</td></tr>`).join('')
+  }</tbody></table>`;
+  $('#styles-table').appendChild(tbl);
+
+  $('#formations').innerHTML = `<ul class="mini-list">` + DATA.formations.map(f => {
+    const wr = Math.round(100 * f.w / f.games);
+    return `<li><span><b>${f.f}</b> · ${f.games} jogos</span><span class="v">${f.w}V ${f.d}E ${f.l}D · ${wr}% vitórias</span></li>`;
+  }).join('') + `</ul>`;
+})();
+
+/* ============ goleiros ============ */
+(function gks() {
+  const G = DATA.gks.slice(0, 10);
+  $('#gk-lede').innerHTML = `<strong>${G[0].player}</strong> (${pt(G[0].team)}) defendeu <strong>${pt1(G[0].pct)}%</strong> dos chutes que enfrentou e soma <strong>${G[0].cs}</strong> jogos sem sofrer gol — o alicerce silencioso de uma campanha até aqui quase perfeita.`;
+  const box = $('#gk-chart');
+  const rowH = 33, mL = 210, mR = 130, W = 900;
+  const H = G.length * rowH + 8;
+  const s = svgRoot(W, H, box);
+  const xw = (W - mL - mR) / 100;
+  G.forEach((d, i) => {
+    const y = i * rowH + 6, bh = 18;
+    txt(s, mL - 10, y + bh - 4, `${d.player} · ${pt(d.team)}`, { 'text-anchor': 'end', fill: C.ink2, 'font-size': 12.5 });
+    const bw = Math.max(d.pct * xw, 2);
+    const bar = el('path', { d: roundBarH(mL, y, bw, bh, 4), fill: C.blue }, s);
+    txt(s, mL + bw + 8, y + bh - 4, `${pt1(d.pct)}%  ·  ${'🧱'.repeat(Math.min(d.cs, 6))}${d.cs > 6 ? '+' : ''}`, { fill: C.ink, 'font-size': 12 });
+    bar.addEventListener('mousemove', (ev) => showTip(
+      `<b>${d.player}</b> (${pt(d.team)})<br>${d.games} jogos · ${d.saves} defesas · ${d.ga} gols sofridos<br>${d.cs} clean sheets`, ev));
+    bar.addEventListener('mouseleave', hideTip);
+  });
+})();
+
+/* ============ disciplina ============ */
+(function disc() {
+  $('#disc-teams').innerHTML = DATA.discipline.map(d =>
+    `<li><span><b>${pt(d.team)}</b> · ${d.games} jogos</span><span class="v">🟨 ${d.y}${d.r ? ` 🟥 ${d.r}` : ''}</span></li>`).join('');
+  $('#disc-matches').innerHTML = DATA.violent_matches.map(x => {
+    const y = x.stats.yellow[0] + x.stats.yellow[1], r = x.stats.red[0] + x.stats.red[1];
+    return `<li><span><b>${pt(x.home)} ${x.hs}–${x['as']} ${pt(x.away)}</b> · ${RD[x.round]}</span><span class="v">🟨 ${y}${r ? ` 🟥 ${r}` : ''}</span></li>`;
+  }).join('');
+  $('#referees').innerHTML = DATA.referees.slice(0, 8).map(d =>
+    `<li><span><b>${d.ref}</b> · ${d.games} jogos</span><span class="v">${pt1(Math.round(10 * d.y / d.games) / 10)} 🟨/jogo${d.r ? ` · ${d.r} 🟥` : ''}</span></li>`).join('');
+})();
+
+/* ============ palcos ============ */
+(function venues() {
+  const V = DATA.venues;
+  $('#palcos-lede').innerHTML = `${DATA.meta.att_total.toLocaleString('pt-BR')} pessoas já passaram pelos estádios — recorde absoluto de público em Copas. O templo da vez: <strong>${V[0].stadium}</strong> (${V[0].city}), com ${fmt(V[0].att)} torcedores acumulados.`;
+  const box = $('#venues-chart');
+  const rowH = 31, mL = 250, mR = 90, W = 900, data = V.slice(0, 14);
+  const H = data.length * rowH + 8;
+  const s = svgRoot(W, H, box);
+  const max = data[0].att;
+  const xw = (W - mL - mR) / max;
+  data.forEach((d, i) => {
+    const y = i * rowH + 5, bh = 17;
+    txt(s, mL - 10, y + bh - 4, `${d.stadium} · ${d.city}`, { 'text-anchor': 'end', fill: C.ink2, 'font-size': 12 });
+    const bw = Math.max(d.att * xw, 2);
+    const bar = el('path', { d: roundBarH(mL, y, bw, bh, 4), fill: C.violet }, s);
+    txt(s, mL + bw + 8, y + bh - 4, fmt(d.att), { fill: C.ink, 'font-size': 12 });
+    bar.addEventListener('mousemove', (ev) => showTip(
+      `<b>${d.stadium}</b> (${d.city})<br>${d.games} jogos · média ${fmt(d.avg)}<br>maior público: ${fmt(d.max)}`, ev));
+    bar.addEventListener('mouseleave', hideTip);
+  });
+})();
+
+/* ============ Brasil ============ */
+(function brazil() {
+  const B = DATA.brazil;
+  const last = B[B.length - 1];
+  $('#brasil-lede').innerHTML = `Cinco jogos: empate de estreia, duas goleadas tranquilas, controle total contra o Japão — e a queda nas oitavas para a <strong>Noruega de Haaland</strong> no MetLife Stadium. O jogo que o mundo dos dados não parou de dissecar.`;
+  $('#brazil-timeline').innerHTML = B.map(x => {
+    const isHome = x.home === 'Brazil';
+    const gf = isHome ? x.hs : x['as'], ga = isHome ? x['as'] : x.hs;
+    const opp = isHome ? x.away : x.home;
+    const res = gf > ga ? 'V' : gf === ga ? 'E' : 'D';
+    const col = res === 'V' ? C.accent : res === 'E' ? C.gold : C.red;
+    return `<div class="card" style="border-left:4px solid ${col};cursor:pointer" onclick="openMatch('${matchKey(x)}');document.getElementById('jogos').scrollIntoView()">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+        <span style="font-weight:700;font-size:16px">${res === 'V' ? '✅' : res === 'E' ? '➖' : '❌'} Brasil ${gf}–${ga} ${pt(opp)}</span>
+        <span style="color:var(--muted);font-size:12.5px">${RD[x.round]} · ${dateBr(x.date)} · ${x.city} · ${fmt(x.att)} torcedores</span>
+      </div>
+      <div style="color:var(--ink-2);font-size:13px;margin-top:4px">posse ${x.stats.poss[isHome ? 0 : 1]}% · ${x.stats.shots[isHome ? 0 : 1]} chutes (${x.stats.sot[isHome ? 0 : 1]} no alvo) · formação ${isHome ? x.hf : x.af}</div>
+    </div>`;
+  }).join('') + `<div class="callout">O detalhe que dói: contra a Noruega o Brasil viveu um jogo <strong>invertido</strong> — cedeu 66% da posse (uma semana depois de ter 69% contra o Japão) e ainda assim finalizou mais (14 × 9). Mas dos 4 chutes brasileiros no alvo saiu 1 gol; dos 5 noruegueses, 2. A Copa 2026 segue sendo o torneio onde a eficiência vence o volume.</div>`;
+})();
+
+/* ============ comparador ============ */
+(function compare() {
+  const CMPDATA = DATA.compare;
+  const teams = Object.keys(CMPDATA).sort((a, b) => pt(a).localeCompare(pt(b)));
+  const selA = $('#cmp-a'), selB = $('#cmp-b');
+  selA.innerHTML = teams.map(tn => `<option value="${tn}" ${tn === 'France' ? 'selected' : ''}>${pt(tn)}</option>`).join('');
+  selB.innerHTML = teams.map(tn => `<option value="${tn}" ${tn === 'Spain' ? 'selected' : ''}>${pt(tn)}</option>`).join('');
+  const METRICS = [
+    ['games', 'jogos', 0], ['goals', 'gols marcados', 0], ['goals_against', 'gols sofridos', 0],
+    ['possession', 'posse média (%)', 1], ['goals_per90', 'gols por 90', 2], ['goals_per90_against', 'gols sofridos por 90', 2],
+    ['shots_per90', 'chutes por 90', 1], ['shots_per90_against', 'chutes cedidos por 90', 1],
+    ['shots_on_target_pct', '% chutes no alvo', 1], ['goals_per_shot', 'gols por chute', 3],
+    ['cards_yellow', 'cartões amarelos', 0], ['cards_red', 'cartões vermelhos', 0], ['avg_age', 'idade média', 1],
+  ];
+  const COMP_LBL = { atk: 'ataque', def: 'defesa', prog: 'profundidade', cal: 'calendário', ctrl: 'controle', disc: 'disciplina', age: 'idade' };
+  function notaCard(team, color) {
+    const R = DATA.ratings[team];
+    if (!R) return '';
+    const comps = Object.keys(COMP_LBL).map(k => `
+      <div style="display:grid;grid-template-columns:86px 1fr 30px;gap:8px;align-items:center;margin-top:5px">
+        <span style="font-size:11.5px;color:var(--muted)">${COMP_LBL[k]}</span>
+        <span style="height:8px;border-radius:4px;background:var(--page);overflow:hidden;display:block"><i style="display:block;height:100%;width:${R.comps[k] * 10}%;background:${color};border-radius:4px"></i></span>
+        <span style="font-size:11.5px;color:var(--ink-2);font-variant-numeric:tabular-nums;text-align:right">${pt1(R.comps[k])}</span>
+      </div>`).join('');
+    return `<div style="flex:1;min-width:240px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+        <span style="font-weight:700;font-size:15px;color:${color}">${pt(team)}</span>
+        <span style="font-size:34px;font-weight:800;color:${color}">${R.nota.toFixed(1).replace('.', ',')}</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:6px">Nota da Copa · rank FIFA pré-Copa #${R.rank} · ${R.games} jogos · adversário médio #${pt1(R.opp_rank_avg)}</div>
+      ${comps}
+    </div>`;
+  }
+  function render() {
+    const A = CMPDATA[selA.value], Bv = CMPDATA[selB.value];
+    $('#cmp-notas').innerHTML = `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+      ${notaCard(selA.value, css('--blue'))}${notaCard(selB.value, css('--red'))}
+    </div>`;
+    $('#cmp-result').innerHTML = `
+      <div class="detail-head">
+        <span class="tm h">${pt(selA.value)}</span><span class="sc" style="font-size:20px;color:var(--muted)">×</span><span class="tm a">${pt(selB.value)}</span>
+      </div>
+      ${METRICS.map(([k, lbl]) => {
+        const a = A[k] || 0, b = Bv[k] || 0;
+        const tot = Math.max(a + b, 0.001);
+        return `<div class="stat-line">
+          <span class="val r">${pt1(a)}</span>
+          <span class="bar h"><i style="width:${a / tot * 100}%"></i></span>
+          <span class="lbl">${lbl}</span>
+          <span class="bar a"><i style="width:${b / tot * 100}%"></i></span>
+          <span class="val">${pt1(b)}</span>
+        </div>`;
+      }).join('')}`;
+  }
+  selA.onchange = render; selB.onchange = render;
+  render();
+  // ranking completo das 48
+  $('#rating-table').innerHTML = DATA.rating_table.map((r, i) =>
+    `<tr${['France','Spain'].includes(r.team) ? ' style="color:var(--gold)"' : r.team === 'Brazil' ? ' style="color:var(--accent)"' : ''}>
+      <td>${i + 1}</td><td>${pt(r.team)}</td><td><b>${r.nota.toFixed(1).replace('.', ',')}</b></td>
+      <td>#${r.rank}</td><td>${r.games}</td><td>#${pt1(r.opp_rank_avg)}</td></tr>`).join('');
+})();
+</script>
+</body>
+</html>

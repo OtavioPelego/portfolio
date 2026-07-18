@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estatísticas Globais de Trigo - USDA</title>
+    
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Leaflet CSS para Mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Chart.js para Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS Customizado -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Scripts de Dados Locais em JS (evita problemas de CORS e permite carregar offline via file://) -->
+    <script src="data/world_geojson.js"></script>
+    <script src="data/all_commodities_data.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-logo">
+                <div class="logo-icon">
+                    <i data-lucide="bar-chart-3" class="wheat-gold"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 id="app-title">Trigo Global</h1>
+                    <p id="app-subtitle">Análise de Produtividade, Área e Produção (Dados USDA PSD)</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="metric-selector">
+                    <label for="active-commodity">Cultura:</label>
+                    <select id="active-commodity">
+                        <option value="wheat" selected>🌾 Trigo</option>
+                        <option value="corn">🌽 Milho</option>
+                        <option value="soybean">🫘 Soja</option>
+                        <option value="rice">🍚 Arroz</option>
+                        <option value="barley">🍺 Cevada</option>
+                        <option value="cotton">☁️ Algodão</option>
+                        <option value="coffee">☕ Café</option>
+                        <option value="sugar">🍬 Açúcar</option>
+                        <option value="palm_oil">🌴 Óleo de Palma</option>
+                        <option value="beef">🥩 Carne Bovina</option>
+                        <option value="pork">🐖 Carne Suína</option>
+                        <option value="poultry">🍗 Carne de Frango</option>
+                    </select>
+                </div>
+                <div class="metric-selector">
+                    <label for="active-metric">Métrica Ativa:</label>
+                    <select id="active-metric">
+                        <option value="yield" selected>Produtividade (MT/HA)</option>
+                        <option value="production">Produção (1.000 MT)</option>
+                        <option value="area">Área Colhida (1.000 HA)</option>
+                        <option value="consumption">Consumo Doméstico (1.000 MT)</option>
+                        <option value="imports">Importações (1.000 MT)</option>
+                        <option value="exports">Exportações (1.000 MT)</option>
+                        <option value="stocks_to_use">Relação Estoque/Consumo (%)</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Grid -->
+        <section class="kpi-grid">
+            <div class="kpi-card" id="card-production">
+                <div class="kpi-icon-wrapper prod-bg">
+                    <i data-lucide="package"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Produção Mundial</span>
+                    <h3 class="kpi-value" id="kpi-prod-val">0 MT</h3>
+                    <span class="kpi-change" id="kpi-prod-change">--</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card" id="card-area">
+                <div class="kpi-icon-wrapper area-bg">
+                    <i data-lucide="map"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Área Colhida Total</span>
+                    <h3 class="kpi-value" id="kpi-area-val">0 HA</h3>
+                    <span class="kpi-change" id="kpi-area-change">--</span>
+                </div>
+            </div>
+
+            <div class="kpi-card" id="card-yield">
+                <div class="kpi-icon-wrapper yield-bg">
+                    <i data-lucide="trending-up"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Produtividade Média</span>
+                    <h3 class="kpi-value" id="kpi-yield-val">0 MT/HA</h3>
+                    <span class="kpi-change" id="kpi-yield-change">--</span>
+                </div>
+            </div>
+
+            <div class="kpi-card" id="card-stocks-to-use">
+                <div class="kpi-icon-wrapper stocks-bg">
+                    <i data-lucide="percent"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Estoque/Consumo Mundial</span>
+                    <h3 class="kpi-value" id="kpi-stocks-to-use-val">0%</h3>
+                    <span class="kpi-change" id="kpi-stocks-to-use-change">--</span>
+                </div>
+            </div>
+
+            <div class="kpi-card" id="card-top-producer">
+                <div class="kpi-icon-wrapper leader-bg">
+                    <i data-lucide="crown"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Maior Produtor</span>
+                    <h3 class="kpi-value" id="kpi-leader-val">--</h3>
+                    <span class="kpi-change" id="kpi-leader-amount">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Content Grid -->
+        <div class="dashboard-grid">
+            
+            <!-- Esquerda: Mapa e Ranking -->
+            <div class="grid-left">
+                <!-- Painel do Mapa -->
+                <div class="panel map-panel">
+                    <div class="panel-header">
+                        <h2 id="map-title-label"><i data-lucide="globe"></i> Distribuição Espacial de Produtividade</h2>
+                        <span class="badge" id="map-year-badge">2025</span>
+                    </div>
+                    <div class="map-container-wrapper">
+                        <div id="world-map"></div>
+                    </div>
+                    <div class="map-legend" id="map-legend">
+                        <!-- Gerado dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Painel do Ranking de Barras -->
+                <div class="panel ranking-panel">
+                    <div class="panel-header">
+                        <h2><i data-lucide="bar-chart-3"></i> Top 10 Países / Regiões</h2>
+                        <span class="badge-accent" id="ranking-metric-badge">Produtividade</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ranking-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direita: Comparação Temporal -->
+            <div class="grid-right">
+                <div class="panel temporal-panel">
+                    <div class="panel-header">
+                        <h2><i data-lucide="history"></i> Evolução Temporal Comparativa (1960 - 2026)</h2>
+                        <div class="panel-actions">
+                            <button class="btn-secondary btn-sm" id="btn-clear-selection">Limpar Países</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Country Chips / Selection Wrapper -->
+                    <div class="country-selection-wrapper">
+                        <div class="search-box">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="country-search" placeholder="Adicionar país para comparar...">
+                            <div class="search-results" id="search-results"></div>
+                        </div>
+                        <div class="active-chips" id="active-countries-container">
+                            <!-- Chips criados no js -->
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container main-temporal-chart">
+                        <canvas id="temporal-chart"></canvas>
+                    </div>
+
+                    <!-- Mini cards adicionais para o país em destaque (quando o usuário clica em um país) -->
+                    <div class="focus-country-details" id="focus-country-panel" style="display: none;">
+                        <div class="focus-header">
+                            <h3><i data-lucide="info"></i> Perfil do País Selecionado: <span id="focus-country-name">Brasil</span></h3>
+                        </div>
+                        <div class="focus-stats-grid">
+                            <div class="focus-stat-item">
+                                <span class="focus-stat-label">Produção</span>
+                                <strong id="focus-prod-val">0 MT</strong>
+                            </div>
+                            <div class="focus-stat-item">
+                                <span class="focus-stat-label">Consumo Interno</span>
+                                <strong id="focus-cons-val">0 MT</strong>
+                            </div>
+                            <div class="focus-stat-item">
+                                <span class="focus-stat-label">Balanço Comercial</span>
+                                <div class="trade-balance-wrapper">
+                                    <span id="focus-trade-type">Importador</span>
+                                    <strong id="focus-trade-val">0 MT</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Linha do Tempo e Controles Inferiores -->
+        <footer class="timeline-footer">
+            <div class="timeline-controls">
+                <button class="btn-play-pause" id="btn-play">
+                    <i data-lucide="play" id="play-icon"></i>
+                </button>
+                <div class="timeline-slider-wrapper">
+                    <span class="time-label" id="start-year-label">1960</span>
+                    <input type="range" id="year-slider" class="year-slider" min="1960" max="2026" value="2025" step="1">
+                    <span class="time-label" id="end-year-label">2026</span>
+                </div>
+                <div class="current-year-display">
+                    <span id="display-year">2025</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- App Lógica -->
+    <script src="app.js"></script>
+    <script>
+        // Inicializa ícones do Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>

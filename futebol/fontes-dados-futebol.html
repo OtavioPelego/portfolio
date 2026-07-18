@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fontes de Dados de Futebol — Comparativo</title>
+<style>
+:root{
+  --bg:#0e1116; --panel:#161b22; --panel2:#1c232d; --line:#2a333f;
+  --ink:#e8edf3; --mut:#9aa7b4; --dim:#6b7787;
+  --acc:#3ddc97; --acc2:#4aa3ff; --warn:#f2c14e; --bad:#f2686b;
+  --pill:#232c37;
+  --mono:'SFMono-Regular',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --bg:#f6f8fa; --panel:#ffffff; --panel2:#f0f3f6; --line:#dde3ea;
+    --ink:#141a20; --mut:#4d5966; --dim:#7a8794; --pill:#eef2f6;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  font-size:15px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:0 0 14px}
+h1{font-size:clamp(28px,4vw,44px);line-height:1.08;margin:0 0 16px;letter-spacing:-.02em}
+.lede{color:var(--mut);max-width:760px;font-size:16px;margin:0 0 6px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:18px}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin:22px 0 4px;padding:16px 18px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.legend h3{width:100%;margin:0 0 4px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-family:var(--mono)}
+.legrow{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+
+/* controls */
+.controls{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px);padding:14px 0;margin:26px 0 8px;border-bottom:1px solid var(--line)}
+.controls .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:none;border:0;color:var(--mut);padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+.seg button.on{background:var(--acc);color:#06231a;font-weight:600}
+select,input[type=search]{background:var(--panel);border:1px solid var(--line);color:var(--ink);
+  border-radius:10px;padding:8px 12px;font-size:13px;font-family:var(--sans)}
+input[type=search]{min-width:190px;flex:1}
+.chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--mut);cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 12px}
+.count{font-family:var(--mono);font-size:12px;color:var(--dim);margin-left:auto}
+
+/* section titles */
+h2.sec{font-size:13px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);margin:40px 0 4px;border-top:1px solid var(--line);padding-top:26px}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-top:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;
+  display:flex;flex-direction:column;position:relative;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--acc)}
+.card.hide{display:none}
+.card .top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.rank{font-family:var(--mono);font-size:11px;color:var(--dim);border:1px solid var(--line);
+  border-radius:6px;padding:2px 6px;flex:none;margin-top:2px}
+.card h3{margin:0;font-size:18px;letter-spacing:-.01em;flex:1;line-height:1.2}
+.card h3 a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--dim)}
+.gran{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap;flex:none}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 12px}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;padding:3px 8px;border-radius:20px;
+  background:var(--pill);color:var(--mut);border:1px solid var(--line)}
+.tag.free{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 40%,var(--line))}
+.tag.scrape{color:var(--acc2);border-color:color-mix(in srgb,var(--acc2) 40%,var(--line))}
+.tag.paid{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.tag.no{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+.desc{font-size:14px;color:var(--mut);margin:0 0 14px}
+.cov{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 14px}
+.cov span{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:6px;border:1px solid var(--line)}
+.cov .y{color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent)}
+.cov .p{color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
+.cov .n{color:var(--dim);opacity:.55}
+.pf{display:grid;grid-template-columns:1fr;gap:10px;margin-top:auto}
+.pf .blk{font-size:13px}
+.pf .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:3px}
+.pf .strong .lbl{color:var(--acc)}
+.pf .weak .lbl{color:var(--bad)}
+.pf ul{margin:0;padding-left:16px;color:var(--mut)}
+.pf li{margin:2px 0}
+details.sample{margin-top:13px;border-top:1px solid var(--line);padding-top:10px}
+details.sample summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;color:var(--acc2);list-style:none}
+details.sample summary::-webkit-details-marker{display:none}
+details.sample summary::before{content:'▸ ';color:var(--dim)}
+details.sample[open] summary::before{content:'▾ '}
+pre{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:11px;overflow-x:auto;
+  font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--ink);margin:9px 0 0;max-width:100%}
+.note{font-size:12px;color:var(--dim);margin-top:9px;font-style:italic}
+
+/* matrix */
+.mtx-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:18px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);position:sticky;top:0;background:var(--panel)}
+td.src{font-weight:600}
+.yy{color:var(--acc)} .pp{color:var(--warn)} .nn{color:var(--dim);opacity:.5}
+
+/* discarded */
+.disc{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:18px}
+.disc .card{border-style:dashed;opacity:.9}
+.disc .card:hover{border-color:var(--bad)}
+
+footer{margin:56px 0 40px;padding-top:24px;border-top:1px solid var(--line);color:var(--dim);font-size:13px}
+a{color:var(--acc2)}
+.pick{background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 12%,var(--panel)),var(--panel));
+  border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.pick .rank{border-color:var(--acc);color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <p class="kicker">Phosphorus · Análises de Futebol</p>
+  <h1>Fontes de dados de futebol — o que cada uma entrega</h1>
+  <p class="lede">Catálogo comparando ~30 fontes por <strong>granularidade do dado</strong> (de GPS/tracking a metadados de mercado) e <strong>importância da cobertura</strong> (Copa 2026, Copas anteriores, Brasileirão e as grandes ligas europeias). Cada card mostra o que tem, o que <em>não</em> tem, pontos fortes/fracos e uma amostra real da estrutura de dados.</p>
+  <p class="meta">Ordenado por padrão: granularidade × cobertura × acessibilidade · Atualizado 15 jul 2026</p>
+</div>
+</header>
+
+<div class="wrap">
+
+  <div class="legend">
+    <h3>Como ler a granularidade</h3>
+    <div class="legrow"><span class="dot" style="background:#c678dd"></span>🛰️ Tracking / GPS — posição contínua (x,y) de todos os jogadores + bola</div>
+    <div class="legrow"><span class="dot" style="background:var(--acc)"></span>🎯 Evento + 360 — cada ação com coordenada e contexto posicional</div>
+    <div class="legrow"><span class="dot" style="background:var(--acc2)"></span>⚽ Evento — ações (passe, chute, falta) com coordenada</div>
+    <div class="legrow"><span class="dot" style="background:#7bc96f"></span>📍 Chute / xG — nível de finalização (xG, coords do chute)</div>
+    <div class="legrow"><span class="dot" style="background:var(--warn)"></span>📊 Stats de jogo/jogador — agregados por partida</div>
+    <div class="legrow"><span class="dot" style="background:var(--dim)"></span>🧾 Resultado / metadados — placar, odds, elenco, valor de mercado</div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="wrap" style="padding:0">
+      <div class="row">
+        <div class="seg" id="accessSeg">
+          <button data-f="all" class="on">Todas</button>
+          <button data-f="free">Gratuito</button>
+          <button data-f="scrape">Scraping</button>
+          <button data-f="apifree">API free</button>
+          <button data-f="paid">Pago</button>
+        </div>
+        <label class="chk"><input type="checkbox" id="only2026"> cobre Copa 2026</label>
+        <select id="sort">
+          <option value="score">Ordenar: Composto (padrão)</option>
+          <option value="gran">Granularidade</option>
+          <option value="cov">Cobertura</option>
+          <option value="name">Nome (A→Z)</option>
+        </select>
+        <input type="search" id="q" placeholder="buscar fonte…">
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec" style="border-top:0;padding-top:8px">Fontes de dados</h2>
+  <div class="grid" id="grid"></div>
+
+  <!-- MATRIX -->
+  <h2 class="sec">Matriz de cobertura</h2>
+  <p class="desc" style="margin-top:10px">Onde cada fonte cobre o que te interessa. <span class="yy">■</span> completo · <span class="pp">■</span> parcial/indireto · <span class="nn">■</span> não tem.</p>
+  <div class="mtx-wrap">
+    <table id="mtx">
+      <thead><tr>
+        <th>Fonte</th><th>Granularidade</th><th>Copa 2026</th><th>Copas hist.</th><th>Brasileirão</th><th>Top-5 EU</th><th>Acesso</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- DISCARDED -->
+  <h2 class="sec">Descartadas ou fora de escopo</h2>
+  <p class="desc" style="margin-top:10px">Não entram na coleta — ou não são fonte de dados, ou são pagas sem retorno prático agora, ou são inspiração/ferramenta.</p>
+  <div class="disc" id="disc"></div>
+
+  <footer>
+    <p><strong>Recomendação rápida para o seu objetivo (data portraits Copa 2026 + dados granulares):</strong></p>
+    <p>Não existe fonte <em>única</em> gratuita com tracking da Copa 2026. A estratégia realista é <strong>camadas</strong>: <br>
+    1) <strong>FBref + Sofascore/FotMob</strong> (scraping) para stats avançadas e xG dos jogos de 2026 conforme acontecem, com cobertura de Brasileirão e ligas europeias ·
+    2) <strong>StatsBomb Open Data + Metrica + SkillCorner</strong> para treinar seus visuais com evento/360/tracking reais (mesmo que de outras partidas) ·
+    3) <strong>Fjelstul / worldcups.ai / basedosdados</strong> para a camada histórica de Copas ·
+    4) <strong>football-data.org</strong> (API free) como espinha dorsal estruturada de fixtures/tabelas.</p>
+    <p class="note">Fontes verificadas ao vivo nesta pesquisa: football-data.org (cobertura free), API-Football (limites free), worldcups.ai, Data Sports Group, dottie.pro. Demais descritas de conhecimento + amostras locais já baixadas na pasta.</p>
+  </footer>
+</div>
+
+<script>
+const F = [
+  {
+    id:'statsbomb', nome:'StatsBomb Open Data', url:'https://github.com/statsbomb/open-data',
+    access:'free', gran:5, granLabel:'🎯 Evento + 360', granColor:'var(--acc)',
+    cov:{wc26:0, wchist:2, bra:0, top5:1},
+    tags:['Gratuito','GitHub / JSON','Event-level','StatsBomb 360'],
+    desc:'O dado de evento mais rico disponível de graça. Cada partida traz ~3.400 eventos com coordenada, mais o 360: freeze-frames com a posição de todos os jogadores no momento do evento.',
+    strong:['Evento + posições (360) grátis — nada chega perto','Schema documentado, ecossistema (statsbombpy, Python/R)','Ótimo para treinar visualizações de xT, passes, pressão'],
+    weak:['Só partidas selecionadas, não temporadas completas das grandes ligas','Sem Copa 2026; Copas de 2018/2022 masc. e femininas sim','Não é live; sem tracking contínuo'],
+    sample:`// events/{match}.json — um evento de passe (estrutura)
+{ "id":"8a1f...", "index":128, "period":1,
+  "timestamp":"00:04:12.340", "minute":4, "second":12,
+  "type":{"id":30,"name":"Pass"},
+  "location":[34.2, 40.1],
+  "player":{"id":5503,"name":"Lionel Messi"},
+  "pass":{ "recipient":{"id":5211,"name":"Jordi Alba"},
+           "length":18.6, "angle":2.9, "height":{"name":"Ground Pass"},
+           "end_location":[52.0, 12.4], "outcome":null } }`,
+    sampleNote:'Local: statsbomb360-open-data/data/competitions.json (índice das competições liberadas).'
+  },
+  {
+    id:'metrica', nome:'Metrica Sports (sample)', url:'https://github.com/metrica-sports/sample-data',
+    access:'free', gran:5, granLabel:'🛰️ Tracking 25Hz', granColor:'#c678dd',
+    cov:{wc26:0, wchist:0, bra:0, top5:0},
+    tags:['Gratuito','GitHub / CSV+JSON','Tracking','25 fps'],
+    desc:'Amostra gratuita de tracking óptico: posição (x,y) dos 22 jogadores + bola a 25 quadros/s em 3 partidas anonimizadas, com os eventos sincronizados. O mais próximo de "GPS" que se acha aberto.',
+    strong:['Tracking contínuo real — base ideal para animações e modelos físicos','Formato EPTS/FIFA + eventos alinhados por frame','Documentação e notebooks oficiais'],
+    weak:['Apenas 3 partidas','Times e jogadores anonimizados','Não é Copa nem liga específica'],
+    sample:`# tracking CSV — 1 linha = 1 frame (25 por segundo)
+Frame,Period,Time[s],Home_11_x,Home_11_y, ... ,Ball_x,Ball_y
+1,1,0.04,0.512,0.336, ... ,0.499,0.501
+2,1,0.08,0.514,0.338, ... ,0.503,0.500
+# coordenadas normalizadas 0–1 do campo; um par x,y por jogador`,
+    sampleNote:'Local: metrica-sports/sample-data/README.md e /data.'
+  },
+  {
+    id:'skillcorner', nome:'SkillCorner Open Data', url:'https://github.com/SkillCorner/opendata',
+    access:'free', gran:5, granLabel:'🛰️ Broadcast tracking', granColor:'#c678dd',
+    cov:{wc26:0, wchist:0, bra:0, top5:2},
+    tags:['Gratuito','GitHub / JSON','Broadcast tracking'],
+    desc:'Tracking extraído do vídeo de transmissão de 9 partidas (grandes clubes), com posições e dados físicos dos jogadores em quadro. Alternativa aberta ao tracking óptico caro.',
+    strong:['Tracking real e gratuito de jogos reconhecíveis','Inclui métricas físicas (velocidade, distância)','Bom para off-ball / espaço'],
+    weak:['Só 9 partidas','Posição só quando o jogador está no enquadramento da TV','Sem bola contínua em alguns trechos'],
+    sample:`// tracking.json — posições por frame (broadcast)
+{ "frame":1043, "time":"00:17:22",
+  "data":[ {"player_id":221,"x":31.4,"y":8.9},
+           {"player_id":118,"x":40.1,"y":-12.0} ],
+  "ball":{"x":29.9,"y":2.1} }`,
+    sampleNote:'Fork seu: github.com/OtavioPelego/skillcorner-opendata'
+  },
+  {
+    id:'playerank', nome:'PlayeRank / Wyscout open', url:'https://github.com/mesosbrodleto/playerank',
+    access:'free', gran:4, granLabel:'⚽ Evento', granColor:'var(--acc2)',
+    cov:{wc26:0, wchist:2, bra:0, top5:1},
+    tags:['Gratuito','GitHub','Event-level','Temporada 17/18'],
+    desc:'Algoritmo aberto de rating de jogadores rodando sobre o dataset público Wyscout 2017/18: eventos (passes, chutes, faltas, duelos) com coordenadas das 5 grandes ligas + Copa 2018 + Euro 2016.',
+    strong:['Eventos das grandes ligas por uma temporada inteira, de graça','Cobre a Copa de 2018 a nível de evento','Código de rating reutilizável'],
+    weak:['Congelado em 2017/18','Sem xG oficial nem 360','Depende do dataset público Wyscout (não atualiza)'],
+    sample:`// events.json (Wyscout) — um passe
+{ "eventName":"Pass", "matchId":2576335,
+  "playerId":3319, "teamId":3157,
+  "positions":[{"x":49,"y":78},{"x":31,"y":80}],
+  "tags":[{"id":1801}]  /* accurate */ }`,
+    sampleNote:null
+  },
+  {
+    id:'fbref', nome:'FBref', url:'https://fbref.com/en/matches/',
+    access:'scrape', gran:3.5, granLabel:'📊 Stats avançadas', granColor:'var(--warn)',
+    cov:{wc26:1, wchist:2, bra:1, top5:1},
+    tags:['Gratuito (scraping)','Opta/StatsPerform','xG · xA','Cobertura enorme'],
+    desc:'A melhor base de estatística agregada gratuita. Stats avançadas por jogo e por jogador (xG, xA, passes progressivos, pressões, SCA) alimentadas por Opta, com tabelas prontas para baixar. Cobre praticamente tudo: Copa 2026 conforme acontece, Copas históricas, Brasileirão e as grandes ligas.',
+    strong:['Cobertura + profundidade de stats imbatível no gratuito','Tabelas exportáveis (CSV/HTML) direto da página','Métricas avançadas (xG, progressive, GCA) para todos os jogos'],
+    weak:['Sem coordenada XY de evento nem tracking','Scraping com rate-limit (≈1 req / 3s)','xG é do StatsPerform (não Opta shot-map público)'],
+    sample:`# tabela por jogador (colunas reais, ex. WC2026 via FBref)
+player,team,position,minutes,goals,assists,shots,shots_on_target,
+xg,npxg,xa,sca,gca,passes_completed,progressive_passes,...
+Amine Gouiri,Algeria,FW,251,1,0,3,2,0.9,0.9,0.3,4,1,...`,
+    sampleNote:'Local: kaggle-…/players.csv, teams.csv e matches.csv são derivados do FBref (mesmo schema).'
+  },
+  {
+    id:'understat', nome:'Understat', url:'https://understat.com/',
+    access:'scrape', gran:3.5, granLabel:'📍 Chute / xG', granColor:'#7bc96f',
+    cov:{wc26:0, wchist:0, bra:0, top5:1},
+    tags:['Gratuito (scraping)','xG shot-level','Top-5 + RFPL'],
+    desc:'xG a nível de finalização: cada chute com xG, coordenada, jogador, tipo de jogada e resultado. Só cobre as 5 grandes ligas europeias + liga russa — sem Copa nem Brasileirão.',
+    strong:['xG por chute com coordenadas, de graça','Ótimo para shot maps e xG plots (seu estilo)','Dados embutidos como JSON na própria página (fácil parse)'],
+    weak:['Só 6 ligas europeias','Sem Copa do Mundo e sem Brasileirão','Modelo de xG proprietário e fixo'],
+    sample:`// var shotsData = JSON.parse('...') na página do jogo
+{ "id":"...", "minute":"23", "result":"Goal",
+  "X":"0.885", "Y":"0.531", "xG":"0.267",
+  "player":"Cole Palmer", "h_a":"h",
+  "situation":"OpenPlay", "shotType":"RightFoot" }`,
+    sampleNote:'Local: UnderStat/…chelsea x tottenham.txt (HTML com shotsData embutido) + visualizacao_partida_29142.html.'
+  },
+  {
+    id:'sofascore', nome:'Sofascore', url:'https://www.sofascore.com/pt',
+    access:'scrape', gran:3.5, granLabel:'📊 Stats + heatmap', granColor:'var(--warn)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['Scraping (API não-oficial)','Heatmaps','Player rating','xG'],
+    desc:'Agregador com stats de jogo, heatmaps de jogador, notas (rating), xG e momentum, com cobertura gigantesca — incluindo Copa 2026 ao vivo, Brasileirão e ligas europeias.',
+    strong:['Cobertura amplíssima + dados ao vivo','Heatmap e rating por jogador prontos','JSON acessível por endpoints internos'],
+    weak:['API não é oficial (contra ToS, muda sem aviso)','Anti-bot / risco de bloqueio','xG e rating são de modelo próprio fechado'],
+    sample:`// endpoint interno (não-oficial): /api/v1/event/{id}/statistics
+{ "statistics":[{ "period":"ALL",
+   "groups":[{"groupName":"Shots",
+     "statisticsItems":[
+       {"name":"Total shots","home":"14","away":"9"},
+       {"name":"Expected goals (xG)","home":"1.87","away":"0.94"}]}]}]}`,
+    sampleNote:null
+  },
+  {
+    id:'fotmob', nome:'FotMob', url:'https://www.fotmob.com/pt-BR/',
+    access:'scrape', gran:3.5, granLabel:'📊 Stats + shot map', granColor:'var(--warn)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['Scraping (API não-oficial)','xG · shot map','Momentum'],
+    desc:'Similar ao Sofascore: xG, shot map, notas de jogador, momentum e stats detalhadas de partida, com cobertura ampla incluindo Copa 2026 e Brasileirão.',
+    strong:['Shot map + xG por jogo fáceis de extrair','Boa cobertura ao vivo','JSON limpo nos endpoints internos'],
+    weak:['API não-oficial (ToS, instável)','Rate-limit / bloqueio possível','Dependente de modelo de xG próprio'],
+    sample:`// /api/matchDetails?matchId={id}  (não-oficial)
+{ "content":{ "shotmap":{ "shots":[
+   {"playerName":"E. Haaland","x":88.4,"y":49.1,
+    "expectedGoals":0.31,"eventType":"Goal","min":79}]}}}`,
+    sampleNote:'Local: whoscored.com/…norway-england.txt tem partida análoga (BRA/NOR/ENG).'
+  },
+  {
+    id:'apifootball', nome:'API-Football (api-sports.io)', url:'https://www.api-football.com/',
+    access:'apifree', gran:3, granLabel:'⚽ Eventos + stats', granColor:'var(--acc2)',
+    cov:{wc26:2, wchist:1, bra:1, top5:1},
+    tags:['API free 100/dia','1200+ ligas','Events · lineups · odds'],
+    desc:'API pronta cobrindo 1200+ ligas com fixtures, eventos (gol, cartão, sub), escalações, estatísticas de jogo, odds e predições. O plano free dá 100 requisições/dia e todos os endpoints — mas as temporadas recentes (2024→2026) ficam travadas para pagantes.',
+    strong:['Cobertura absurda + API estruturada e fácil','Todos endpoints no free (só limita volume)','Inclui odds e predictions'],
+    weak:['Free = 100 req/dia + temporadas atuais/2026 bloqueadas','Sem coordenada de evento nem tracking','Copa 2026 só em plano pago'],
+    sample:`// GET /fixtures?id=... → evento
+{ "fixture":{"id":1035037,"date":"2026-06-11T..."},
+  "teams":{"home":{"name":"Mexico"},"away":{"name":"South Africa"}},
+  "goals":{"home":2,"away":0},
+  "events":[{"time":{"elapsed":23},"type":"Goal",
+             "player":{"name":"..."},"detail":"Normal Goal"}] }`,
+    sampleNote:'Verificado: free = 100 req/dia, 10 req/min, temporadas antigas apenas.'
+  },
+  {
+    id:'footballdataorg', nome:'football-data.org', url:'https://www.football-data.org/',
+    access:'apifree', gran:2.5, granLabel:'🗓️ Fixtures + tabelas', granColor:'var(--dim)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['API free ~10/min','12 competições','Matches · standings'],
+    desc:'API gratuita, limpa e estável. O free cobre 12 competições incluindo Copa do Mundo, Brasileirão, Premier League, La Liga, Bundesliga, Serie A, Ligue 1 e Champions. Dá fixtures, classificações, artilheiros, escalações e head-to-head — sem eventos detalhados nem xG.',
+    strong:['Free já inclui Copa + Brasileirão + top-5 + UCL','Estável, oficial, sem scraping','Ótima espinha dorsal de fixtures/tabelas'],
+    weak:['Sem event-level, sem xG, sem tracking','Rate-limit baixo no free (~10 req/min)','Stats de partida limitadas'],
+    sample:`// GET /v4/competitions/WC/matches
+{ "matches":[{ "id":12345,
+   "utcDate":"2026-06-11T...","status":"FINISHED",
+   "homeTeam":{"name":"Mexico"},"awayTeam":{"name":"South Africa"},
+   "score":{"fullTime":{"home":2,"away":0}} }] }`,
+    sampleNote:'Verificado: free inclui WC, Serie A Brasil, PL, La Liga, Bundesliga, Ligue 1, UCL etc.'
+  },
+  {
+    id:'fjelstul', nome:'Fjelstul World Cup DB', url:'https://github.com/jfjelstul/worldcup',
+    access:'free', gran:2, granLabel:'🧾 Match/gols/subs', granColor:'var(--dim)',
+    cov:{wc26:0, wchist:2, bra:0, top5:0},
+    tags:['Gratuito','GitHub / CSV','1930–2022','Relacional tidy'],
+    desc:'A base histórica definitiva das Copas: todas as edições de 1930 a 2022 em CSVs relacionais limpos — partidas, gols, cartões, substituições, elencos, jogadores, técnicos, árbitros, estádios e prêmios.',
+    strong:['Histórico completo e impecavelmente estruturado','Ideal para dashboards e retrospectivas de Copa','Licença aberta, fácil de cruzar'],
+    weak:['Sem eventos, chutes ou xG (nível partida/gol)','Vai só até 2022','Não cobre 2026'],
+    sample:`# goals.csv
+key_id,tournament_name,match_name,team_name,player_name,minute_label
+...,2022 World Cup,ARG vs FRA,Argentina,Lionel Messi,23'`,
+    sampleNote:'É a fonte por trás de worldcups.ai e dos dashboards da Dottie.'
+  },
+  {
+    id:'worldcupsai', nome:'worldcups.ai', url:'https://www.worldcups.ai/',
+    access:'free', gran:2, granLabel:'🧾 Match histórico', granColor:'var(--dim)',
+    cov:{wc26:0, wchist:2, bra:0, top5:0},
+    tags:['Gratuito (CSV)','1930–2023','IA de consulta (paga)'],
+    desc:'Empacota a base Fjelstul (1930–2023, masc. e fem.) com download de CSV grátis (CC-BY-NC-SA) e uma camada de IA para consultar em linguagem natural. 27 datasets: 1.248 jogos, 10.401 jogadores, gols, cartões, subs, árbitros, estádios.',
+    strong:['CSV grátis de tudo, já limpo','Inclui Copas femininas até 2023','API de query/download'],
+    weak:['Mesmo teto de granularidade do Fjelstul (nível partida)','IA de perguntas é paga','Uso comercial restrito pela licença'],
+    sample:`# download CSV de qualquer tabela (relacional ou curada)
+matches.csv · players.csv · goals.csv · bookings.csv
+substitutions.csv · managers.csv · referees.csv · stadiums.csv`,
+    sampleNote:'Verificado: 27 datasets, 1930–2023, download gratuito.'
+  },
+  {
+    id:'basedosdados', nome:'Base dos Dados', url:'https://basedosdados.org/',
+    access:'free', gran:2, granLabel:'🧾 Match histórico', granColor:'var(--dim)',
+    cov:{wc26:0, wchist:2, bra:2, top5:0},
+    tags:['Gratuito','BigQuery / SQL','Copa 1930–2018','Datasets BR'],
+    desc:'Data lake público brasileiro. Traz a Copa do Mundo 1930–2018 e datasets nacionais (incluindo futebol brasileiro) acessíveis via BigQuery/SQL ou download. Já testado por você.',
+    strong:['SQL direto no BigQuery, sem montar pipeline','Forte no contexto brasileiro','Gratuito e bem documentado'],
+    weak:['Copa só até 2018','Nível partida (sem evento/xG)','Cobertura depende de quem subiu o dataset'],
+    sample:`-- BigQuery
+SELECT ano, fase, mandante, visitante, gols_mandante, gols_visitante
+FROM \`basedosdados.mundo_fifa_copa_mundo.partidas\`
+WHERE ano BETWEEN 1930 AND 2018`,
+    sampleNote:'Dataset já testado: basedosdados.org/dataset/afc5c178…'
+  },
+  {
+    id:'kaggle', nome:'Kaggle — FIFA WC 2026', url:'https://www.kaggle.com/datasets/swaptr/fifa-wc-2026-matches',
+    access:'free', gran:3, granLabel:'📊 Stats de jogo', granColor:'var(--warn)',
+    cov:{wc26:2, wchist:0, bra:0, top5:0},
+    tags:['Gratuito','CSV','WC 2026','Derivado FBref'],
+    desc:'Conjunto CSV com matches, players e teams da Copa 2026 (schema idêntico ao FBref). Útil como scaffold já montado — mas os números se preenchem conforme o torneio acontece.',
+    strong:['CSV pronto de 2026, sem scraping','Schema FBref (stats avançadas por jogador/time)','Bom ponto de partida rápido'],
+    weak:['Depende de o mantenedor atualizar','Sem eventos/coords','Confiabilidade menor que a fonte original (FBref)'],
+    sample:`# matches.csv (colunas reais)
+round,date,home_team,away_team,score,home_possession,away_possession,
+home_sot,away_sot,home_total_shots,away_total_shots,home_corners,...
+Group stage,2026-06-11,Mexico,South Africa,2–0,61,40,4,2,16,3,3,...`,
+    sampleNote:'Local: kaggle-fifa-worldcup-2026-deep-analysis-prediction/*.csv'
+  },
+  {
+    id:'fdcouk', nome:'football-data.co.uk', url:'https://football-data.co.uk/',
+    access:'free', gran:2.5, granLabel:'🗓️ Resultado + odds', granColor:'var(--dim)',
+    cov:{wc26:0, wchist:0, bra:1, top5:2},
+    tags:['Gratuito','CSV','Odds históricas','Stats básicas'],
+    desc:'CSVs de resultados históricos com estatísticas básicas (chutes, escanteios, faltas, cartões) e — o diferencial — odds de dezenas de casas de aposta, cobrindo muitas ligas por décadas. Foco europeu.',
+    strong:['Odds históricas gratuitas, raríssimo de achar','Décadas de resultados em CSV simples','Bom para modelos de previsão/mercado'],
+    weak:['Sem xG, sem eventos, sem tracking','Foco Europa (Brasileirão limitado)','Stats de jogo bem básicas'],
+    sample:`# E0.csv — colunas
+Div,Date,HomeTeam,AwayTeam,FTHG,FTAG,FTR,HTHG,HTAG,HTR,
+HS,AS,HST,AST,HC,AC,HF,AF,HY,AY,HR,AR,
+B365H,B365D,B365A,...  # gols, chutes, cartões + odds`,
+    sampleNote:'FTHG=gols casa FT · HST=chutes no gol casa · B365H=odd vitória casa Bet365.'
+  },
+  {
+    id:'transfermarkt', nome:'Transfermarkt', url:'https://www.transfermarkt.com.br/',
+    access:'scrape', gran:2, granLabel:'🧾 Mercado / elenco', granColor:'var(--dim)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['Gratuito (scraping)','Valor de mercado','Transferências','Elencos'],
+    desc:'Não é dado de desempenho em campo — é a referência de valor de mercado, transferências, contratos, lesões, elencos e biografia, com cobertura praticamente universal (Brasileirão incluso).',
+    strong:['Única boa fonte de valor de mercado e transfers','Elencos, idades, contratos, lesões — ótimo metadado','Cobre Copa 2026 (convocações, valores) e Brasileirão'],
+    weak:['Zero dado de evento, chute ou xG','Valores são estimativa da comunidade','Anti-scraping moderado'],
+    sample:`// scraping da página do jogador/elenco
+{ "player":"Vinícius Júnior", "club":"Real Madrid",
+  "market_value_eur":200000000, "age":25, "position":"LW",
+  "contract_until":"2027-06-30", "nationality":"Brazil" }`,
+    sampleNote:null
+  },
+  {
+    id:'whoscored', nome:'WhoScored', url:'https://www.whoscored.com/',
+    access:'scrape', gran:3, granLabel:'📊 Stats (Opta)', granColor:'var(--warn)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['Scraping (difícil)','Opta','Ratings detalhados'],
+    desc:'Stats detalhadas alimentadas por Opta, com ratings e dashboards por jogador/jogo e boa cobertura. O problema é o acesso: anti-scraping pesado.',
+    strong:['Dados Opta com bom detalhe de ações','Ratings e mapas por jogador','Cobre WC 2026 e grandes ligas'],
+    weak:['Anti-bot forte — coleta trabalhosa/instável','Sem download oficial','ToS restritiva'],
+    sample:`// dados embutidos no HTML (require.config / matchCentreData)
+matchCentreData = { "events":[
+  {"minute":79,"type":{"displayName":"Goal"},
+   "playerId":...,"x":88.1,"y":49.4}], ... }`,
+    sampleNote:'Local: whoscored.com/…international-fifa-world-cup-2026-norway-england.txt'
+  },
+  {
+    id:'footystats', nome:'FootyStats', url:'https://footystats.org/',
+    access:'scrape', gran:3, granLabel:'📊 Stats de time/jogo', granColor:'var(--warn)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['Freemium','xG agregado','Viés apostas'],
+    desc:'Agregador de stats de time e jogo com algum xG, tendências e foco em apostas. Export CSV e API existem, mas nos planos pagos.',
+    strong:['Boa cobertura de ligas + tendências prontas','xG e stats de time acessíveis','API/CSV disponíveis'],
+    weak:['Export/API são pagos','Granularidade agregada (sem evento/coords)','Orientado a apostas, não a tracking'],
+    sample:`// API (plano pago) — stats de liga/jogo
+{ "team":"Palmeiras","xg_for_avg":1.72,"xg_against_avg":0.88,
+  "btts_pct":54,"corners_avg":6.1 }`,
+    sampleNote:null
+  },
+  {
+    id:'365scores', nome:'365Scores', url:'https://www.365scores.com/pt/football',
+    access:'scrape', gran:2.5, granLabel:'🗓️ Placar + stats', granColor:'var(--dim)',
+    cov:{wc26:1, wchist:1, bra:1, top5:1},
+    tags:['Scraping','Live scores','Stats agregadas'],
+    desc:'Agregador de placares, tabelas e estatísticas de partida, com página dedicada de stats da Copa. Granularidade menor que Sofascore/FotMob.',
+    strong:['Cobertura ampla + interface de stats da Copa','Live scores e tabelas','JSON interno acessível'],
+    weak:['Menos profundo (sem shot map/heatmap ricos)','API não-oficial','xG limitado'],
+    sample:`// endpoint interno de estatísticas do jogo
+{ "stats":[{"name":"Ball Possession","home":"58%","away":"42%"},
+           {"name":"Shots on Target","home":6,"away":3}] }`,
+    sampleNote:'Ref.: 365scores.com/pt/football/league/fifa-world-cup-5930/stats'
+  }
+];
+
+// PAID / ENTERPRISE (reference)
+const PAID = [
+  {
+    id:'opta', nome:'Stats Perform (Opta)', url:'https://www.statsperform.com/products/',
+    access:'paid', gran:5, granLabel:'🎯 Evento + tracking', granColor:'var(--acc)',
+    cov:{wc26:2, wchist:2, bra:2, top5:2},
+    tags:['Enterprise','Padrão-ouro','Event + tracking live'],
+    desc:'O padrão da indústria: evento + tracking ao vivo, o dado que alimenta metade dos outros sites (WhoScored, FBref). Sem qualquer acesso gratuito.',
+    strong:['Máxima granularidade e cobertura, ao vivo','Base de quase todo mundo'],
+    weak:['Licença enterprise (caro)','Sem free tier','Contrato/negociação'],
+    sample:null, sampleNote:null
+  },
+  {
+    id:'hudlsb', nome:'Hudl / StatsBomb (full)', url:'https://www.hudl.com/products/statsbomb',
+    access:'paid', gran:5, granLabel:'🎯 Evento + 360', granColor:'var(--acc)',
+    cov:{wc26:2, wchist:2, bra:2, top5:2},
+    tags:['Enterprise','Event + 360 completo','Todas as ligas'],
+    desc:'A versão paga do StatsBomb: evento + 360 para temporadas completas de todas as grandes ligas, com Copa 2026 provável. O Open Data é uma fração disso.',
+    strong:['Evento + 360 completo, cobertura total','Provável cobertura da Copa 2026'],
+    weak:['Enterprise/caro','Free só o Open Data limitado'],
+    sample:null, sampleNote:null
+  },
+  {
+    id:'wyscout', nome:'Wyscout (Hudl)', url:'https://wyscout.hudl.com/',
+    access:'paid', gran:4, granLabel:'⚽ Evento', granColor:'var(--acc2)',
+    cov:{wc26:2, wchist:2, bra:2, top5:2},
+    tags:['Pago','Event data','Scouting','Cobertura gigante'],
+    desc:'Plataforma de scouting com event data de cobertura enorme (incluindo Brasileirão e ligas menores) + vídeo. Assinatura cara; o dataset público 2017/18 é o que sobra de graça (ver PlayeRank).',
+    strong:['Cobertura de ligas amplíssima','Vídeo + eventos integrados'],
+    weak:['Só pago (e caro)','Interface fechada'],
+    sample:null, sampleNote:null
+  },
+  {
+    id:'sportmonks', nome:'Sportmonks', url:'https://docs.sportmonks.com/v3',
+    access:'paid', gran:3, granLabel:'⚽ Eventos + stats', granColor:'var(--acc2)',
+    cov:{wc26:2, wchist:1, bra:2, top5:2},
+    tags:['Pago (API)','Livescore','xG add-on'],
+    desc:'API paga bem documentada com fixtures, eventos, lineups, xG (add-on) e boa cobertura. Tem plano gratuito só de teste, sem uso real.',
+    strong:['API moderna e documentada','Add-ons de xG/pressure'],
+    weak:['Sem free tier útil','xG e dados avançados custam à parte'],
+    sample:null, sampleNote:null
+  },
+  {
+    id:'dsg', nome:'Data Sports Group (DSG)', url:'https://datasportsgroup.com/fifa-world-cup-data/',
+    access:'paid', gran:5, granLabel:'🎯 Evento + tracking', granColor:'var(--acc)',
+    cov:{wc26:2, wchist:1, bra:1, top5:1},
+    tags:['Enterprise','Pacote Copa 2026','Widgets + API'],
+    desc:'Pacote comercial focado na Copa 2026: dados ao vivo das 104 partidas com passing networks, heatmaps posicionais, ball tracking e coordenadas de evento, além de widgets e microsite. Sem acesso gratuito.',
+    strong:['Pacote 2026 mais completo do mercado comercial','Passing networks + heatmaps + ball tracking prontos'],
+    weak:['Enterprise, sem free','Preço sob consulta'],
+    sample:null, sampleNote:'Verificado: sem tier gratuito.'
+  },
+  {
+    id:'apifutebol', nome:'API-Futebol (BR)', url:'https://www.api-futebol.com.br/',
+    access:'paid', gran:3, granLabel:'⚽ Eventos + stats', granColor:'var(--acc2)',
+    cov:{wc26:2, wchist:1, bra:2, top5:1},
+    tags:['Pago (BR)','Estaduais + Brasileirão','Copa 2026'],
+    desc:'API brasileira com ótima cobertura nacional — estaduais, Brasileirão, continentais e Copa 2026. O forte é o Brasil, mas é paga (free só simbólico).',
+    strong:['Melhor cobertura de futebol brasileiro em API','Estaduais + Brasileirão + Copa 2026'],
+    weak:['Paga','Free tier muito limitado'],
+    sample:null, sampleNote:null
+  },
+  {
+    id:'catapult', nome:'Catapult', url:'https://www.catapult.com/pt/esportes/futebol',
+    access:'paid', gran:5, granLabel:'🛰️ GPS / IMU real', granColor:'#c678dd',
+    cov:{wc26:0, wchist:0, bra:0, top5:0},
+    tags:['Hardware/Pago','Vestível GPS','Só para clubes'],
+    desc:'GPS/acelerômetro vestível de verdade — o dado físico real do jogador. Mas não é dataset que se baixa: é hardware+plataforma vendido a clubes/seleções. Você só teria acesso via um clube.',
+    strong:['Dado físico/GPS real do atleta (o sonho)','Velocidade, aceleração, carga'],
+    weak:['Não é dado público — hardware para clubes','Sem qualquer acesso aberto'],
+    sample:null, sampleNote:null
+  }
+];
+
+// DISCARDED / not a source
+const DISC = [
+  {nome:'dottie.pro', why:'É consultoria de BI/marketing brasileira. O dashboard da Copa é só portfólio, não um produto de dados. <strong>Não é fonte.</strong>', url:'https://dottie.pro/'},
+  {nome:'wc26.bogachev.fr', why:'É o projeto de <em>data portraits</em> do Alexander Bogachev — sua principal <strong>inspiração de estilo</strong>, não uma fonte de dados aberta.', url:'https://wc26.bogachev.fr/'},
+  {nome:'FIFA Data Centre / Archive', url:'https://inside.fifa.com/data-centre/matches/men', why:'Arquivo oficial de partidas com stats básicas, mas sem download em massa e com acesso instável às edições recentes.'},
+  {nome:'PlayeRank site (wyscout.hudl.com)', url:'https://wyscout.hudl.com/', why:'A plataforma Wyscout em si é paga. O que aproveitamos é o dataset público 2017/18 (card PlayeRank, na lista principal).'},
+  {nome:'Stats Perform / Sportmonks / DSG', url:'#', why:'Movidos para a seção de pagos/enterprise como referência — sem coleta prática agora.'}
+];
+
+const covMap = {2:'y',1:'p',0:'n'};
+const covTxt = {2:'', 1:'~', 0:'✕'};
+function covPill(k,v){ const lbl={wc26:'Copa 26',wchist:'Copa hist',bra:'Brasileirão',top5:'Top-5 EU'}[k];
+  return `<span class="${covMap[v]}">${covTxt[v]}${lbl}</span>`; }
+function score(f){ return f.gran*2 + (f.cov.wc26+f.cov.wchist+f.cov.bra+f.cov.top5)/1.4 +
+  ({free:1.5,scrape:1,apifree:1.2,paid:0}[f.access]); }
+function covScore(f){ return f.cov.wc26+f.cov.wchist+f.cov.bra+f.cov.top5; }
+const accessTag = {free:['tag free','Gratuito'],scrape:['tag scrape','Scraping'],apifree:['tag free','API free'],paid:['tag paid','Pago']};
+
+function card(f){
+  const at = accessTag[f.access];
+  return `<div class="card ${score(f)>=13?'pick':''}" data-access="${f.access}" data-2026="${f.cov.wc26>0}" data-name="${f.nome.toLowerCase()}" data-gran="${f.gran}" data-cov="${covScore(f)}" data-score="${score(f).toFixed(2)}">
+    <div class="top">
+      <span class="rank">#</span>
+      <h3><a href="${f.url}" target="_blank" rel="noopener">${f.nome}</a></h3>
+      <span class="gran" style="background:color-mix(in srgb,${f.granColor} 16%,transparent);color:${f.granColor};border:1px solid color-mix(in srgb,${f.granColor} 40%,transparent)">${f.granLabel}</span>
+    </div>
+    <div class="tags"><span class="${at[0]}">${at[1]}</span>${f.tags.slice(1).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <p class="desc">${f.desc}</p>
+    <div class="cov">${Object.keys(f.cov).map(k=>covPill(k,f.cov[k])).join('')}</div>
+    <div class="pf">
+      <div class="blk strong"><span class="lbl">Pontos fortes</span><ul>${f.strong.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+      <div class="blk weak"><span class="lbl">Pontos fracos</span><ul>${f.weak.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+    </div>
+    ${f.sample?`<details class="sample"><summary>ver amostra de dado</summary><pre>${f.sample.replace(/</g,'&lt;')}</pre>${f.sampleNote?`<p class="note">${f.sampleNote}</p>`:''}</details>`:(f.sampleNote?`<p class="note">${f.sampleNote}</p>`:'')}
+  </div>`;
+}
+
+const ALL = [...F, ...PAID];
+const grid = document.getElementById('grid');
+function render(){
+  const acc = document.querySelector('#accessSeg .on').dataset.f;
+  const only26 = document.getElementById('only2026').checked;
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const sort = document.getElementById('sort').value;
+  let list = ALL.slice();
+  list.sort((a,b)=> sort==='name'? a.nome.localeCompare(b.nome)
+    : sort==='gran'? b.gran-a.gran || score(b)-score(a)
+    : sort==='cov'? covScore(b)-covScore(a) || score(b)-score(a)
+    : score(b)-score(a));
+  grid.innerHTML = list.map(card).join('');
+  let shown=0;
+  [...grid.children].forEach((el,i)=>{
+    const f = list[i];
+    let ok = true;
+    if(acc!=='all' && f.access!==acc) ok=false;
+    if(only26 && !(f.cov.wc26>0)) ok=false;
+    if(q && !f.nome.toLowerCase().includes(q) && !f.desc.toLowerCase().includes(q) && !f.tags.join(' ').toLowerCase().includes(q)) ok=false;
+    el.classList.toggle('hide',!ok);
+    if(ok){ shown++; el.querySelector('.rank').textContent = shown; }
+  });
+  document.getElementById('count').textContent = shown+' fontes';
+}
+document.querySelectorAll('#accessSeg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#accessSeg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); render();
+});
+['only2026','sort','q'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+
+// matrix
+const covCell = v => `<td class="${['nn','pp','yy'][v]}">${['✕','~','●'][v]}</td>`;
+document.querySelector('#mtx tbody').innerHTML = ALL.slice().sort((a,b)=>score(b)-score(a)).map(f=>
+  `<tr><td class="src">${f.nome}</td><td style="color:var(--mut)">${f.granLabel}</td>
+   ${covCell(f.cov.wc26)}${covCell(f.cov.wchist)}${covCell(f.cov.bra)}${covCell(f.cov.top5)}
+   <td>${accessTag[f.access][1]}</td></tr>`).join('');
+
+// discarded
+document.getElementById('disc').innerHTML = DISC.map(d=>
+  `<div class="card"><div class="top"><h3><a href="${d.url}" target="_blank" rel="noopener">${d.nome}</a></h3></div>
+   <p class="desc">${d.why}</p></div>`).join('');
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como ler — Onda da Partida</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; background: #04050c; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #cfcdc2;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 24px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      color: #009dff;
+      text-decoration: none;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      transition: color 0.2s ease;
+    }
+    .back-btn:hover {
+      color: #fff;
+    }
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      background: linear-gradient(45deg, #ffffff, #8f8d84);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 16px;
+      color: #8f8d84;
+      font-weight: 400;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      font-size: 20px;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: 10px;
+    }
+    p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: #c9c7bc;
+    }
+    p strong {
+      color: #fff;
+    }
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+    li {
+      margin-bottom: 8px;
+      font-size: 14.5px;
+      color: #c9c7bc;
+    }
+    li strong {
+      color: #fff;
+    }
+    
+    /* Grid de Pontos Fortes e Limitações */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 768px) {
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .analysis-card {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .analysis-card.strengths {
+      border: 1px solid rgba(0, 157, 255, 0.15);
+    }
+    .analysis-card.limitations {
+      border: 1px solid rgba(255, 59, 95, 0.15);
+    }
+    .analysis-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .analysis-card.strengths h3 {
+      color: #009dff;
+    }
+    .analysis-card.limitations h3 {
+      color: #ff3b5f;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge.blue { background: rgba(0, 157, 255, 0.12); color: #009dff; }
+    .badge.red { background: rgba(255, 59, 95, 0.12); color: #ff3b5f; }
+    .badge.purple { background: rgba(127, 108, 175, 0.15); color: #c084fc; }
+    
+    .model-detail {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 15px;
+      font-size: 13.5px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .model-detail code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #fff;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #8f8d84;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 24px;
+    }
+    footer a {
+      color: #cfcdc2;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <a href="onda-da-partida.html" class="back-btn">‹ Voltar ao Retrato</a>
+    <h1>Como Ler o Retrato Visual</h1>
+    <div class="subtitle">Um ensaio de Visual Data Analytics (VDA) sobre o controle espacial no futebol</div>
+  </header>
+
+  <main>
+    <!-- Seção 1: O Conceito -->
+    <section class="card">
+      <h2>O Conceito da "Onda da Partida"</h2>
+      <p>
+        A <strong>Onda da Partida</strong> é uma representação tridimensional imersiva do domínio espacial em um jogo de futebol.
+        Este estilo de visualização é uma adaptação das inovadoras ideias do designer de dados e analista <strong>Alexander Bogachev</strong>,
+        que propôs retratar o campo como uma superfície orgânica e fluida para traduzir a física e a tensão tática do jogo.
+      </p>
+      <p>
+        Os dados utilizados nesta demonstração provêm do repositório público de dados de rastreamento (tracking) da <strong>Metrica Sports</strong>,
+        uma empresa líder em tecnologia de análise de desempenho esportivo. A captura registra as coordenadas de todos os 22 jogadores e da bola a uma taxa de <strong>25 quadros por segundo (25 Hz)</strong>.
+      </p>
+    </section>
+
+    <!-- Seção 2: Como Funciona o Modelo -->
+    <section class="card">
+      <h2>Como Funciona a Matemática Visual</h2>
+      <p>
+        A superfície tridimensional que você vê flutuando sobre o campo de jogo é gerada dinamicamente através de dois componentes matemáticos principais:
+      </p>
+      
+      <ul>
+        <li>
+          <strong>1. Controle de Campo (Pitch Control) – Cor da Malha:</strong>
+          Para cada pequeno quadrante do campo, o modelo calcula o tempo físico que cada jogador levaria para correr até aquele ponto (com base em sua distância e velocidade).
+          A cor resultante é uma mistura contínua baseada no controle:
+          <br><br>
+          <span class="badge blue">Azul</span> representa controle absoluto do <strong>Mandante (MAN)</strong>.
+          <br>
+          <span class="badge red">Vermelho</span> representa controle absoluto do <strong>Visitante (VIS)</strong>.
+          <br>
+          <span class="badge purple">Roxo</span> representa a zona de <strong>Disputa Territorial</strong> (onde os tempos de chegada de ambos os times são quase idênticos).
+          <br><br>
+          Onde o controle é totalmente indefinido na fronteira imediata, a malha se rasga sutilmente, gerando uma fresta visual de alta dramaticidade.
+        </li>
+        <li>
+          <strong>2. Altura da Malha (Multiplicador de Perigo):</strong>
+          A altura das ondas tridimensionais representa a relevância do controle territorial. Ela é calculada multiplicando o grau de dominância territorial pelo <strong>perigo espacial</strong> (a proximidade do local em relação ao gol adversário).
+          Pontos de controle próximos ao gol de ataque geram paredões mais altos. Além disso:
+          <ul>
+            <li>Ao redor da bola, a malha recebe um impulso dinâmico de <strong>50% adicionais de altura</strong> para destacar o epicentro da ação.</li>
+            <li>No momento de um gol, a malha do autor do gol se eleva dramaticamente na jogada e o campo inteiro se tinge da cor do time que marcou até a bola voltar a rolar.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="model-detail">
+        <strong>Eletrocardiograma (ECG) Inferior:</strong> O gráfico na parte inferior da tela resume o balanço territorial líquido do jogo segundo a segundo.
+        Picos para cima indicam amplo domínio territorial do Mandante, enquanto picos para baixo indicam domínio do Visitante.
+        Você pode <strong>clicar ou arrastar</strong> ao longo do ECG para navegar no tempo e assistir aos movimentos táticos em qualquer velocidade.
+      </div>
+    </section>
+
+    <!-- Seção 3: Pontos Fortes e Limitações -->
+    <section class="analysis-grid">
+      
+      <!-- Pontos Fortes -->
+      <div class="analysis-card strengths">
+        <h3>Pontos Fortes da Visualização</h3>
+        <ul>
+          <li>
+            <strong>Leitura Holística Rápida:</strong>
+            Em vez de tentar acompanhar 22 pontos em movimento simultâneo (o que satura a carga cognitiva), o analista consegue entender instantaneamente as linhas de compactação, blocos de marcação e espaços vazios pela leitura da malha colorida.
+          </li>
+          <li>
+            <strong>Ponderação por Perigo Espacial:</strong>
+            Diferente de mapas de calor tradicionais que apenas mostram onde os jogadores estão, a tridimensionalidade baseada no perigo do gol contextualiza a importância real daquela posse de bola.
+          </li>
+          <li>
+            <strong>Interatividade Espacial 3D:</strong>
+            A capacidade de arrastar com o mouse para rotacionar e mudar a elevação da câmera permite que o usuário altere a perspectiva (por exemplo, visualizar a partida "por trás da defesa" ou em uma "visão aérea vertical").
+          </li>
+          <li>
+            <strong>Síntese Temporal Integrada:</strong>
+            O ECG simplifica 90 minutos de flutuação de controle em uma única linha contínua, permitindo identificar instantaneamente momentos de pressão e reviravoltas da partida.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Limitações -->
+      <div class="analysis-card limitations">
+        <h3>Limitações do Modelo (VDA)</h3>
+        <ul>
+          <li>
+            <strong>Modelo Físico Simplificado:</strong>
+            O cálculo de tempo de viagem assume que todos os atletas correm à mesma velocidade máxima padrão (4.5 m/s) e aceleração constante. Não são considerados cansaço, velocidade máxima real de cada atleta, nem a direção em que o corpo do jogador já está orientado.
+          </li>
+          <li>
+            <strong>Desconsideração da Altura da Bola (2D):</strong>
+            O rastreamento e o modelo tratam o jogo como estritamente bidimensional. Trajetórias aéreas (como lançamentos altos ou cruzamentos elevados) não são processadas em sua componente de altura real, o que pode falsear quem de fato domina o espaço aéreo.
+          </li>
+          <li>
+            <strong>Ausência de Pressão de Jogo:</strong>
+            O modelo de Pitch Control assume o controle de espaço apenas pela distância e velocidade de corrida. Ele não pondera se um jogador está de costas sob forte pressão técnica ou se é dotado de maior capacidade de passe e drible para romper o espaço.
+          </li>
+          <li>
+            <strong>Custo de Processamento Gráfico:</strong>
+            A renderização em tempo real da malha 3D interpolada e ordenada por profundidade diretamente em Canvas 2D exige processamento de CPU considerável do navegador.
+          </li>
+        </ul>
+      </div>
+      
+    </section>
+
+  </main>
+
+  <footer>
+    Dados de Rastreamento fornecidos por <a href="https://github.com/metrica-sports/sample-data" target="_blank">Metrica Sports</a>
+  </footer>
+</div>
+
+</body>
+</html>

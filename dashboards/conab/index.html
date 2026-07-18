@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Histórico Conab — Área, Produção e Produtividade</title>
+    
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Leaflet CSS para Mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Chart.js para Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS Customizado do Painel -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Scripts de Dados Locais em JS (evita problemas de CORS no file://) -->
+    <script src="data/malha_br_ufs.js"></script>
+    <script src="data/conab_data.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-logo">
+                <div class="logo-icon">
+                    <i data-lucide="sprout"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Histórico Conab</h1>
+                    <p>Área, Produção e Rendimento de Culturas no Brasil (1976 - 2026)</p>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <!-- Tabs de Categoria -->
+                <div class="category-tabs">
+                    <button class="tab-btn active" data-category="Grãos">Grãos</button>
+                    <button class="tab-btn" data-category="Café">Café</button>
+                    <button class="tab-btn" data-category="Cana-de-Açúcar">Cana-de-Açúcar</button>
+                </div>
+                
+                <!-- Dropdown de Cultura -->
+                <div class="metric-selector">
+                    <select id="crop-select">
+                        <option value="soja" selected>Soja</option>
+                    </select>
+                </div>
+                
+                <!-- Dropdown de Métrica -->
+                <div class="metric-selector">
+                    <select id="metric-select">
+                        <option value="production" selected>Produção (Toneladas)</option>
+                        <option value="area">Área Plantada (Hectares)</option>
+                        <option value="yield">Produtividade (kg/ha)</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Grid -->
+        <section class="kpi-grid">
+            <div class="kpi-card" id="card-production">
+                <div class="kpi-icon-wrapper prod-bg">
+                    <i data-lucide="package"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Produção Nacional</span>
+                    <h3 class="kpi-value" id="kpi-prod-val">0.0 t</h3>
+                    <span class="kpi-change neutral" id="kpi-prod-change">--</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card" id="card-area">
+                <div class="kpi-icon-wrapper area-bg">
+                    <i data-lucide="map"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Área Plantada Total</span>
+                    <h3 class="kpi-value" id="kpi-area-val">0.0 ha</h3>
+                    <span class="kpi-change neutral" id="kpi-area-change">--</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card" id="card-yield">
+                <div class="kpi-icon-wrapper yield-bg">
+                    <i data-lucide="trending-up"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Produtividade Média</span>
+                    <h3 class="kpi-value" id="kpi-yield-val">0 kg/ha</h3>
+                    <span class="kpi-change neutral" id="kpi-yield-change">--</span>
+                </div>
+            </div>
+            
+            <div class="kpi-card" id="card-leader">
+                <div class="kpi-icon-wrapper leader-bg">
+                    <i data-lucide="award"></i>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Estado Líder</span>
+                    <h3 class="kpi-value" id="kpi-leader-val">--</h3>
+                    <span class="kpi-change positive" id="kpi-leader-sub">Sem registros</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Content Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Side: Map -->
+            <div class="grid-left">
+                <div class="panel map-panel">
+                    <div class="panel-header">
+                        <h2><i data-lucide="map-pin"></i> Distribuição Geográfica de <span id="badge-crop">Soja</span></h2>
+                        <span class="badge" id="badge-safra">2025/26</span>
+                    </div>
+                    
+                    <div class="map-container-wrapper">
+                        <div id="map-br"></div>
+                    </div>
+                    
+                    <div class="map-legend">
+                        <span class="legend-label" id="legend-min">0</span>
+                        <div class="legend-scale" id="map-legend-scale"></div>
+                        <span class="legend-label" id="legend-max">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Charts & Details -->
+            <div class="grid-right">
+                <!-- Panel de Filtro de UF Ativa -->
+                <div class="active-filter-details" id="filter-details-container" style="display: none;">
+                    <div class="filter-details-header">
+                        <h3 id="filter-uf-title"><i data-lucide="map-pin"></i> Paraná (PR)</h3>
+                        <button class="btn-clear-filter" id="btn-clear-uf">Limpar Filtro</button>
+                    </div>
+                    <div class="filter-stats-grid">
+                        <div class="filter-stat-item">
+                            <span class="filter-stat-label">Produção</span>
+                            <strong id="filter-prod">0.0 t</strong>
+                        </div>
+                        <div class="filter-stat-item">
+                            <span class="filter-stat-label">Área Plantada</span>
+                            <strong id="filter-area">0.0 ha</strong>
+                        </div>
+                        <div class="filter-stat-item">
+                            <span class="filter-stat-label">Produtividade</span>
+                            <strong id="filter-yield">0 kg/ha</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Evolução Histórica -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i data-lucide="line-chart"></i> Evolução Histórica (<span id="selected-metric-label">Produção</span>)</h2>
+                        <span class="badge-accent">Linha do Tempo</span>
+                    </div>
+                    <div class="chart-container main-evolution-chart">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Ranking dos Estados -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i data-lucide="bar-chart-3"></i> Top 10 Estados Produtores</h2>
+                        <span class="badge-accent">Maiores UFs</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="rankingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Timeline Footer (Controle temporal) -->
+    <footer class="timeline-footer">
+        <div class="timeline-controls">
+            <button class="btn-play-pause" id="play-btn" title="Iniciar Animação Temporal">
+                <i data-lucide="play"></i>
+            </button>
+            <div class="timeline-slider-wrapper">
+                <span class="time-label" id="timeline-start-label">1976/77</span>
+                <input type="range" class="year-slider" id="timeline-slider" value="0" min="0" max="49" autocomplete="off">
+                <span class="time-label" id="timeline-end-label">2025/26</span>
+            </div>
+            <div class="current-year-display">
+                <span id="display-year">2025/26</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Principal da Aplicação -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Brasil de Lupa — Atlas 3D com dados do IBGE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#06080f; --panel:rgba(12,15,30,.72); --line:rgba(120,140,220,.22);
+    --tx:#e6ecff; --mut:#8a94c0; --mut2:#6c76a4;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--tx);
+    font-family:"Segoe UI", system-ui, sans-serif; min-height:100%; }
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(188,55,84,.16), transparent 60%),
+      radial-gradient(1100px 620px at 90% 0%, rgba(33,145,140,.16), transparent 55%),
+      radial-gradient(900px 700px at 60% 110%, rgba(45,116,232,.14), transparent 55%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+  .wrap{ max-width:1160px; margin:0 auto; padding:56px 24px 60px; }
+
+  header .kicker{ font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--mut2); font-weight:600; }
+  header h1{ margin:6px 0 10px; font-size:clamp(32px,6vw,54px); font-weight:800; letter-spacing:-.5px; line-height:1.02;
+    background:linear-gradient(100deg,#fcffa4,#f98e09,#bc3754 45%,#21918c 72%,#5ec2ff);
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  header p{ margin:0; max-width:640px; color:var(--mut); font-size:15px; line-height:1.55; }
+  header .meta{ margin-top:14px; display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--mut2); }
+  header .meta b{ color:#aab3dd; font-weight:600; }
+
+  .grid{ margin-top:40px; display:grid; gap:20px; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); }
+
+  .card{ position:relative; display:flex; flex-direction:column; text-decoration:none; color:inherit;
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    backdrop-filter:blur(9px); transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+  .card.live:hover{ transform:translateY(-5px); border-color:rgba(160,180,255,.5);
+    box-shadow:0 16px 40px rgba(0,0,0,.45); }
+  .card.soon{ opacity:.62; }
+  .poster{ height:132px; position:relative; border-bottom:1px solid var(--line);
+    display:flex; align-items:flex-end; justify-content:center; }
+  .poster svg{ width:100%; height:100%; display:block; }
+  .body{ padding:15px 17px 17px; }
+  .body h2{ margin:0 0 5px; font-size:18px; font-weight:700; letter-spacing:.2px; }
+  .body .desc{ margin:0; font-size:12.5px; color:var(--mut); line-height:1.5; min-height:38px; }
+  .body .src{ margin-top:11px; font-size:10.5px; color:var(--mut2); letter-spacing:.4px; text-transform:uppercase; }
+
+  .badge{ position:absolute; top:12px; right:12px; z-index:2; font-size:10px; font-weight:700; letter-spacing:.5px;
+    text-transform:uppercase; padding:4px 9px; border-radius:20px; }
+  .badge.pronto{ background:rgba(94,201,98,.16); color:#8ee06a; border:1px solid rgba(94,201,98,.4); }
+  .badge.breve{ background:rgba(140,160,255,.12); color:#aab3dd; border:1px solid rgba(140,160,255,.3); }
+  .go{ display:inline-flex; align-items:center; gap:6px; margin-top:13px; font-size:12.5px; font-weight:600; color:#c9d2ff; }
+  .go svg{ transition:transform .18s ease; }
+  .card.live:hover .go svg{ transform:translateX(4px); }
+
+  footer{ margin-top:46px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--mut2); }
+  footer b{ color:var(--mut); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Brasil de Lupa · atlas 3D</div>
+    <h1>O Brasil em três dimensões</h1>
+    <p>Uma coleção de mapas 3D interativos construídos com dados abertos do <b>IBGE</b> —
+       cada um explora uma faceta do país: quantos somos, como mudamos, quanto ganhamos.
+       Arraste para girar, role para dar zoom, passe o mouse para os detalhes.</p>
+    <div class="meta">
+      <span><b>10</b> mapas · todos prontos</span>
+      <span>Fonte: <b>IBGE</b> (Censos, estimativas, SIDRA)</span>
+      <span>Renderização: <b>deck.gl</b></span>
+    </div>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <span><a href="../index.html" style="color:#aab3dd;text-decoration:none">← portfólio</a> · Projeto <b>Brasil de Lupa</b> · mapas independentes, uma identidade só.</span>
+    <span>Dados © IBGE · uso educativo e exploratório.</span>
+  </footer>
+</div>
+
+<script>
+// motivos SVG por mapa (inline, sem assets externos)
+const bars = (cols, grad) => {
+  const id = 'g'+Math.random().toString(36).slice(2,7);
+  let rects=''; const n=cols.length, w=100/n;
+  cols.forEach((h,i)=>{ rects+=`<rect x="${(i*w+w*0.18).toFixed(2)}" y="${(100-h).toFixed(2)}" width="${(w*0.64).toFixed(2)}" height="${h.toFixed(2)}" rx="1.2" fill="url(#${id})"/>`; });
+  return `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="${id}" x1="0" y1="1" x2="0" y2="0">${grad}</linearGradient></defs>${rects}</svg>`;
+};
+const inferno = '<stop offset="0" stop-color="#1b0c3b"/><stop offset=".5" stop-color="#bc3754"/><stop offset="1" stop-color="#fcffa4"/>';
+const diver   = '<stop offset="0" stop-color="#2574e8"/><stop offset=".5" stop-color="#6c768c"/><stop offset="1" stop-color="#ef4444"/>';
+const viridis = '<stop offset="0" stop-color="#440154"/><stop offset=".5" stop-color="#21918c"/><stop offset="1" stop-color="#fde725"/>';
+
+const arcsSVG = `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="ar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+  ${[[12,82,48,20],[30,86,80,40],[20,78,66,30],[55,84,90,55]].map(([x1,y1,x2,y2])=>`<path d="M${x1} ${y1} Q ${(x1+x2)/2} ${Math.min(y1,y2)-38} ${x2} ${y2}" fill="none" stroke="url(#ar)" stroke-width="1.6" opacity=".85"/><circle cx="${x1}" cy="${y1}" r="2.2" fill="#22d3ee"/><circle cx="${x2}" cy="${y2}" r="2.2" fill="#a78bfa"/>`).join('')}</svg>`;
+const pyramidSVG = `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="py" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#4c1d95"/><stop offset="1" stop-color="#f59e42"/></linearGradient></defs>
+  ${Array.from({length:9},(_,i)=>{const y=90-i*9; const w=(9-i)*4.6; return `<rect x="${50-w-1}" y="${y}" width="${w}" height="6.4" rx="1" fill="url(#py)"/><rect x="51" y="${y}" width="${w*0.92}" height="6.4" rx="1" fill="url(#py)" opacity=".8"/>`;}).join('')}</svg>`;
+const agroSVG = `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="ag" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#14532d"/><stop offset="1" stop-color="#eab308"/></linearGradient></defs>
+  <path d="M0 100 L0 62 Q25 48 50 60 T100 56 L100 100 Z" fill="url(#ag)" opacity=".55"/>
+  <path d="M0 100 L0 78 Q30 66 55 76 T100 72 L100 100 Z" fill="url(#ag)"/>
+  ${Array.from({length:16},(_,i)=>`<line x1="${i*6.5+3}" y1="100" x2="${i*6.5+3}" y2="82" stroke="#eab308" stroke-width="0.8" opacity=".5"/>`).join('')}</svg>`;
+const greenGold = '<stop offset="0" stop-color="#14532d"/><stop offset=".5" stop-color="#7cb342"/><stop offset="1" stop-color="#facc3c"/>';
+const mosaicSVG = `<svg viewBox="0 0 100 100" preserveAspectRatio="none">${
+  [['#f5c518','#22c55e','#a78bfa','#b05426','#f97316','#38bdf8'],
+   ['#22c55e','#f5c518','#f97316','#a3e635','#a78bfa','#f5c518'],
+   ['#a78bfa','#f97316','#f5c518','#22c55e','#ef4444','#c026d3'],
+   ['#f97316','#a3e635','#22c55e','#f5c518','#f97316','#22c55e']]
+   .map((row,r)=>row.map((c,ci)=>`<rect x="${ci*100/6}" y="${r*25}" width="${100/6+0.6}" height="25.6" fill="${c}" opacity="0.9"/>`).join('')).join('')}</svg>`;
+
+const econSVG = `<svg viewBox="0 0 100 100" preserveAspectRatio="none">${
+  [['#7ab548',55],['#e67e22',40],['#3498db',82],['#9b59b6',48],['#3498db',95],['#e67e22',60],['#9b59b6',70],['#7ab548',52],['#3498db',88],['#9b59b6',44],['#e67e22',66],['#3498db',76]]
+  .map(([c,h],i)=>{const w=100/12; return `<rect x="${(i*w+w*0.15).toFixed(2)}" y="${100-h}" width="${(w*0.7).toFixed(2)}" height="${h}" rx="1" fill="${c}"/>`;}).join('')}</svg>`;
+
+const MAPS = [
+  { live:true, file:'brasil_em_picos.html', title:'Brasil em Picos',
+    desc:'População de cada município como um pico 3D. O país inteiro e o modo "RS de Lupa".',
+    src:'Estimativas IBGE 2025', poster: bars([22,40,28,62,45,80,55,95,70,50,35,58,42,72,30], inferno) },
+  { live:true, file:'brasil_no_tempo.html', title:'Brasil no Tempo',
+    desc:'Crescimento populacional animado de 2001 a 2025. Quem cresce vs. quem encolhe.',
+    src:'SIDRA 6579 · 2001–2025', poster: bars([30,44,26,66,40,84,50,70,90,58,38,62,48,78,34], diver) },
+  { live:true, file:'brasil_desigual.html', title:'Brasil Desigual',
+    desc:'Renda per capita por município. A desigualdade vira cor — e vira topografia.',
+    src:'Censo 2022 · SIDRA 10295', poster: bars([18,52,30,74,44,88,40,64,96,48,34,70,50,82,28], viridis) },
+  { live:true, file:'brasil_que_envelhece.html', title:'Brasil que Envelhece',
+    desc:'A transição demográfica: do RS grisalho à Amazônia jovem. Idade mediana por município.',
+    src:'Censo 2022 · SIDRA 10097', poster: pyramidSVG },
+  { live:true, file:'brasil_em_movimento.html', title:'Brasil em Movimento',
+    desc:'Arcos de migração entre estados: SC atrai, o Rio perde. Censo 2022, janela de 5 anos.',
+    src:'Censo 2022 · SIDRA 10159', poster: arcsSVG },
+  { live:true, file:'brasil_que_planta.html', title:'Brasil que Planta',
+    desc:'O cinturão da soja: 152 Mt em 2023, de Mato Grosso ao MATOPIBA.',
+    src:'PAM 2023 · SIDRA 5457', poster: agroSVG },
+  { live:true, file:'brasil_soja_no_tempo.html', title:'A Onda da Soja',
+    desc:'A fronteira agrícola no tempo: 8 Mt em 1974 → 145 Mt em 2024, varrendo o Cerrado.',
+    src:'PAM 1974–2024 · SIDRA 5457', poster: bars([8,11,15,19,24,30,38,47,58,70,83,95], greenGold) },
+  { live:true, file:'brasil_mosaico.html', title:'O que o Brasil Planta',
+    desc:'A lavoura de maior valor em cada município — soja, cana, café, mandioca, milho…',
+    src:'PAM 2023 · SIDRA 5457', poster: mosaicSVG },
+  { live:true, file:'brasil_culturas.html', title:'Culturas do Brasil',
+    desc:'Escolha o produto: milho, café, cana, arroz… e o rebanho bovino. Onde o Brasil produz.',
+    src:'PAM+PPM 2023 · IBGE', poster: bars([40,72,32,86,52,95,46,78,62,90,38,68], greenGold) },
+  { live:true, file:'brasil_economia.html', title:'A Economia do Brasil',
+    desc:'PIB por município e o setor que mais gera valor. Em 34% dos municípios, é a administração pública.',
+    src:'PIB Municipal 2021 · SIDRA 5938', poster: econSVG },
+];
+
+const arrow = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+document.getElementById('grid').innerHTML = MAPS.map(m => {
+  const inner = `
+    <span class="badge ${m.live?'pronto':'breve'}">${m.live?'pronto':'em breve'}</span>
+    <div class="poster">${m.poster}</div>
+    <div class="body">
+      <h2>${m.title}</h2>
+      <p class="desc">${m.desc}</p>
+      <div class="src">${m.src}</div>
+      ${m.live ? `<span class="go">Explorar ${arrow}</span>` : ''}
+    </div>`;
+  return m.live
+    ? `<a class="card live" href="${m.file}" target="_blank" rel="noopener">${inner}</a>`
+    : `<div class="card soon">${inner}</div>`;
+}).join('');
+</script>
+</body>
+</html>
