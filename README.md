@@ -1,4 +1,4 @@
-# Otávio Corrêa · Visual Data Analytics
+# Otávio Pelego · Visual Data Analytics
 
 Portfólio de visualização de dados interativa — atlas 3D do Brasil, data portraits de futebol e dashboards analíticos, tudo rodando 100% no navegador (client-side, sem backend).
 
@@ -43,4 +43,4 @@ Site estático puro — publicado via Cloudflare Pages (sem etapa de build, outp
 
 `o2cnutri_mvp_presentation/` é um diretório legado de assets do MVP [O2C Nutri](https://otaviopelego.github.io/phosphorus/portfolio/o2c_nutri.html) (Phosphorus), mantido por compatibilidade de links.
 
-**Otávio Corrêa** · fundador da [Phosphorus](https://otaviopelego.github.io/phosphorus/) · pelegocorrea@gmail.com
+**Otávio Pelego** — nome profissional de *Otávio de Oliveira Corrêa* · fundador da [Phosphorus](https://otaviopelego.github.io/phosphorus/) · pelegocorrea@gmail.com
