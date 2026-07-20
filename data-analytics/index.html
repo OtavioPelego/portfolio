@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Data Analytics — Otávio Pelego</title>
+<meta name="description" content="Transformo dados em visualizações interativas que qualquer pessoa entende: dashboards de operação, mapas 3D em WebGL e relatórios que se exploram no navegador.">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-top:22px}
+  .gcard{position:relative;display:flex;flex-direction:column;background:var(--panel);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;
+    transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .gcard:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 16px 40px -18px var(--ac)}
+  .gcard .cover{height:150px;background-size:cover;background-position:center;position:relative}
+  .gcard .cover::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,14,19,.05) 0%,rgba(11,14,19,.5) 70%,var(--panel) 100%)}
+  .gcard .glyph{position:absolute;right:14px;bottom:10px;z-index:2;font-size:30px;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+  .gcard .gbody{padding:15px 18px 17px;display:flex;flex-direction:column;flex:1}
+  .gcard h3{margin:0 0 3px;font-size:18.5px;letter-spacing:-.015em}
+  .gcard .tl{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ac);
+    text-transform:uppercase;margin:0 0 9px}
+  .gcard p{margin:0 0 13px;font-size:13.5px;color:var(--mut);flex:1}
+  .gcard .gfoot{display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--line);padding-top:11px;margin-top:auto}
+  .gcard .src{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+  .gcard .go{font-family:var(--mono);font-size:12px;color:var(--ac);display:flex;align-items:center;gap:5px}
+  .gcard:hover .go .arw{transform:translateX(4px)}
+  .gcard .go .arw{transition:transform .18s}
+  @media (prefers-color-scheme:light){
+    .gcard .cover::after{background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.5) 70%,var(--panel) 100%)}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" href="../index.html"><span class="dot"></span> Otávio Pelego</a>
+  <nav class="topnav">
+    <a href="./" aria-current="page">Data Analytics</a>
+    <a href="../workflows/">Automações</a>
+    <a href="../contents/">Conteúdo</a>
+    <a href="../websites/">Sites</a>
+    <a href="../consulting/">Consultoria</a>
+  </nav>
+</div></div>
+
+<header><div class="wrap">
+  <p class="kicker">Visual Data Analytics</p>
+  <h1 class="wide">Seus dados existem. A <span class="g">clareza</span> é que não.</h1>
+  <p class="lede">Toda empresa acumula dado. Quase nenhuma consegue olhar para ele e decidir alguma coisa. Eu faço a ponte: pego o que está preso em planilha, sistema e PDF e devolvo em algo que a sua equipe entende sem precisar de treinamento.</p>
+</div></header>
+
+<div class="wrap">
+
+  <p class="sechead"><span>Talvez você se reconheça aqui</span></p>
+  <div class="pains">
+    <div class="pain"><b>O relatório que ninguém abre</b><span>Um PDF de 40 páginas chega toda segunda. A diretoria olha a primeira folha e arquiva o resto.</span></div>
+    <div class="pain"><b>A planilha refém de uma pessoa</b><span>Só o Fulano entende aquele arquivo. Se ele sai de férias, a empresa fica cega.</span></div>
+    <div class="pain"><b>A decisão no achismo</b><span>O dado está lá, mas dá tanto trabalho cruzar que no fim todo mundo decide pela intuição mesmo.</span></div>
+  </div>
+
+  <h2 class="big">O que eu entrego</h2>
+  <p class="sub">Não é "um dashboard". É o caminho inteiro, do dado bruto até a tela que a pessoa usa.</p>
+  <ul class="checks">
+    <li><b>Painéis vivos</b> — a operação em tempo real, atualizando sozinha, acessível pelo navegador ou celular.</li>
+    <li><b>Mapas e visualizações 3D</b> — quando o dado é geográfico, ver o território muda o que se percebe.</li>
+    <li><b>Relatórios que se exploram</b> — em vez do PDF morto, uma página onde a pessoa clica e responde a própria dúvida.</li>
+    <li><b>Apresentações com fator uau</b> — o mesmo estudo que você entregaria em PowerPoint, virando uma página que impressiona o seu cliente.</li>
+    <li><b>O pipeline por trás</b> — extração, limpeza e cruzamento das bases, para o número chegar certo e sozinho.</li>
+    <li><b>Autonomia sua</b> — entrego funcionando e explico como mexer. Não crio dependência de mim.</li>
+  </ul>
+
+  <p class="sechead"><span>Prova: o que já fiz para clientes</span></p>
+
+  <div class="proof">
+    <p class="lbl">Charqueada São João · turismo, excursões e eventos</p>
+    <h4>De um ano de planilhas para um radar estratégico</h4>
+    <p>Um histórico denso de um ano inteiro estava servindo só para consulta. Construí um ecossistema de Business Intelligence no Looker Studio focado em relacionamento e oportunidade comercial: extração e estruturação de uma base de quase <strong>10.000 leads</strong>, além de um mapeamento de influência em diagrama de Sankey rastreando "quem traz quem".</p>
+    <p>A diretoria saiu de planilhas estáticas para controle visual da origem dos visitantes, das influências e da sazonalidade.</p>
+    <div class="chips"><span class="chip">Looker Studio</span><span class="chip">~10.000 leads</span><span class="chip">Sankey</span><span class="chip">sazonalidade</span></div>
+  </div>
+
+  <div class="proof">
+    <p class="lbl">Nexus Propriedades · mercado imobiliário</p>
+    <h4>O estudo de mercado que virou página web em um clique</h4>
+    <p>As apresentações de estudo de mercado dependiam de processo manual e chegavam ao cliente final com percepção de valor baixa. Automatizei a geração: em um clique, o estudo vira uma página web customizada e visualmente impactante — o "fator uau" que muda como o cliente recebe o trabalho.</p>
+    <p>Fez parte de um projeto maior, com CRM proprietário sob medida e dashboards financeiros em tempo real.</p>
+    <div class="chips"><span class="chip">automação</span><span class="chip">CRM sob medida</span><span class="chip">dashboards financeiros</span></div>
+  </div>
+
+  <p class="sechead"><span>Prova: projetos autorais com dados públicos</span><a href="../index.html">← voltar ao início</a></p>
+  <p class="sub">Ninguém me contratou para fazer isto. Construí porque é o que eu faço quando ninguém está pedindo — e é a melhor amostra do padrão que entrego.</p>
+
+  <div class="gallery">
+
+    <a class="gcard" style="--ac:var(--amber)" href="../brasil-de-lupa/brasil_em_picos.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#1b0c3b,#bc3754 60%,#f98e09)"><span class="glyph">🏔️</span></div>
+      <div class="gbody">
+        <h3>Brasil em Picos</h3>
+        <p class="tl">População em relevo</p>
+        <p>A mediana dos municípios brasileiros tem cerca de 11 mil habitantes. São Paulo tem 11,9 milhões. Essa distorção é difícil de sentir numa tabela — em 3D, ela salta aos olhos.</p>
+        <div class="gfoot"><span class="src">IBGE · Estimativas 2025</span><span class="go">abrir <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--blue)" href="../brasil-de-lupa/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#062015,#0f6b52 60%,#21918c)"><span class="glyph">🗺️</span></div>
+      <div class="gbody">
+        <h3>Brasil de Lupa — o atlas</h3>
+        <p class="tl">10 mapas · dados do IBGE</p>
+        <p>Para onde os brasileiros se mudam, onde a renda se concentra, como o país envelhece, por onde a soja avançou. Dez recortes do Brasil, cada um em três dimensões e navegável com o mouse.</p>
+        <div class="gfoot"><span class="src">IBGE · Censos e SIDRA</span><span class="go">explorar <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--red)" href="../futebol/copa-2022-sob-o-microscopio.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#3a1412,#5c1d18 60%,#7a4a1e)"><span class="glyph">🔬</span></div>
+      <div class="gbody">
+        <h3>Copa 2022 sob o Microscópio</h3>
+        <p class="tl">1.453 chutes, um a um</p>
+        <p>A Espanha defendia a 46 metros do próprio gol; a Costa Rica, a 30. Dá para ver isso porque cada chute da Copa tem a fotografia real da defesa, capturada pelas câmeras 360.</p>
+        <div class="gfoot"><span class="src">StatsBomb Open Data</span><span class="go">abrir <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--purple)" href="../futebol/index.html">
+      <div class="cover" style="background-image:url('../futebol/covers/onda-3d.png'),linear-gradient(135deg,#2a1a44,#3a1d55)"><span class="glyph">⚽</span></div>
+      <div class="gbody">
+        <h3>Futebol — 5 data portraits</h3>
+        <p class="tl">De 1930 à Copa de 2026</p>
+        <p>Uma partida inteira virando escultura: quem dominava cada metro do campo, calculado a partir do rastreamento posicional a 25 quadros por segundo.</p>
+        <div class="gfoot"><span class="src">Metrica · StatsBomb · FBref</span><span class="go">explorar <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--green)" href="../dashboards/usda/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#2a2410,#6b5a1e 60%,#d4a24e)"><span class="glyph">🌽</span></div>
+      <div class="gbody">
+        <h3>Agro global — USDA</h3>
+        <p class="tl">12 commodities desde 1960</p>
+        <p>Produção, consumo e estoque do mundo inteiro, com mapa e linha do tempo. Dá para assistir a China virar o maior produtor de trigo do planeta, ano a ano.</p>
+        <div class="gfoot"><span class="src">USDA PSD</span><span class="go">abrir <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--blue)" href="../dashboards/tse/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#0d1b3a,#1f3b7a 60%,#4aa3ff)"><span class="glyph">🗳️</span></div>
+      <div class="gbody">
+        <h3>Histórico eleitoral — TSE</h3>
+        <p class="tl">1994 a 2022</p>
+        <p>Todas as eleições presidenciais desde a redemocratização, com perfil do eleitorado, dos candidatos e o mapa de votação por estado, turno a turno.</p>
+        <div class="gfoot"><span class="src">TSE · dados oficiais</span><span class="go">abrir <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+  </div>
+  <p class="sub" style="margin-top:16px">Tem mais: o <a href="../dashboards/conab/index.html">painel de safras da Conab</a> (1976–2026) e os outros mapas do atlas.</p>
+
+  <div class="cta">
+    <div>
+      <h3>Quer ver seus dados assim?</h3>
+      <p>Me manda uma planilha, um acesso ou só a descrição do que você gostaria de enxergar. Eu digo o que dá para fazer e como ficaria.</p>
+    </div>
+    <a class="btn" href="mailto:pelegocorrea@gmail.com?subject=Visual%20Data%20Analytics">Falar comigo</a>
+  </div>
+
+  <footer>
+    <span>Otávio Pelego · <span class="civil">Otávio de Oliveira Corrêa</span></span>
+    <span><a href="../index.html">início</a> · <a href="https://otaviopelego.github.io/phosphorus/">Phosphorus</a> · <a href="mailto:pelegocorrea@gmail.com">e-mail</a></span>
+  </footer>
+</div>
+</body>
+</html>
