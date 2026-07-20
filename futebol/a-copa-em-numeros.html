@@ -88,6 +88,12 @@
   .card h3 { font-size: 16px; font-weight: 650; margin-bottom: 2px; }
   .card .note { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
   svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  /* charts: fluidos no desktop/tablet; no celular mantêm largura legível e deslizam */
+  .chart-scroll { width: 100%; }
+  @media (max-width: 640px) {
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+    .chart-scroll > svg { min-width: 560px; }
+  }
   .callout {
     border-left: 3px solid var(--gold); background: var(--surface-2);
     border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 18px 0;
@@ -431,8 +437,11 @@ function el(name, attrs, parent) {
   return e;
 }
 function svgRoot(vw, vh, container) {
+  const wrap = document.createElement('div');
+  wrap.className = 'chart-scroll';
   const s = el('svg', { viewBox: `0 0 ${vw} ${vh}`, width: '100%', role: 'img' });
-  container.appendChild(s);
+  wrap.appendChild(s);
+  container.appendChild(wrap);
   return s;
 }
 function txt(s, x, y, str, attrs) {
