@@ -652,3 +652,124 @@ body {
     letter-spacing: -0.02em;
     text-shadow: 0 0 15px rgba(var(--color-gold-rgb), 0.25);
 }
+
+/* ==========================================
+   RESPONSIVIDADE MOBILE (TELA PEQUENA)
+   ========================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem 1rem 7.5rem 1rem;
+    }
+    
+    .app-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .header-logo {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .header-logo .logo-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .header-controls {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .category-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .tab-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .metric-selector {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .metric-selector select {
+        flex-grow: 1;
+        max-width: 200px;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .kpi-card {
+        padding: 0.8rem;
+        gap: 0.6rem;
+    }
+    
+    .kpi-icon-wrapper {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+    }
+    
+    .kpi-icon-wrapper i {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .kpi-value {
+        font-size: 1.1rem;
+    }
+    
+    .timeline-footer {
+        padding: 1rem 1.2rem;
+    }
+    
+    .timeline-controls {
+        gap: 0.8rem;
+    }
+    
+    #display-year {
+        font-size: 1.3rem;
+    }
+    
+    .time-label {
+        font-size: 0.75rem;
+        min-width: 42px;
+    }
+    
+    .btn-play-pause {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .btn-play-pause i {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .metric-selector select {
+        max-width: none;
+    }
+    
+    .filter-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}
+

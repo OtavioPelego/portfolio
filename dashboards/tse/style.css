@@ -497,9 +497,38 @@ body {
         gap: 1rem;
     }
     
+    .logo-area {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+    }
+    
     .filter-bar {
         flex-direction: column;
         gap: 1rem;
+    }
+    
+    .metrics-grid {
+        gap: 1rem;
+    }
+    
+    .metric-card {
+        padding: 1rem;
+    }
+    
+    .card {
+        padding: 1rem;
+    }
+    
+    .tabs-header {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .tab-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
     }
     
     .main-footer {
@@ -508,3 +537,18 @@ body {
         text-align: center;
     }
 }
+
+@media (max-width: 480px) {
+    .logo-area h1 {
+        font-size: 1.4rem;
+    }
+    
+    .card-info h3 {
+        font-size: 1.4rem;
+    }
+    
+    .tab-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
