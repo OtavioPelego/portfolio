@@ -88,6 +88,24 @@
   #howto .box b { color: #fff; }
   #howto .box .close { margin-top: 18px; background: #199e70; color: #06130d; border: none; border-radius: 99px;
     padding: 9px 22px; font-weight: 700; cursor: pointer; font-size: 14px; font-family: inherit; }
+  /* ---------- responsivo: telas estreitas e celular deitado (o canvas 3D nunca muda) ---------- */
+  @media (max-width: 640px), (max-height: 430px) {
+    .topbar { padding: 13px 14px 0; }
+    .topbar a, .product-title { font-size: 11px; letter-spacing: 1.5px; }
+    .brand { gap: 10px; }
+    /* placar e relógio descem para baixo da topbar, um em cada canto */
+    .board { top: 56px; left: 14px; transform: none; gap: 20px; }
+    .side .digit { font-size: clamp(36px, 6.5vh, 52px); }
+    .side .bar { width: 54px; }
+    .side .tag { font-size: 12px; letter-spacing: 2px; }
+    .side .gmin { font-size: 10.5px; }
+    .clockbox { top: 56px; right: 14px; }
+    .clockbox .min { font-size: clamp(28px, 5vh, 42px); }
+    .clockbox .half { font-size: 9.5px; letter-spacing: 2px; }
+    /* crédito da fonte flutua centralizado, acima dos controles (folga p/ a onda alta no landscape) */
+    .datasource-citation { bottom: calc(4.5vh + 96px); right: 50%; transform: translateX(50%);
+      text-align: center; font-size: 10px; letter-spacing: 0.5px; }
+  }
 </style>
 </head>
 <body>
