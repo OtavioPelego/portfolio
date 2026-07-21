@@ -552,3 +552,27 @@ body {
     }
 }
 
+.mobile-experience-tip {
+    display: none;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(0, 102, 204, 0.1);
+    border: 1px solid rgba(0, 102, 204, 0.25);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+.mobile-experience-tip i {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--primary);
+}
+@media (max-width: 768px) {
+    .mobile-experience-tip {
+        display: flex;
+    }
+}
+

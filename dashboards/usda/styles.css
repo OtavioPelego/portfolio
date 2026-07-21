@@ -797,3 +797,27 @@ body {
     }
 }
 
+.mobile-experience-tip {
+    display: none;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(212, 163, 89, 0.1);
+    border: 1px solid rgba(212, 163, 89, 0.25);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    color: var(--color-gold);
+    line-height: 1.4;
+}
+.mobile-experience-tip i {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+}
+@media (max-width: 768px) {
+    .mobile-experience-tip {
+        display: flex;
+    }
+}
+
