@@ -14,8 +14,9 @@
   .topbar a { pointer-events: auto; color: #b9b7ac; text-decoration: none; font-size: 12px;
     letter-spacing: 2.5px; text-transform: uppercase; }
   .topbar a:hover { color: #fff; }
-  .brand { display: flex; align-items: center; gap: 15px; pointer-events: auto; }
+  .brand { display: flex; align-items: center; gap: 9px; pointer-events: auto; }
   .brand-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.25); }
+  .brand .sep { color: #7d7b72; font-size: 12px; }
   .product-title {
     color: #fff;
     font-size: 13px;
@@ -92,7 +93,8 @@
   @media (max-width: 640px), (max-height: 430px) {
     .topbar { padding: 13px 14px 0; }
     .topbar a, .product-title { font-size: 11px; letter-spacing: 1.5px; }
-    .brand { gap: 10px; }
+    .brand { gap: 7px; }
+    .brand .crumb-mid { display: none; }
     /* placar e relógio descem para baixo da topbar, um em cada canto */
     .board { top: 56px; left: 14px; transform: none; gap: 20px; }
     .side .digit { font-size: clamp(36px, 6.5vh, 52px); }
@@ -114,8 +116,12 @@
 
 <div class="topbar">
   <div class="brand">
-    <a href="https://otaviopelego.pages.dev/">‹ &nbsp;Laboratório</a>
-    <div class="brand-sep"></div>
+    <a href="../index.html">Otávio Pelego</a>
+    <span class="sep crumb-mid">›</span>
+    <a href="../laboratorio/" class="crumb-mid">Laboratório</a>
+    <span class="sep crumb-mid">›</span>
+    <a href="index.html" class="crumb-mid">Futebol</a>
+    <span class="sep">›</span>
     <span class="product-title">Onda da Partida</span>
   </div>
   <a href="como-ler.html">Como ler</a>
