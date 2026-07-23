@@ -9,22 +9,19 @@
 <style>
   :root{--ac:var(--blue)}
   .vgrouphead{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:26px 0 2px;opacity:.9}
-  .vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:16px;margin-top:14px}
+  .vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:14px}
   .vcard{position:relative;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .18s,border-color .18s,box-shadow .18s}
   .vcard:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 16px 40px -18px var(--ac)}
-  .vcard .cov{aspect-ratio:4/5;position:relative;display:flex;align-items:center;justify-content:center}
-  .vcard .cov::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,14,19,.12),rgba(11,14,19,.5) 74%,var(--panel))}
+  .vcard .cov{aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;background-repeat:no-repeat;background-color:var(--panel2)}
+  .vcard .cov::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,0) 40%)}
   .vcard .play{position:relative;z-index:2;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.93);display:flex;align-items:center;justify-content:center;color:#0a0a0a;font-size:19px;padding-left:3px;box-shadow:0 4px 18px rgba(0,0,0,.4);transition:transform .18s}
   .vcard:hover .play{transform:scale(1.09)}
-  .vcard .plat{position:absolute;top:9px;left:11px;z-index:2;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#fff;opacity:.9}
+  .vcard .plat{position:absolute;top:9px;left:11px;z-index:2;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#fff;opacity:.95;text-shadow:0 1px 4px rgba(0,0,0,.75)}
   .vcard .vb{padding:13px 15px 15px;display:flex;flex-direction:column;flex:1}
   .vcard h4{margin:0 0 5px;font-size:15px;letter-spacing:-.01em;line-height:1.25}
   .vcard p{margin:0 0 11px;font-size:12.5px;color:var(--mut);flex:1;line-height:1.5}
   .vcard .vt{display:flex;flex-wrap:wrap;gap:5px}
   .vcard .vt span{font-family:var(--mono);font-size:9.5px;padding:3px 7px;border-radius:20px;background:var(--panel2);color:var(--mut);border:1px solid var(--line)}
-  @media (prefers-color-scheme:light){
-    .vcard .cov::after{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.5) 74%,var(--panel))}
-  }
 </style>
 </head>
 <body>
@@ -72,7 +69,7 @@
   <div class="vids">
 
     <a class="vcard" href="https://www.instagram.com/reel/DLikbxJuHp7/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#0d1b3a,#3a1d6e 68%,#7c3aed)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/01.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>Founders precisam de motores</h4>
         <p>Reel de marca para a 49 Educação (aceleradora): a metáfora dos foguetes e do combustível que acelera startups do primeiro passo à órbita.</p>
@@ -81,7 +78,7 @@
     </a>
 
     <a class="vcard" href="https://www.instagram.com/reel/DNJOasPOZ5M/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#0d2c4a,#155e9c 70%,#2b8fe0)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/02.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>Programa de Aceleração</h4>
         <p>Peça institucional da 49 Educação: os programas e experiências que unem prática, estratégia e networking para preparar founders.</p>
@@ -90,7 +87,7 @@
     </a>
 
     <a class="vcard" href="https://www.instagram.com/reel/DNbRQ8Vt9jn/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#14243a,#2b6cb0 66%,#0f9d63)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/03.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>A Uber não tem carros</h4>
         <p>Storytelling no clima do Vale do Silício: transformar um problema real em oportunidade bilionária, promovendo o Pack do Fundador.</p>
@@ -99,7 +96,7 @@
     </a>
 
     <a class="vcard" href="https://drive.google.com/file/d/1GGUS3ANpro0XUcbtZR4vekEcTvjUumcd/view" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#2a1a44,#7c3aed 66%,#ec4899)"><span class="plat">Google Drive</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/04.webp')"><span class="plat">Google Drive</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>O Magnata e seu Unicórnio</h4>
         <p>Vídeo de marca para a 49 Educação — uma fábula sobre construir a startup que vira unicórnio.</p>
@@ -108,7 +105,7 @@
     </a>
 
     <a class="vcard" href="https://drive.google.com/file/d/1OjrYw16Nda8249hjzdukdfYuSsPXkfjx/view" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#0d2a2a,#0f9d63 68%,#a3e635)"><span class="plat">Google Drive</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/05.webp')"><span class="plat">Google Drive</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>O Cientista Maluco e a Alquimia das Startups</h4>
         <p>Vídeo de marca para a 49 Educação — a metáfora da alquimia para a fórmula que transforma ideia em negócio.</p>
@@ -117,7 +114,7 @@
     </a>
 
     <a class="vcard" href="https://www.instagram.com/reel/DK2vNalJY0p/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#3a0d1a,#c1121f 68%,#ec4899)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/09.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>Só para Elas · CARAS TV</h4>
         <p>Vídeo de divulgação oficial do programa "Só para Elas", com a Dra. Fabiane Gama, no lançamento pela CARAS TV.</p>
@@ -131,7 +128,7 @@
   <div class="vids">
 
     <a class="vcard" href="https://www.instagram.com/reel/DVoMOfJDLap/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#2a1a44,#7c3aed 60%,#22d3ee)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/07.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>126 olhares</h4>
         <p>Experimento com o Sora: 126 olhares femininos, um a um, condensados em 1 minuto. Feito para o Dia Internacional da Mulher.</p>
@@ -140,7 +137,7 @@
     </a>
 
     <a class="vcard" href="https://www.instagram.com/reel/DKfwhCmMp7a/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#3a1a0d,#c2410c 68%,#f59e0b)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/08.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>Pompéia</h4>
         <p>Teste criativo que transforma uma tragédia histórica em narrativa com humor — misturando Veo 3, ElevenLabs e CapCut.</p>
@@ -149,7 +146,7 @@
     </a>
 
     <a class="vcard" href="https://www.instagram.com/reel/DNKPqymgDfo/" target="_blank" rel="noopener">
-      <div class="cov" style="background:linear-gradient(160deg,#1a1a2e,#4a5568 70%,#cbd5e0)"><span class="plat">Instagram</span><span class="play">▶</span></div>
+      <div class="cov" style="background-image:url('videos/thumbs/06.webp')"><span class="plat">Instagram</span><span class="play">▶</span></div>
       <div class="vb">
         <h4>Como seria hoje o nosso abraço</h4>
         <p>Uma homenagem ao meu pai, recriada com IA generativa de vídeo. Um exercício pessoal do que a ferramenta é capaz de evocar.</p>
