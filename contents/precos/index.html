@@ -9,6 +9,13 @@
 <link rel="stylesheet" href="../../assets/site.css">
 <style>
   :root{--ac:var(--blue)}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:4px;
+    background:var(--panel);gap:4px;margin:0 0 20px}
+  .seg a{padding:8px 15px;border-radius:99px;font-size:13px;text-decoration:none;color:var(--mut);
+    white-space:nowrap;transition:color .16s,background .16s}
+  .seg a.on{background:var(--ac);color:#08131b;font-weight:650}
+  .seg a:hover:not(.on){color:var(--ink)}
+  @media (max-width:460px){ .seg{width:100%} .seg a{flex:1;text-align:center;font-size:12px;padding:8px 8px} }
   .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
   .tier{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);
     border-radius:15px;padding:20px 18px 18px;transition:transform .18s,border-color .18s}
@@ -54,6 +61,10 @@
 
 <header><div class="wrap">
   <p class="kicker">Vídeos com IA · tabela de preços</p>
+  <div class="seg">
+    <a class="on" href="./">Para negócios</a>
+    <a href="../momentos/">Para momentos pessoais</a>
+  </div>
   <h1 class="wide">Sua marca em vídeo, <span class="g">sem set de filmagem</span>.</h1>
   <p class="lede">Produzo vídeos para redes sociais — reels, anúncios e institucionais — usando inteligência artificial generativa (Google Veo / Flow) para cenários, som e trilha. Cinema sem equipe de filmagem, no prazo e no orçamento de um post.</p>
   <div class="btnrow">
@@ -159,7 +170,7 @@
 
   <footer>
     <span>Otávio Pelego · <span class="civil">Otávio de Oliveira Corrêa</span></span>
-    <span><a href="../">Conteúdo</a> · <a href="../../index.html">início</a> · <a href="mailto:pelegocorrea@gmail.com">e-mail</a></span>
+    <span><a href="../momentos/">versão para momentos pessoais</a> · <a href="../../index.html">início</a> · <a href="mailto:pelegocorrea@gmail.com">e-mail</a></span>
   </footer>
 </div>
 <script src="../../assets/nav.js"></script>
