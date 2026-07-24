@@ -91,6 +91,17 @@ h2.big{font-size:clamp(22px,3.2vw,30px);letter-spacing:-.02em;margin:18px 0 10px
   transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
 .card:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 16px 40px -18px var(--ac)}
 .card .ico{font-size:26px;margin-bottom:12px;display:block}
+
+/* card com capa (serviços na home) */
+.card.cov{padding:0}
+.card.cov .cvr{height:136px;background-size:cover;background-position:center;
+  background-repeat:no-repeat;position:relative;border-bottom:1px solid var(--line)}
+.card.cov .cvr::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,14,19,0) 45%,rgba(11,14,19,.45))}
+.card.cov .cbody{padding:17px 20px 18px;display:flex;flex-direction:column;flex:1}
+@media (prefers-color-scheme:light){
+  .card.cov .cvr::after{background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.12))}
+}
 .card h3{margin:0 0 6px;font-size:18.5px;letter-spacing:-.015em;line-height:1.2}
 .card p{margin:0 0 14px;font-size:13.5px;color:var(--mut);flex:1}
 .card .go,.hero-card .go{font-family:var(--mono);font-size:12px;color:var(--ac);display:inline-flex;
@@ -189,6 +200,7 @@ footer .civil{font-style:normal;color:var(--dim)}
 .social .wa{--sc:#25d366}
 .social .li{--sc:#0a66c2}
 .social .ig{--sc:#e1306c}
+.social .xx{--sc:var(--ink)}
 .social .em{--sc:var(--green)}
 @media (prefers-color-scheme:light){ .social .li{--sc:#0a66c2} }
 

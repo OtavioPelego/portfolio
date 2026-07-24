@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bgw" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1430"/><stop offset="1" stop-color="#2a1a44"/>
+    </linearGradient>
+    <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a06cff" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#a06cff" stop-opacity=".9"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="150" fill="url(#bgw)"/>
+  <!-- trilhos: a informacao andando sozinha da esquerda para a direita -->
+  <g fill="none" stroke="url(#wire)" stroke-width="1.6">
+    <path d="M40 40 H150 Q170 40 170 60 V90 Q170 110 190 110 H360"/>
+    <path d="M40 75 H120 Q140 75 140 60 V45 Q140 30 160 30 H360" opacity=".65"/>
+    <path d="M40 110 H100 Q120 110 120 92 V78 Q120 62 140 62 H360" opacity=".4"/>
+  </g>
+  <!-- pacotes de dado em transito -->
+  <g fill="#a06cff">
+    <circle cx="170" cy="60" r="3.4"/><circle cx="140" cy="45" r="3.4" opacity=".7"/>
+    <circle cx="120" cy="92" r="3.4" opacity=".5"/>
+    <circle cx="286" cy="110" r="4.6"/><circle cx="243" cy="30" r="4" opacity=".8"/>
+  </g>
+  <!-- nos de origem -->
+  <g fill="#141026" stroke="#a06cff" stroke-width="1.4">
+    <rect x="20" y="30" width="22" height="20" rx="5"/>
+    <rect x="20" y="65" width="22" height="20" rx="5"/>
+    <rect x="20" y="100" width="22" height="20" rx="5"/>
+  </g>
+  <!-- destino -->
+  <rect x="352" y="52" width="30" height="46" rx="8" fill="#241a3d" stroke="#c9a6ff" stroke-width="1.6"/>
+  <g stroke="#c9a6ff" stroke-width="1.5" stroke-linecap="round">
+    <path d="M360 66 H374"/><path d="M360 75 H374"/><path d="M360 84 H368"/>
+  </g>
+</svg>

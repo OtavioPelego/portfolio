@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Assistentes de IA: o resumo do site em markdown esta em /llms.txt
+Sitemap: https://otaviopelego.pages.dev/sitemap.xml

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bgs" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c2118"/><stop offset="1" stop-color="#0f3b2e"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3ddc97" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#3ddc97" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="150" fill="url(#bgs)"/>
+  <!-- janela do navegador -->
+  <g>
+    <rect x="46" y="22" width="308" height="112" rx="9" fill="#0b1a14" stroke="rgba(61,220,151,.35)" stroke-width="1.4"/>
+    <path d="M46 31a9 9 0 019-9h290a9 9 0 019 9v9H46z" fill="rgba(61,220,151,.10)"/>
+    <g fill="#3ddc97" opacity=".55">
+      <circle cx="60" cy="31" r="3"/><circle cx="71" cy="31" r="3"/><circle cx="82" cy="31" r="3"/>
+    </g>
+    <rect x="96" y="27" width="120" height="8" rx="4" fill="rgba(61,220,151,.16)"/>
+  </g>
+  <!-- conteudo da pagina: heroi + texto + cards -->
+  <rect x="60" y="52" width="128" height="40" rx="6" fill="url(#hero)"/>
+  <g fill="rgba(230,255,244,.30)">
+    <rect x="60" y="100" width="112" height="5" rx="2.5"/>
+    <rect x="60" y="111" width="86" height="5" rx="2.5"/>
+    <rect x="60" y="122" width="54" height="5" rx="2.5" fill="rgba(61,220,151,.55)"/>
+  </g>
+  <g fill="#12271e" stroke="rgba(61,220,151,.28)" stroke-width="1.2">
+    <rect x="204" y="52" width="62" height="75" rx="7"/>
+    <rect x="276" y="52" width="62" height="75" rx="7"/>
+  </g>
+  <g fill="rgba(61,220,151,.45)">
+    <rect x="214" y="64" width="30" height="5" rx="2.5"/><rect x="214" y="76" width="42" height="4" rx="2"/>
+    <rect x="214" y="86" width="36" height="4" rx="2"/>
+    <rect x="286" y="64" width="30" height="5" rx="2.5"/><rect x="286" y="76" width="42" height="4" rx="2"/>
+    <rect x="286" y="86" width="36" height="4" rx="2"/>
+  </g>
+</svg>

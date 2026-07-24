@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a2410"/><stop offset="1" stop-color="#3d2f14"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="150" fill="url(#bgg)"/>
+  <!-- a pergunta -->
+  <rect x="34" y="26" width="200" height="26" rx="13" fill="#171208" stroke="rgba(212,162,78,.5)" stroke-width="1.4"/>
+  <g stroke="#d4a24e" stroke-width="1.7" fill="none" stroke-linecap="round">
+    <circle cx="50" cy="39" r="5"/><path d="M54 43l4 4"/>
+  </g>
+  <g fill="rgba(240,220,180,.5)">
+    <rect x="66" y="36" width="86" height="5" rx="2.5"/>
+    <rect x="158" y="36" width="34" height="5" rx="2.5" opacity=".6"/>
+  </g>
+  <!-- a resposta da IA, com a marca citada -->
+  <g>
+    <path d="M46 74h6M49 71v6" stroke="#d4a24e" stroke-width="2" stroke-linecap="round"/>
+    <path d="M40 92l3-7 3 7-3 2z" fill="#d4a24e" opacity=".8"/>
+    <circle cx="58" cy="88" r="2.2" fill="#d4a24e" opacity=".6"/>
+  </g>
+  <g fill="rgba(240,220,180,.34)">
+    <rect x="74" y="72" width="196" height="5" rx="2.5"/>
+    <rect x="74" y="85" width="164" height="5" rx="2.5"/>
+    <rect x="74" y="98" width="120" height="5" rx="2.5"/>
+  </g>
+  <!-- a empresa recomendada, em destaque -->
+  <rect x="74" y="114" width="126" height="22" rx="7" fill="rgba(212,162,78,.16)" stroke="#d4a24e" stroke-width="1.3"/>
+  <rect x="86" y="122" width="70" height="6" rx="3" fill="#f0d9a8"/>
+  <circle cx="170" cy="125" r="3" fill="#3ddc97"/>
+  <path d="M178 125h10" stroke="#3ddc97" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- pino do mapa -->
+  <g transform="translate(322,52)" opacity=".9">
+    <path d="M22 0a22 22 0 00-22 22c0 16 22 40 22 40s22-24 22-40A22 22 0 0022 0z" fill="rgba(212,162,78,.18)" stroke="#d4a24e" stroke-width="1.6"/>
+    <circle cx="22" cy="22" r="8" fill="#d4a24e"/>
+  </g>
+</svg>
