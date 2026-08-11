@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convocações da Embrapa — concurso 2024/25</title>
+<meta name="description" content="Painel interativo das convocações do concurso público da Embrapa (Edital 1/2024): quantos pesquisadores, analistas, técnicos e assistentes já foram chamados, com filtros por cargo, área, subárea, situação, unidade e busca por nome.">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="styles.css">
+<meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://otaviopelego.pages.dev/dashboards/embrapa/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Otávio Pelego">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Convocações da Embrapa — concurso 2024/25">
+<meta property="og:description" content="Quantos pesquisadores, analistas, técnicos e assistentes já foram chamados no concurso da Embrapa. Filtre por cargo, área, subárea, situação, unidade — ou procure pelo seu nome.">
+<meta property="og:url" content="https://otaviopelego.pages.dev/dashboards/embrapa/">
+<meta property="og:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PelegoCorrea">
+</head>
+<body>
+
+<div class="wrap painel">
+
+  <nav class="bc" aria-label="Trilha de navegação">
+    <a href="../../index.html">Otávio Pelego</a> ›
+    <a href="../../laboratorio/">Laboratório</a> ›
+    <span aria-current="page">Convocações da Embrapa</span>
+  </nav>
+
+  <header class="cab">
+    <div>
+      <p class="olho">Concurso público Embrapa · Edital nº 1/2024</p>
+      <h1>Convocações da Embrapa</h1>
+      <p class="sub">Acompanhamento das convocações do concurso 2024/25. Os dados vêm do
+        painel oficial da Embrapa; cargo, área e subárea de cada opção vêm do edital
+        de abertura. Procure pelo seu nome, ou filtre por qualquer combinação.</p>
+    </div>
+    <div class="carimbos">
+      <div class="carimbo">
+        <span class="rot">Atualizado por mim</span>
+        <strong id="carimbo-coleta">—</strong>
+      </div>
+      <div class="carimbo">
+        <span class="rot">Fonte atualizada em</span>
+        <strong id="carimbo-fonte">—</strong>
+      </div>
+      <a class="link-fonte" id="link-fonte" href="#" target="_blank" rel="noopener">
+        ver painel oficial ↗
+      </a>
+    </div>
+  </header>
+
+  <!-- ---------- números de cabeceira ---------- -->
+  <section class="kpis" aria-label="Convocados por cargo">
+    <button class="kpi total" data-cargo="" aria-pressed="false">
+      <span class="rot">Convocados no total</span>
+      <strong class="val" id="kpi-total">—</strong>
+      <span class="det" id="kpi-total-det">—</span>
+    </button>
+    <button class="kpi" data-cargo="Pesquisador" style="--ac:var(--s1)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Pesquisador</span>
+      <strong class="val" id="kpi-pesquisador">—</strong>
+      <span class="det" id="det-pesquisador">—</span>
+    </button>
+    <button class="kpi" data-cargo="Analista" style="--ac:var(--s2)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Analista</span>
+      <strong class="val" id="kpi-analista">—</strong>
+      <span class="det" id="det-analista">—</span>
+    </button>
+    <button class="kpi" data-cargo="Técnico" style="--ac:var(--s3)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Técnico</span>
+      <strong class="val" id="kpi-tecnico">—</strong>
+      <span class="det" id="det-tecnico">—</span>
+    </button>
+    <button class="kpi" data-cargo="Assistente" style="--ac:var(--s4)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Assistente</span>
+      <strong class="val" id="kpi-assistente">—</strong>
+      <span class="det" id="det-assistente">—</span>
+    </button>
+  </section>
+  <p class="nota-kpi">Clique num cargo para filtrar o painel inteiro. O número grande é o
+    total de convocações; abaixo, quantas já viraram contratação.</p>
+
+  <!-- ---------- filtros ---------- -->
+  <section class="filtros" aria-label="Filtros">
+    <div class="linha-busca">
+      <label class="campo busca">
+        <span>Buscar por nome</span>
+        <input type="search" id="f-nome" placeholder="digite parte do nome…"
+               autocomplete="off" spellcheck="false">
+      </label>
+      <button class="limpar" id="limpar" type="button">Limpar filtros</button>
+      <button class="baixar" id="baixar" type="button">Baixar CSV do que está na tela</button>
+    </div>
+
+    <div class="grade-filtros">
+      <label class="campo"><span>Cargo</span><select id="f-cargo"></select></label>
+      <label class="campo"><span>Área</span><select id="f-area"></select></label>
+      <label class="campo"><span>Subárea</span><select id="f-subarea"></select></label>
+      <label class="campo"><span>Situação</span><select id="f-situacao"></select></label>
+      <label class="campo"><span>Concorrência</span><select id="f-modalidade"></select></label>
+      <label class="campo"><span>Unidade da Embrapa</span><select id="f-unidade"></select></label>
+      <label class="campo"><span>Cidade de lotação</span><select id="f-lotacao"></select></label>
+      <label class="campo"><span>Nº da opção</span><select id="f-opcao"></select></label>
+      <label class="campo faixa">
+        <span>Colocação entre</span>
+        <div>
+          <input type="number" id="f-col-min" min="1" placeholder="1" inputmode="numeric">
+          <em>e</em>
+          <input type="number" id="f-col-max" min="1" placeholder="999" inputmode="numeric">
+        </div>
+      </label>
+    </div>
+
+    <p class="resumo-filtro" id="resumo-filtro" role="status"></p>
+  </section>
+
+  <!-- ---------- gráficos ---------- -->
+  <section class="paineis">
+
+    <article class="painel-bloco largo">
+      <h2>Em que pé está cada convocação</h2>
+      <p class="dica">Do total filtrado, quanto já virou contratação, quanto ainda está
+        em trâmite e quanto saiu do processo.</p>
+      <div class="barra-empilhada" id="g-desfecho"></div>
+      <ul class="legenda" id="leg-desfecho"></ul>
+      <table class="tabela-situacao" id="t-situacao">
+        <caption class="sr-only">Convocações por situação</caption>
+        <thead><tr><th scope="col">Situação</th><th scope="col">Pessoas</th><th scope="col">%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </article>
+
+    <article class="painel-bloco">
+      <h2>Unidades que mais chamaram</h2>
+      <p class="dica">Unidade da Embrapa para a qual a pessoa foi convocada.
+        Quem ainda não escolheu localidade não aparece aqui.</p>
+      <div class="barras" id="g-unidades"></div>
+    </article>
+
+    <article class="painel-bloco">
+      <h2>Áreas mais chamadas</h2>
+      <p class="dica">Área do edital, somando todas as subáreas dentro dela.</p>
+      <div class="barras" id="g-areas"></div>
+    </article>
+
+    <article class="painel-bloco largo">
+      <h2>Convocados por opção, comparado às vagas do edital</h2>
+      <p class="dica">Cada opção (cargo/área/subárea) tem um número de vagas previsto no
+        Anexo II do edital. Aqui dá para ver quantas pessoas já foram chamadas em cada uma.
+        Mostrando as 15 com mais convocações do recorte atual.</p>
+      <div class="barras opcoes" id="g-opcoes"></div>
+    </article>
+
+  </section>
+
+  <!-- ---------- tabela ---------- -->
+  <section class="bloco-tabela">
+    <div class="cab-tabela">
+      <h2>Lista de convocados</h2>
+      <span class="contador" id="contador-tabela"></span>
+    </div>
+    <div class="rolagem-tabela">
+      <table class="tabela" id="tabela">
+        <thead>
+          <tr>
+            <th scope="col" data-ord="posicao" class="num">Colocação</th>
+            <th scope="col" data-ord="nome">Nome</th>
+            <th scope="col" data-ord="cargo">Cargo</th>
+            <th scope="col" data-ord="area">Área / subárea</th>
+            <th scope="col" data-ord="situacao">Situação</th>
+            <th scope="col" data-ord="unidade">Unidade</th>
+            <th scope="col" data-ord="lotacao">Lotação</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-tabela"></tbody>
+      </table>
+    </div>
+    <div class="mais-wrap">
+      <button class="mais" id="mais" type="button">Mostrar mais</button>
+    </div>
+  </section>
+
+  <footer class="rodape-painel">
+    <p><strong>De onde vêm os dados.</strong> As convocações são coletadas do painel público
+      da Embrapa no Looker Studio, que a própria Embrapa atualiza semanalmente. Cargo, área,
+      subárea, vagas e localidades vêm do Anexo I e do Anexo II do Edital nº 1/2024. Este é
+      um projeto pessoal, sem qualquer vínculo com a Embrapa ou com o Cebraspe — para
+      qualquer decisão que dependa disso, confie sempre na fonte oficial.</p>
+
+    <p><strong>Por que aqui tem cargo e no painel oficial não.</strong> O painel da Embrapa
+      publica apenas o <em>número</em> da opção — 40000084, por exemplo. É o edital que diz
+      que aquele número corresponde a um cargo, uma área e uma subárea. Este painel cruza as
+      duas fontes, e é isso que permite responder “quantos pesquisadores já foram chamados”.</p>
+
+    <p><strong>Duas coisas que podem estranhar à primeira vista.</strong></p>
+    <ul>
+      <li><strong id="rodape-sem-lotacao">Parte das pessoas aparece sem unidade e sem
+        cidade.</strong> São convocações ainda sem localidade definida. O próprio painel
+        da Embrapa registra esses casos como “null” e informa que eles permanecem assim
+        até a convocação ser finalizada.</li>
+      <li><strong>Algumas opções já chamaram mais gente do que o número de vagas.</strong>
+        Isso é esperado: a cada desistência ou desclassificação, a Embrapa convoca a
+        próxima pessoa da lista. Por isso a comparação com as vagas do edital serve para
+        dar noção de andamento, e não para contar quem foi efetivado.</li>
+    </ul>
+
+    <p class="mini">Os nomes exibidos são os mesmos já publicados no painel oficial da
+      Embrapa, de acesso público. Os nomes de cidade foram padronizados pela grafia do
+      edital, porque o painel oficial traz a mesma cidade escrita de formas diferentes
+      (“Seropedica” e “Seropédica”, por exemplo) — o que espalharia a mesma cidade por
+      vários filtros.</p>
+    <p class="voltar"><a href="../../laboratorio/">← voltar para o Laboratório</a></p>
+  </footer>
+
+</div>
+
+<script src="data/dados.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

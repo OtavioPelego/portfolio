@@ -1,0 +1,234 @@
+/* ============================================================
+   Painel de convocações da Embrapa
+   Herda o sistema de design do site (assets/site.css) e acrescenta
+   só o que é específico de painel: KPIs, filtros, barras e tabela.
+   ============================================================ */
+
+:root{
+  /* Paleta categórica — identidade por CARGO, em ordem fixa.
+     Validada nos dois modos (banda de luminosidade, piso de croma,
+     separação para daltonismo e contraste contra a superfície). */
+  --s1:#3b8fe6;  /* Pesquisador */
+  --s2:#a87a2e;  /* Analista    */
+  --s3:#8f5ce8;  /* Técnico     */
+  --s4:#1f9c68;  /* Assistente  */
+
+  /* Paleta de estado — reservada, nunca reutilizada como série. */
+  --ok:#0ca30c;      /* efetivado    */
+  --atencao:#fab219; /* em andamento */
+  --grave:#d03b3b;   /* saiu         */
+
+  --barra:#3b8fe6;       /* matiz única das barras de magnitude */
+  --trilho:rgba(255,255,255,.06);
+  --sup:var(--panel);    /* superfície dos gráficos */
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --s1:#1f6fd0; --s2:#a8781f; --s3:#7c4ddb; --s4:#0f9d63;
+    --barra:#1f6fd0;
+    --trilho:rgba(0,0,0,.06);
+  }
+}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.painel{padding-top:26px;padding-bottom:64px;max-width:1240px}
+
+/* ---------- trilha e cabeçalho ---------- */
+.bc{font-size:12px;color:var(--dim);margin-bottom:18px;letter-spacing:.2px}
+.bc a{color:var(--mut);text-decoration:none}
+.bc a:hover{color:var(--ink)}
+
+.cab{display:flex;gap:30px;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;margin-bottom:26px}
+.cab h1{margin:0 0 8px;font-size:clamp(27px,4vw,38px);letter-spacing:-.025em;line-height:1.1}
+.olho{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--green);margin:0 0 9px}
+.cab .sub{margin:0;color:var(--mut);font-size:14.5px;max-width:60ch}
+
+.carimbos{display:flex;flex-direction:column;gap:9px;align-items:flex-start;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 17px;
+  min-width:225px}
+.carimbo{display:flex;flex-direction:column;gap:1px}
+.carimbo .rot{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--dim)}
+.carimbo strong{font-size:14.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.link-fonte{font-family:var(--mono);font-size:11.5px;color:var(--blue);text-decoration:none;
+  border-top:1px solid var(--line);padding-top:9px;width:100%}
+.link-fonte:hover{text-decoration:underline}
+
+/* ---------- KPIs ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:13px}
+.kpi{--ac:var(--mut);
+  display:flex;flex-direction:column;gap:3px;text-align:left;cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--ac);
+  border-radius:13px;padding:15px 17px 14px;color:inherit;font:inherit;
+  transition:border-color .16s,transform .16s,box-shadow .16s}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 12px 30px -18px rgba(0,0,0,.7)}
+.kpi[aria-pressed="true"]{border-color:var(--ac);
+  box-shadow:0 0 0 1px var(--ac) inset, 0 12px 30px -20px var(--ac)}
+.kpi.total{--ac:var(--green)}
+.kpi .rot{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.kpi .pip{width:9px;height:9px;border-radius:50%;background:var(--ac);flex:none}
+.kpi .val{font-size:31px;font-weight:700;letter-spacing:-.03em;line-height:1.12}
+.kpi .det{font-size:12px;color:var(--dim)}
+.nota-kpi{font-size:12.5px;color:var(--dim);margin:11px 2px 0}
+
+/* ---------- filtros ---------- */
+.filtros{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:17px 18px;margin-top:24px}
+.linha-busca{display:flex;gap:11px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.campo{display:flex;flex-direction:column;gap:5px;min-width:0}
+.campo>span{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--dim)}
+.campo.busca{flex:1;min-width:230px}
+.campo input,.campo select{background:var(--panel2);color:var(--ink);
+  border:1px solid var(--line);border-radius:9px;padding:9px 11px;font:inherit;font-size:14px;
+  width:100%;min-width:0}
+.campo input:focus,.campo select:focus{outline:2px solid var(--blue);outline-offset:1px;
+  border-color:var(--blue)}
+.campo.busca input{font-size:15.5px}
+.campo select{cursor:pointer}
+
+.grade-filtros{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:11px}
+.campo.faixa>div{display:flex;align-items:center;gap:7px}
+.campo.faixa em{color:var(--dim);font-style:normal;font-size:12px;flex:none}
+.campo.faixa input{width:100%}
+
+.limpar,.baixar{background:var(--panel2);color:var(--mut);border:1px solid var(--line);
+  border-radius:9px;padding:9px 14px;font:inherit;font-size:13px;cursor:pointer;
+  white-space:nowrap;transition:color .16s,border-color .16s}
+.limpar:hover,.baixar:hover{color:var(--ink);border-color:var(--mut)}
+
+.resumo-filtro{margin:13px 2px 0;font-size:13px;color:var(--mut);min-height:1.2em}
+.resumo-filtro b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ---------- blocos de gráfico ---------- */
+.paineis{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+  gap:16px;margin-top:24px}
+.painel-bloco{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:18px 20px 20px;min-width:0}
+.painel-bloco.largo{grid-column:1/-1}
+.painel-bloco h2{margin:0 0 5px;font-size:16.5px;letter-spacing:-.015em}
+.painel-bloco .dica{margin:0 0 16px;font-size:12.5px;color:var(--dim);max-width:70ch}
+
+/* barra empilhada de desfecho */
+.barra-empilhada{display:flex;gap:2px;height:34px;border-radius:8px;overflow:hidden;
+  background:var(--trilho)}
+.barra-empilhada .seg{position:relative;display:flex;align-items:center;justify-content:center;
+  min-width:2px;transition:flex-grow .3s ease}
+.barra-empilhada .seg span{font-size:12px;font-weight:600;color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);padding:0 6px;white-space:nowrap}
+
+.legenda{list-style:none;display:flex;flex-wrap:wrap;gap:7px 20px;margin:13px 0 0;padding:0}
+.legenda li{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--mut)}
+.legenda .pip{width:10px;height:10px;border-radius:3px;flex:none}
+.legenda b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.tabela-situacao{width:100%;border-collapse:collapse;margin-top:17px;font-size:13px}
+.tabela-situacao th{text-align:left;font-family:var(--mono);font-size:10px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:400;
+  padding:0 10px 7px 0;border-bottom:1px solid var(--line)}
+.tabela-situacao th:not(:first-child),.tabela-situacao td:not(:first-child){text-align:right}
+.tabela-situacao td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);
+  font-variant-numeric:tabular-nums;color:var(--mut)}
+.tabela-situacao td:first-child{color:var(--ink)}
+.tabela-situacao .marca{display:inline-block;width:8px;height:8px;border-radius:2px;
+  margin-right:8px;vertical-align:baseline}
+
+/* barras horizontais de magnitude */
+.barras{display:flex;flex-direction:column;gap:9px}
+.barras .item{display:grid;grid-template-columns:1fr auto;gap:3px 10px;align-items:center}
+.barras .rotulo{font-size:13px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;min-width:0}
+.barras .qtd{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink);
+  font-weight:600;flex:none}
+.barras .trilho{grid-column:1/-1;height:9px;background:var(--trilho);border-radius:5px;
+  overflow:hidden}
+.barras .preenche{height:100%;background:var(--barra);border-radius:0 4px 4px 0;
+  transition:width .3s ease;min-width:2px}
+.barras .vazio{font-size:13px;color:var(--dim);font-style:italic}
+
+/* comparação convocados x vagas */
+.barras.opcoes .item{grid-template-columns:1fr auto}
+.barras.opcoes .trilho{height:11px;position:relative;background:var(--trilho)}
+.barras.opcoes .meta{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--mut);
+  border-radius:1px}
+.barras.opcoes .qtd small{color:var(--dim);font-weight:400}
+.legenda-vagas{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);
+  margin-top:14px}
+.legenda-vagas .risco{display:inline-block;width:2px;height:13px;background:var(--mut);
+  border-radius:1px}
+
+/* ---------- tabela ---------- */
+.bloco-tabela{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  margin-top:16px;overflow:hidden}
+.cab-tabela{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  flex-wrap:wrap;padding:18px 20px 13px}
+.cab-tabela h2{margin:0;font-size:16.5px;letter-spacing:-.015em}
+.contador{font-family:var(--mono);font-size:12px;color:var(--dim);
+  font-variant-numeric:tabular-nums}
+
+.rolagem-tabela{overflow-x:auto}
+.tabela{width:100%;border-collapse:collapse;font-size:13.5px;min-width:880px}
+.tabela th{position:sticky;top:0;z-index:2;background:var(--panel2);text-align:left;
+  font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--mut);font-weight:400;padding:10px 14px;white-space:nowrap;cursor:pointer;
+  border-bottom:1px solid var(--line);user-select:none}
+.tabela th:hover{color:var(--ink)}
+.tabela th::after{content:"";opacity:.45;margin-left:6px}
+.tabela th[data-dir="asc"]::after{content:"▲"}
+.tabela th[data-dir="desc"]::after{content:"▼"}
+.tabela th.num,.tabela td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tabela td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.tabela tbody tr:hover{background:var(--panel2)}
+.tabela .nome{color:var(--ink);font-weight:500}
+.tabela .sub{display:block;font-size:11.5px;color:var(--dim);margin-top:2px}
+.tabela .mut{color:var(--mut)}
+.tabela mark{background:rgba(74,163,255,.26);color:inherit;border-radius:2px;padding:0 1px}
+
+/* etiqueta de cargo — cor + texto, nunca só cor */
+.et-cargo{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:var(--ink)}
+.et-cargo .pip{width:8px;height:8px;border-radius:50%;flex:none;background:var(--mut)}
+.et-cargo[data-c="Pesquisador"] .pip{background:var(--s1)}
+.et-cargo[data-c="Analista"]    .pip{background:var(--s2)}
+.et-cargo[data-c="Técnico"]     .pip{background:var(--s3)}
+.et-cargo[data-c="Assistente"]  .pip{background:var(--s4)}
+
+/* etiqueta de situação — ícone + texto, nunca só cor */
+.et-sit{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:12.5px}
+.et-sit::before{font-size:11px;line-height:1}
+.et-sit[data-d="efetivado"]{color:var(--ok)}
+.et-sit[data-d="efetivado"]::before{content:"●"}
+.et-sit[data-d="em andamento"]{color:var(--atencao)}
+.et-sit[data-d="em andamento"]::before{content:"◐"}
+.et-sit[data-d="saiu"]{color:var(--grave)}
+.et-sit[data-d="saiu"]::before{content:"○"}
+
+.vazio-tabela{padding:34px 20px;text-align:center;color:var(--dim);font-size:14px}
+.mais-wrap{padding:15px 20px 19px;display:flex;justify-content:center}
+.mais{background:var(--panel2);color:var(--mut);border:1px solid var(--line);border-radius:10px;
+  padding:10px 20px;font:inherit;font-size:13.5px;cursor:pointer}
+.mais:hover{color:var(--ink);border-color:var(--mut)}
+.mais[hidden]{display:none}
+
+/* ---------- rodapé ---------- */
+.rodape-painel{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--mut);max-width:78ch}
+.rodape-painel p{margin:0 0 11px}
+.rodape-painel strong{color:var(--ink)}
+.rodape-painel ul{margin:0 0 13px;padding-left:19px}
+.rodape-painel li{margin-bottom:7px}
+.rodape-painel .mini{font-size:12px;color:var(--dim)}
+.rodape-painel .voltar a{color:var(--blue);text-decoration:none;font-family:var(--mono);
+  font-size:12.5px}
+.rodape-painel .voltar a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .carimbos{width:100%}
+  .kpi .val{font-size:26px}
+  .linha-busca{align-items:stretch}
+  .limpar,.baixar{flex:1}
+}

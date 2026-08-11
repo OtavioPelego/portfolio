@@ -5,6 +5,10 @@
 /phosphorus     https://otaviopelego.github.io/phosphorus/   302
 /phosphorus/*   https://otaviopelego.github.io/phosphorus/   302
 
+# atalho curto para o painel de convocacoes da Embrapa
+/embrapa                              /dashboards/embrapa/   301
+/laboratorio/embrapa/*                /dashboards/embrapa/   301
+
 # atalhos em portugues para as paginas de servico
 /dados        /data-analytics/   301
 /automacoes   /workflows/        301
