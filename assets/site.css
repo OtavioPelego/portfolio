@@ -77,7 +77,10 @@ h1.wide{max-width:22ch}
 /* ---------- seções ---------- */
 .sechead{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--dim);margin:48px 0 0;padding-top:26px;border-top:1px solid var(--line);
-  display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+  display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;
+  /* a barra do topo é fixa (51px no desktop, 64px com hambúrguer): sem isto
+     um link para #contato ou #video pararia com o título escondido atrás dela */
+  scroll-margin-top:78px}
 .sechead a{color:var(--mut);text-decoration:none;letter-spacing:.06em}
 .sechead a:hover{color:var(--ink)}
 h2.big{font-size:clamp(22px,3.2vw,30px);letter-spacing:-.02em;margin:18px 0 10px;line-height:1.2}
@@ -184,6 +187,15 @@ h2.big{font-size:clamp(22px,3.2vw,30px);letter-spacing:-.02em;margin:18px 0 10px
 .btn.wa{background:#25d366;color:#062513}
 .cta .btnrow{margin-top:0}
 .btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- cta de meio de página ----------
+   Versão enxuta da .cta, para usar depois de uma seção de prova sem
+   competir com a caixa grande do fim da página. Uma linha só. */
+.cta-slim{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin-top:24px;padding:15px 20px;border:1px solid var(--line);
+  border-radius:14px;background:var(--panel)}
+.cta-slim p{margin:0;font-size:14.5px;color:var(--mut);max-width:58ch}
+.cta-slim .btn{padding:10px 19px;font-size:14px}
 
 /* ---------- rodapé ---------- */
 footer{margin:60px 0 46px;padding-top:24px;border-top:1px solid var(--line);
