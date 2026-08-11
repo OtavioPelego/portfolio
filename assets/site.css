@@ -37,9 +37,13 @@ a{color:inherit}
 .topnav a{color:var(--mut);text-decoration:none;transition:color .16s}
 .topnav a:hover,.topnav a[aria-current]{color:var(--ink)}
 
-/* ---------- menu hambúrguer (só no mobile) ---------- */
+/* ---------- menu hambúrguer (mobile e tablet) ----------
+   O corte é 1080px porque a barra precisa de ~970px para caber a marca
+   mais os 9 links numa linha só. Abaixo disso o menu vira hambúrguer,
+   em vez de a navegação descer para uma segunda linha. Se mudar a
+   quantidade ou o texto dos itens, meça de novo e ajuste este valor. */
 .nav-toggle{display:none}
-@media (max-width:720px){
+@media (max-width:1080px){
   .topbar .wrap{flex-wrap:nowrap;position:relative}
   .nav-toggle{display:inline-flex;flex-direction:column;justify-content:center;gap:4px;
     width:42px;height:36px;padding:9px 8px;background:transparent;border:1px solid var(--line);
@@ -201,8 +205,16 @@ footer .civil{font-style:normal;color:var(--dim)}
 .social .li{--sc:#0a66c2}
 .social .ig{--sc:#e1306c}
 .social .xx{--sc:var(--ink)}
+.social .rd{--sc:#ff4500}
 .social .em{--sc:var(--green)}
 @media (prefers-color-scheme:light){ .social .li{--sc:#0a66c2} }
+
+/* ---------- canal desligado ----------
+   O Reddit já está no HTML de todas as páginas, nos botões de contato e nos
+   ícones do rodapé, mas fica oculto enquanto o perfil não tiver publicações.
+   Para ligá-lo no site inteiro, apague as duas regras abaixo — nada mais. */
+.social a.off{display:none}
+footer .fsocial a.off{display:none}
 
 /* ícones sociais no rodapé */
 footer .fsocial{display:inline-flex;gap:13px;align-items:center}

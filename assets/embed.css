@@ -1,0 +1,102 @@
+/* ============================================================
+   Otávio Pelego — cabeçalho e rodapé para páginas autônomas
+
+   Os painéis e as capas de projeto (Conab, TSE, USDA, Futebol,
+   Brasil de Lupa) têm identidade visual própria e NÃO carregam o
+   assets/site.css — carregar quebraria o layout deles. Este arquivo
+   entrega a mesma navegação e o mesmo rodapé do site em classes
+   prefixadas com "op-", que não colidem com nada.
+
+   Todas essas páginas são de fundo escuro, então as cores aqui são
+   fixas em vez de herdadas — cada página nomeia suas variáveis de
+   um jeito diferente.
+   ============================================================ */
+
+.op-bar,.op-foot{
+  --op-ink:#eef2f7;
+  --op-mut:#9fadbc;
+  --op-dim:#6b7885;
+  --op-line:rgba(255,255,255,.13);
+  --op-panel:#141922;
+  --op-green:#3ddc97;
+  --op-mono:'SFMono-Regular',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --op-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-family:var(--op-sans);
+  box-sizing:border-box;
+}
+.op-bar *,.op-foot *{box-sizing:border-box}
+
+/* ---------- barra de navegação ---------- */
+.op-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;position:relative;margin:0 0 20px;padding:0 0 13px;
+  border-bottom:1px solid var(--op-line)}
+.op-bar .op-brand{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;
+  letter-spacing:-.02em;color:var(--op-ink);text-decoration:none;line-height:1.4}
+.op-bar .op-brand i{width:9px;height:9px;border-radius:50%;background:var(--op-green);
+  box-shadow:0 0 12px var(--op-green);flex:none}
+.op-nav{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;font-family:var(--op-mono);
+  line-height:1.5}
+.op-nav a{color:var(--op-mut);text-decoration:none;transition:color .16s}
+.op-nav a:hover,.op-nav a[aria-current]{color:var(--op-ink)}
+
+/* ---------- menu hambúrguer (mobile e tablet) ----------
+   Mesmo corte do assets/site.css: a barra precisa de ~970px para caber
+   a marca mais os 9 links numa linha só. */
+.op-toggle{display:none}
+@media (max-width:1080px){
+  .op-bar{flex-wrap:nowrap}
+  .op-toggle{display:inline-flex;flex-direction:column;justify-content:center;gap:4px;
+    width:42px;height:36px;padding:9px 8px;background:transparent;
+    border:1px solid var(--op-line);border-radius:10px;cursor:pointer;flex:none}
+  .op-toggle span{display:block;height:2px;width:100%;background:var(--op-ink);
+    border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  .op-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .op-toggle.open span:nth-child(2){opacity:0}
+  .op-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .op-nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;
+    gap:0;background:var(--op-panel);border:1px solid var(--op-line);border-radius:12px;
+    margin-top:6px;padding:6px;z-index:900;box-shadow:0 18px 44px -18px rgba(0,0,0,.75);
+    font-size:14.5px}
+  .op-nav.open{display:flex}
+  .op-nav a{padding:11px 14px;border-radius:8px}
+  .op-nav a:hover,.op-nav a[aria-current]{background:rgba(255,255,255,.06);color:var(--op-ink)}
+}
+
+/* ---------- bloco de contatos ---------- */
+.op-foot{margin:52px 0 0;padding-top:26px;border-top:1px solid var(--op-line)}
+.op-foot .op-head{font-family:var(--op-mono);font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--op-dim);margin:0 0 12px}
+.op-foot .op-sub{color:var(--op-mut);max-width:640px;margin:0;font-size:15px;line-height:1.55}
+.op-social{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.op-social a{display:inline-flex;align-items:center;gap:9px;padding:11px 17px;
+  border-radius:11px;background:rgba(255,255,255,.04);border:1px solid var(--op-line);
+  color:var(--op-ink);text-decoration:none;font-size:14.5px;font-weight:600;line-height:1.3;
+  transition:transform .16s,border-color .16s,box-shadow .16s}
+.op-social a:hover{transform:translateY(-2px);border-color:var(--op-sc);
+  box-shadow:0 12px 30px -14px var(--op-sc)}
+.op-social a svg{width:19px;height:19px;fill:var(--op-sc);flex:none}
+.op-social a small{display:block;font-size:11.5px;font-weight:400;color:var(--op-dim);
+  font-family:var(--op-mono);letter-spacing:.02em}
+.op-social .wa{--op-sc:#25d366}
+.op-social .li{--op-sc:#0a66c2}
+.op-social .ig{--op-sc:#e1306c}
+.op-social .xx{--op-sc:var(--op-ink)}
+.op-social .rd{--op-sc:#ff4500}
+.op-social .em{--op-sc:var(--op-green)}
+
+/* ---------- rodapé ---------- */
+.op-legal{margin:34px 0 8px;padding-top:22px;border-top:1px solid var(--op-line);
+  color:var(--op-dim);font-size:12.5px;font-family:var(--op-mono);line-height:1.6;
+  display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:space-between;align-items:center}
+.op-legal a{color:var(--op-mut);text-decoration:underline;text-underline-offset:2px}
+.op-legal a:hover{color:var(--op-ink)}
+.op-icons{display:inline-flex;gap:13px;align-items:center}
+.op-icons a{display:inline-flex;align-items:center;color:var(--op-mut);text-decoration:none}
+.op-icons a:hover{color:var(--op-ink)}
+.op-icons svg{width:15px;height:15px;fill:currentColor}
+
+/* ---------- canal desligado ----------
+   Mesmo interruptor do assets/site.css: o Reddit está no HTML mas
+   fica oculto. Para ligá-lo, apague as duas regras abaixo. */
+.op-social a.off{display:none}
+.op-icons a.off{display:none}

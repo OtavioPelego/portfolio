@@ -260,6 +260,18 @@ body {
     gap: 1.5rem;
 }
 
+/* Itens de grid e de flex nascem com min-width:auto, ou seja, se recusam a
+   encolher abaixo da largura mínima do conteúdo. Como a legenda do mapa e o
+   canvas do gráfico têm largura mínima de ~418px, no celular a coluna
+   empurrava a página para 434px e criava rolagem lateral. */
+.grid-left, .grid-right, .panel, .chart-container {
+    min-width: 0;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+}
+
 /* Panels */
 .panel {
     background: var(--bg-card);
@@ -694,7 +706,15 @@ body {
     body {
         padding: 1rem 1rem 6.5rem 1rem;
     }
-    
+
+    /* No desktop a legenda cabe numa linha e fica com space-between;
+       no celular ela quebra em linhas em vez de esticar o painel. */
+    .map-legend {
+        flex-wrap: wrap;
+        gap: 0.4rem 0.8rem;
+        justify-content: flex-start;
+    }
+
     .app-header {
         flex-direction: column;
         align-items: stretch;
@@ -727,6 +747,10 @@ body {
     .metric-selector select {
         flex-grow: 1;
         max-width: 200px;
+        /* Sem isto, o min-width:auto do item flex faz o select adotar a
+           largura da opção mais longa ("Relação Estoque/Consumo (%)", 268px)
+           e o max-width acima é ignorado — min-width vence max-width. */
+        min-width: 0;
     }
     
     .kpi-grid {

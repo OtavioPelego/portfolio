@@ -266,6 +266,17 @@ body {
     gap: 1.5rem;
 }
 
+/* Itens de grid e de flex nascem com min-width:auto e se recusam a encolher
+   abaixo da largura mínima do conteúdo — em telas de 320px isso empurrava a
+   coluna do mapa para além da viewport e criava rolagem lateral. */
+.grid-left, .grid-right, .panel, .chart-container {
+    min-width: 0;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+}
+
 .panel {
     background: var(--bg-card);
     border: 1px solid var(--border-card);
@@ -660,7 +671,15 @@ body {
     body {
         padding: 1rem 1rem 7.5rem 1rem;
     }
-    
+
+    /* No desktop a legenda cabe numa linha e fica com space-between;
+       no celular ela quebra em linhas em vez de esticar o painel. */
+    .map-legend {
+        flex-wrap: wrap;
+        gap: 0.4rem 0.8rem;
+        justify-content: flex-start;
+    }
+
     .app-header {
         flex-direction: column;
         align-items: stretch;
