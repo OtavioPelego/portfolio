@@ -25,6 +25,10 @@
     { chave: 'saiu',         rotulo: 'Saiu do processo', cor: 'var(--grave)' },
   ];
 
+  // A lista abre curta, para a página caber na tela e o usuário enxergar os
+  // gráficos abaixo sem rolar 100 linhas. Quem quiser ver mais amplia em lotes
+  // maiores, porque aí já está procurando alguém.
+  const LIMITE_INICIAL = 20;
   const LIMITE_PAGINA = 100;
 
   /* ---------- utilidades ---------- */
@@ -48,14 +52,15 @@
   // 1.125 nomes a cada tecla digitada.
   const REGISTROS = DADOS.registros.map((r) => ({ ...r, _nome: achatar(r.nome) }));
 
-  const filtros = {
-    nome: '', cargo: '', area: '', subarea: '', situacao: '',
+  const VAZIO = {
+    nome: '', cargo: '', area: '', subarea: '', situacao: '', desfecho: '',
     modalidade: '', unidade: '', lotacao: '', opcao: '',
     colMin: null, colMax: null,
   };
+  const filtros = { ...VAZIO };
 
   let ordenacao = { campo: 'posicao', dir: 'asc' };
-  let mostrando = LIMITE_PAGINA;
+  let mostrando = LIMITE_INICIAL;
 
   /* ---------- filtragem ---------- */
 
@@ -73,6 +78,7 @@
       if (exceto !== 'area' && filtros.area && r.area !== filtros.area) return false;
       if (exceto !== 'subarea' && filtros.subarea && r.subarea !== filtros.subarea) return false;
       if (exceto !== 'situacao' && filtros.situacao && r.situacao !== filtros.situacao) return false;
+      if (exceto !== 'desfecho' && filtros.desfecho && r.desfecho !== filtros.desfecho) return false;
       if (exceto !== 'modalidade' && filtros.modalidade && r.modalidade !== filtros.modalidade) return false;
       if (exceto !== 'unidade' && filtros.unidade && r.unidade !== filtros.unidade) return false;
       if (exceto !== 'lotacao' && filtros.lotacao && r.lotacao !== filtros.lotacao) return false;
@@ -95,8 +101,19 @@
     return mapa;
   };
 
-  const maiores = (mapa, n) =>
-    [...mapa.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR')).slice(0, n);
+  // Os N maiores. `fixo` é o valor atualmente filtrado naquela dimensão: se ele
+  // ficaria de fora do corte, entra assim mesmo — senão o usuário filtraria por
+  // uma opção pequena e ela sumiria do próprio gráfico onde ele clicou.
+  function maiores(mapa, n, fixo) {
+    const ordenado = [...mapa.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
+    const corte = ordenado.slice(0, n);
+    if (fixo && !corte.some(([k]) => k === fixo)) {
+      const dele = ordenado.find(([k]) => k === fixo);
+      if (dele) corte.push(dele);
+    }
+    return corte;
+  }
 
   /* ---------- selects ---------- */
 
@@ -104,6 +121,8 @@
     { id: '#f-cargo', chave: 'cargo', campo: 'cargo', todos: 'Todos os cargos', ordem: CARGOS },
     { id: '#f-area', chave: 'area', campo: 'area', todos: 'Todas as áreas' },
     { id: '#f-subarea', chave: 'subarea', campo: 'subarea', todos: 'Todas as subáreas' },
+    { id: '#f-desfecho', chave: 'desfecho', campo: 'desfecho', todos: 'Qualquer situação',
+      ordem: DESFECHOS.map((d) => d.chave), rotulo: rotuloDesfecho },
     { id: '#f-situacao', chave: 'situacao', campo: 'situacao', todos: 'Todas as situações' },
     { id: '#f-modalidade', chave: 'modalidade', campo: 'modalidade', todos: 'Todas' },
     { id: '#f-unidade', chave: 'unidade', campo: 'unidade', todos: 'Todas as unidades' },
@@ -128,7 +147,7 @@
       // na lista — senão o select ficaria "vazio" mostrando outra coisa.
       if (atual && !disponiveis.has(atual)) chaves.unshift(atual);
 
-      const rotular = (k) => s.campo === 'opcao' ? rotuloOpcao(k) : k;
+      const rotular = s.rotulo || ((k) => s.campo === 'opcao' ? rotuloOpcao(k) : k);
 
       el.innerHTML =
         `<option value="">${escapar(s.todos)}</option>` +
@@ -140,6 +159,25 @@
   function rotuloOpcao(codigo) {
     const o = DADOS.opcoes && DADOS.opcoes[codigo];
     return o ? `${codigo} — ${o.subarea}` : codigo;
+  }
+
+  function rotuloDesfecho(chave) {
+    const d = DESFECHOS.find((x) => x.chave === chave);
+    return d ? d.rotulo : chave;
+  }
+
+  /* ---------- alternar um filtro pelo gráfico ---------- */
+
+  // Clicar numa barra define o filtro daquela dimensão; clicar de novo no mesmo
+  // valor desliga. É o MESMO filtro dos selects, de propósito: assim existe uma
+  // fonte de verdade só, e o usuário sempre enxerga no formulário o que está
+  // ativo — em vez de ficar com um filtro invisível que ele não sabe desfazer.
+  function alternar(chave, valor) {
+    filtros[chave] = (filtros[chave] === valor) ? '' : valor;
+    // Escolher um cargo ou uma área invalida o que é mais específico embaixo.
+    if (chave === 'cargo') { filtros.area = ''; filtros.subarea = ''; }
+    if (chave === 'area') filtros.subarea = '';
+    atualizar();
   }
 
   /* ---------- KPIs ---------- */
@@ -172,9 +210,12 @@
 
   /* ---------- gráfico: desfecho ---------- */
 
-  function pintarDesfecho(lista) {
-    const total = lista.length;
-    const porDesfecho = contar(lista, 'desfecho');
+  // Recebe a lista SEM o filtro de desfecho aplicado, para as três faixas
+  // continuarem visíveis mesmo com uma delas escolhida — senão, ao clicar em
+  // "Já contratado", a barra viraria um bloco só e não haveria como trocar.
+  function pintarDesfecho(semDesfecho, semSituacao) {
+    const total = semDesfecho.length;
+    const porDesfecho = contar(semDesfecho, 'desfecho');
 
     $('#g-desfecho').innerHTML = DESFECHOS.map((d) => {
       const n = porDesfecho.get(d.chave) || 0;
@@ -182,8 +223,12 @@
       const pct = n / total * 100;
       // Só cabe rótulo dentro do segmento se ele tiver alguma largura.
       const dentro = pct >= 9 ? `<span>${numero(n)}</span>` : '';
-      return `<div class="seg" style="flex:${n} 0 0;background:${d.cor}" ` +
-             `title="${escapar(d.rotulo)}: ${numero(n)} (${porcento(n, total)}%)">${dentro}</div>`;
+      const ativo = filtros.desfecho === d.chave;
+      return `<button type="button" class="seg${ativo ? ' sel' : ''}" ` +
+             `style="flex:${n} 0 0;background:${d.cor}" data-desfecho="${escapar(d.chave)}" ` +
+             `aria-pressed="${ativo}" ` +
+             `title="${escapar(d.rotulo)}: ${numero(n)} (${porcento(n, total)}%) — clique para filtrar">` +
+             `${dentro}</button>`;
     }).join('');
 
     $('#leg-desfecho').innerHTML = DESFECHOS.map((d) => {
@@ -192,41 +237,57 @@
              `<b>${numero(n)}</b> <span>(${porcento(n, total)}%)</span></li>`;
     }).join('');
 
-    // A tabela ao lado é a leitura sem depender de cor nenhuma.
-    const porSituacao = maiores(contar(lista, 'situacao'), 20);
+    // A tabela é a leitura sem depender de cor nenhuma, e filtra por situação
+    // específica — por isso usa a lista sem o filtro de situação.
+    const totalSit = semSituacao.length;
+    const porSituacao = maiores(contar(semSituacao, 'situacao'), 20, filtros.situacao);
     const corDe = (situacao) => {
-      const r = lista.find((x) => x.situacao === situacao);
+      const r = semSituacao.find((x) => x.situacao === situacao);
       const d = DESFECHOS.find((y) => y.chave === (r && r.desfecho));
       return d ? d.cor : 'var(--mut)';
     };
     $('#t-situacao tbody').innerHTML = porSituacao.length
-      ? porSituacao.map(([sit, n]) =>
-          `<tr><td><i class="marca" style="background:${corDe(sit)}"></i>${escapar(sit)}</td>` +
-          `<td>${numero(n)}</td><td>${porcento(n, total)}%</td></tr>`).join('')
+      ? porSituacao.map(([sit, n]) => {
+          const ativo = filtros.situacao === sit;
+          return `<tr class="clicavel${ativo ? ' sel' : ''}" data-situacao="${escapar(sit)}" ` +
+            `tabindex="0" role="button" aria-pressed="${ativo}" ` +
+            `title="Clique para filtrar por ${escapar(sit)}">` +
+            `<td><i class="marca" style="background:${corDe(sit)}"></i>${escapar(sit)}</td>` +
+            `<td>${numero(n)}</td><td>${porcento(n, totalSit)}%</td></tr>`;
+        }).join('')
       : '<tr><td colspan="3">Nenhum registro no recorte atual.</td></tr>';
   }
 
   /* ---------- gráficos de barra ---------- */
 
-  function pintarBarras(alvo, dados, vazio) {
+  // `chave` é a dimensão que este gráfico filtra. Cada linha vira um botão,
+  // e a linha inteira é a área de clique — a barrinha tem 9px de altura e
+  // ninguém acertaria ela no celular.
+  function pintarBarras(alvo, chave, dados, vazio, rotular) {
     const el = $(alvo);
     if (!dados.length) {
       el.innerHTML = `<p class="vazio">${escapar(vazio)}</p>`;
       return;
     }
     const teto = Math.max(...dados.map(([, n]) => n));
-    el.innerHTML = dados.map(([rotulo, n]) => `
-      <div class="item">
-        <span class="rotulo" title="${escapar(rotulo)}">${escapar(rotulo)}</span>
+    const texto = rotular || ((v) => v);
+    el.innerHTML = dados.map(([valor, n]) => {
+      const ativo = filtros[chave] === valor;
+      const rot = texto(valor);
+      return `
+      <button type="button" class="item${ativo ? ' sel' : ''}" data-valor="${escapar(valor)}"
+              aria-pressed="${ativo}" title="${escapar(rot)} — clique para filtrar">
+        <span class="rotulo">${escapar(rot)}</span>
         <span class="qtd">${numero(n)}</span>
         <div class="trilho"><div class="preenche" style="width:${n / teto * 100}%"></div></div>
-      </div>`).join('');
+      </button>`;
+    }).join('');
   }
 
   // Convocados por opção, com um risco marcando as vagas previstas no edital.
   function pintarOpcoes(lista) {
     const el = $('#g-opcoes');
-    const dados = maiores(contar(lista, 'opcao'), 15);
+    const dados = maiores(contar(lista, 'opcao'), 15, filtros.opcao);
     if (!dados.length) {
       el.innerHTML = '<p class="vazio">Nenhum registro no recorte atual.</p>';
       return;
@@ -250,12 +311,15 @@
         marca = `<i class="meta" style="left:calc(${vagas / teto * 100}% - 1px)" ` +
                 `title="${numero(vagas)} vagas previstas no edital"></i>`;
       }
+      const ativo = filtros.opcao === cod;
       return `
-      <div class="item">
-        <span class="rotulo" title="Opção ${escapar(cod)} — ${escapar(rotulo)}">${escapar(rotulo)}</span>
+      <button type="button" class="item${ativo ? ' sel' : ''}" data-valor="${escapar(cod)}"
+              aria-pressed="${ativo}"
+              title="Opção ${escapar(cod)} — ${escapar(rotulo)} — clique para filtrar">
+        <span class="rotulo">${escapar(rotulo)}</span>
         <span class="qtd">${numero(n)}${vagas ? ` <small>/ ${numero(vagas)} vagas</small>` : ''}</span>
         <div class="trilho"><div class="preenche" style="width:${n / teto * 100}%"></div>${marca}</div>
-      </div>`;
+      </button>`;
     }).join('');
 
     if (temVagas) {
@@ -354,6 +418,7 @@
     if (filtros.cargo) partes.push(`cargo ${filtros.cargo}`);
     if (filtros.area) partes.push(`área ${filtros.area}`);
     if (filtros.subarea) partes.push(`subárea ${filtros.subarea}`);
+    if (filtros.desfecho) partes.push(rotuloDesfecho(filtros.desfecho).toLowerCase());
     if (filtros.situacao) partes.push(`situação ${filtros.situacao}`);
     if (filtros.modalidade) partes.push(filtros.modalidade);
     if (filtros.unidade) partes.push(`unidade ${filtros.unidade}`);
@@ -372,16 +437,27 @@
   /* ---------- orquestração ---------- */
 
   function atualizar(preservarPagina) {
-    if (!preservarPagina) mostrando = LIMITE_PAGINA;
+    if (!preservarPagina) mostrando = LIMITE_INICIAL;
     const lista = filtrar(null);
 
     pintarKPIs(lista);
-    pintarDesfecho(lista);
-    pintarBarras('#g-unidades', maiores(contar(lista, 'unidade'), 12),
+
+    // Cada gráfico se desenha ignorando o PRÓPRIO filtro e respeitando todos os
+    // outros. É o que permite trocar de unidade com um clique em vez de ter que
+    // limpar tudo: as demais barras continuam na tela.
+    pintarDesfecho(filtrar('desfecho'), filtrar('situacao'));
+
+    const semUnidade = filtrar('unidade');
+    pintarBarras('#g-unidades', 'unidade',
+      maiores(contar(semUnidade, 'unidade'), 12, filtros.unidade),
       'Ninguém no recorte atual já tem unidade definida.');
-    pintarBarras('#g-areas', maiores(contar(lista, 'area'), 10),
+
+    const semArea = filtrar('area');
+    pintarBarras('#g-areas', 'area',
+      maiores(contar(semArea, 'area'), 10, filtros.area),
       'Nenhum registro no recorte atual.');
-    pintarOpcoes(lista);
+
+    pintarOpcoes(filtrar('opcao'));
     pintarTabela(lista);
     pintarResumo(lista);
     montarSelects();
@@ -408,6 +484,35 @@
       atualizar();
     });
   }
+
+  // Cliques nos gráficos. Delegação no container, porque o conteúdo é
+  // redesenhado a cada atualização e listeners individuais se perderiam.
+  const ligarBarras = (seletor, chave) => {
+    $(seletor).addEventListener('click', (e) => {
+      const item = e.target.closest('.item');
+      if (item) alternar(chave, item.dataset.valor);
+    });
+  };
+  ligarBarras('#g-unidades', 'unidade');
+  ligarBarras('#g-areas', 'area');
+  ligarBarras('#g-opcoes', 'opcao');
+
+  $('#g-desfecho').addEventListener('click', (e) => {
+    const seg = e.target.closest('.seg');
+    if (seg) alternar('desfecho', seg.dataset.desfecho);
+  });
+
+  // A tabelinha de situações usa <tr>, que não é botão: o teclado precisa de
+  // ajuda para acioná-la.
+  const acionarSituacao = (e) => {
+    const linha = e.target.closest('tr.clicavel');
+    if (!linha) return;
+    if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    alternar('situacao', linha.dataset.situacao);
+  };
+  $('#t-situacao').addEventListener('click', acionarSituacao);
+  $('#t-situacao').addEventListener('keydown', acionarSituacao);
 
   const lerFaixa = (el, chave) => el.addEventListener('input', (e) => {
     const v = parseInt(e.target.value, 10);
@@ -444,11 +549,7 @@
   });
 
   $('#limpar').addEventListener('click', () => {
-    Object.assign(filtros, {
-      nome: '', cargo: '', area: '', subarea: '', situacao: '',
-      modalidade: '', unidade: '', lotacao: '', opcao: '',
-      colMin: null, colMax: null,
-    });
+    Object.assign(filtros, VAZIO);
     $('#f-nome').value = '';
     $('#f-col-min').value = '';
     $('#f-col-max').value = '';
