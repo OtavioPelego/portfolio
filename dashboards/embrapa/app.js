@@ -62,6 +62,12 @@
   let ordenacao = { campo: 'posicao', dir: 'asc' };
   let mostrando = LIMITE_INICIAL;
 
+  // Quantas barras cada gráfico mostra fechado, e se o usuário pediu para abrir.
+  // O estado de aberto NÃO é zerado ao filtrar: quem abriu quer continuar vendo
+  // a lista inteira enquanto mexe nos filtros — é justamente aí que ela serve.
+  const TOPO = { unidade: 12, area: 10, opcao: 15 };
+  const expandido = { unidade: false, area: false, opcao: false };
+
   /* ---------- filtragem ---------- */
 
   // Aplica todos os filtros, menos o que estiver em `exceto`. Isso serve para
@@ -260,24 +266,45 @@
 
   /* ---------- gráficos de barra ---------- */
 
+  // Atualiza o botão "ver todas" de um gráfico. `total` é quantos existem no
+  // recorte atual; `TOPO[chave]` é quantos cabem fechado.
+  function pintarVerTodas(idBotao, chave, total, plural) {
+    const btn = $(idBotao);
+    const cabe = TOPO[chave];
+    if (total <= cabe) {
+      // Nada a expandir agora. Se o usuário tinha aberto, deixamos o estado
+      // ligado: ao afrouxar o filtro, a lista volta aberta como ele deixou.
+      btn.hidden = true;
+      return;
+    }
+    btn.hidden = false;
+    btn.setAttribute('aria-expanded', String(expandido[chave]));
+    btn.textContent = expandido[chave]
+      ? `Ver só as ${cabe} maiores`
+      : `Ver todas as ${numero(total)} ${plural}`;
+  }
+
   // `chave` é a dimensão que este gráfico filtra. Cada linha vira um botão,
   // e a linha inteira é a área de clique — a barrinha tem 9px de altura e
   // ninguém acertaria ela no celular.
-  function pintarBarras(alvo, chave, dados, vazio, rotular) {
+  function pintarBarras(alvo, chave, mapa, vazio, plural, idBotao) {
     const el = $(alvo);
+    const dados = maiores(mapa, expandido[chave] ? Infinity : TOPO[chave], filtros[chave]);
+
+    pintarVerTodas(idBotao, chave, mapa.size, plural);
+    el.classList.toggle('expandido', expandido[chave] && dados.length > TOPO[chave]);
+
     if (!dados.length) {
       el.innerHTML = `<p class="vazio">${escapar(vazio)}</p>`;
       return;
     }
     const teto = Math.max(...dados.map(([, n]) => n));
-    const texto = rotular || ((v) => v);
     el.innerHTML = dados.map(([valor, n]) => {
       const ativo = filtros[chave] === valor;
-      const rot = texto(valor);
       return `
       <button type="button" class="item${ativo ? ' sel' : ''}" data-valor="${escapar(valor)}"
-              aria-pressed="${ativo}" title="${escapar(rot)} — clique para filtrar">
-        <span class="rotulo">${escapar(rot)}</span>
+              aria-pressed="${ativo}" title="${escapar(valor)} — clique para filtrar">
+        <span class="rotulo">${escapar(valor)}</span>
         <span class="qtd">${numero(n)}</span>
         <div class="trilho"><div class="preenche" style="width:${n / teto * 100}%"></div></div>
       </button>`;
@@ -287,7 +314,12 @@
   // Convocados por opção, com um risco marcando as vagas previstas no edital.
   function pintarOpcoes(lista) {
     const el = $('#g-opcoes');
-    const dados = maiores(contar(lista, 'opcao'), 15, filtros.opcao);
+    const mapa = contar(lista, 'opcao');
+    const dados = maiores(mapa, expandido.opcao ? Infinity : TOPO.opcao, filtros.opcao);
+
+    pintarVerTodas('#mais-opcoes', 'opcao', mapa.size, 'opções');
+    el.classList.toggle('expandido', expandido.opcao && dados.length > TOPO.opcao);
+
     if (!dados.length) {
       el.innerHTML = '<p class="vazio">Nenhum registro no recorte atual.</p>';
       return;
@@ -322,11 +354,9 @@
       </button>`;
     }).join('');
 
-    if (temVagas) {
-      el.insertAdjacentHTML('beforeend',
-        '<p class="legenda-vagas"><i class="risco"></i> o risco marca o total de vagas ' +
-        'previsto no Anexo II do edital</p>');
-    }
+    // A legenda vive fora do container das barras, senão sumiria dentro da
+    // rolagem quando o gráfico está expandido.
+    $('#leg-vagas').hidden = !temVagas;
   }
 
   /* ---------- tabela ---------- */
@@ -447,15 +477,11 @@
     // limpar tudo: as demais barras continuam na tela.
     pintarDesfecho(filtrar('desfecho'), filtrar('situacao'));
 
-    const semUnidade = filtrar('unidade');
-    pintarBarras('#g-unidades', 'unidade',
-      maiores(contar(semUnidade, 'unidade'), 12, filtros.unidade),
-      'Ninguém no recorte atual já tem unidade definida.');
+    pintarBarras('#g-unidades', 'unidade', contar(filtrar('unidade'), 'unidade'),
+      'Ninguém no recorte atual já tem unidade definida.', 'unidades', '#mais-unidades');
 
-    const semArea = filtrar('area');
-    pintarBarras('#g-areas', 'area',
-      maiores(contar(semArea, 'area'), 10, filtros.area),
-      'Nenhum registro no recorte atual.');
+    pintarBarras('#g-areas', 'area', contar(filtrar('area'), 'area'),
+      'Nenhum registro no recorte atual.', 'áreas', '#mais-areas');
 
     pintarOpcoes(filtrar('opcao'));
     pintarTabela(lista);
@@ -496,6 +522,18 @@
   ligarBarras('#g-unidades', 'unidade');
   ligarBarras('#g-areas', 'area');
   ligarBarras('#g-opcoes', 'opcao');
+
+  // "Ver todas" / "ver só as N maiores". Preserva a paginação da tabela: mexer
+  // no gráfico não tem por que encolher a lista que o usuário já expandiu.
+  const ligarVerTodas = (idBotao, chave) => {
+    $(idBotao).addEventListener('click', () => {
+      expandido[chave] = !expandido[chave];
+      atualizar(true);
+    });
+  };
+  ligarVerTodas('#mais-unidades', 'unidade');
+  ligarVerTodas('#mais-areas', 'area');
+  ligarVerTodas('#mais-opcoes', 'opcao');
 
   $('#g-desfecho').addEventListener('click', (e) => {
     const seg = e.target.closest('.seg');

@@ -172,6 +172,19 @@
   transition:width .3s ease;min-width:2px}
 .barras .vazio{font-size:13px;color:var(--dim);font-style:italic}
 
+/* Aberto, o gráfico pode ter 50 unidades ou 187 opções. Sem teto, a lista de
+   convocados lá embaixo ficaria a milhares de pixels de distância — então a
+   lista inteira fica disponível, mas rolando dentro do próprio cartão. */
+.barras.expandido{max-height:min(62vh,520px);overflow-y:auto;overscroll-behavior:contain;
+  padding-right:6px;margin-right:-6px}
+
+.ver-todas{margin-top:15px;width:100%;background:var(--panel2);color:var(--mut);
+  border:1px solid var(--line);border-radius:9px;padding:9px 14px;font:inherit;
+  font-size:12.5px;cursor:pointer;transition:color .16s,border-color .16s}
+.ver-todas:hover{color:var(--ink);border-color:var(--mut)}
+.ver-todas:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.ver-todas[hidden]{display:none}
+
 /* comparação convocados x vagas */
 .barras.opcoes .item{grid-template-columns:1fr auto}
 .barras.opcoes .trilho{height:11px;position:relative;background:var(--trilho)}
@@ -180,6 +193,7 @@
 .barras.opcoes .qtd small{color:var(--dim);font-weight:400}
 .legenda-vagas{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);
   margin-top:14px}
+.legenda-vagas[hidden]{display:none}
 .legenda-vagas .risco{display:inline-block;width:2px;height:13px;background:var(--mut);
   border-radius:1px}
 
@@ -252,4 +266,10 @@
   .kpi .val{font-size:26px}
   .linha-busca{align-items:stretch}
   .limpar,.baixar{flex:1}
+  /* No toque, alvo abaixo de ~44px erra muito. No desktop o mouse é preciso e
+     esse respiro só afastaria as barras à toa. */
+  .barras{gap:12px}
+  .barras .item{padding:8px 6px;margin:-8px -6px}
+  .ver-todas{padding:13px 14px}
+  .tabela-situacao td{padding:11px 10px 11px 0}
 }
