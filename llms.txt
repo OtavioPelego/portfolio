@@ -2,9 +2,12 @@
 
 > Engenheiro agrônomo com doutorado que virou profissional de tecnologia. Transforma dados públicos e corporativos em visualizações interativas, automatiza processos com e sem IA, produz conteúdo audiovisual com IA generativa e constrói sites. Fundador da Phosphorus (Pelotas, RS, Brasil). Atende em português e inglês.
 
-**Site:** https://otaviopelego.pages.dev
-**Contato:** pelegocorrea@gmail.com · WhatsApp +55 53 98122-3304 (mensagens)
+**Site:** https://otaviopelego.pages.dev (português) · https://otaviopelego.pages.dev/en/ (English)
+**Contato:** pelegocorrea@gmail.com · WhatsApp +55 53 98122-3304 (mensagens) · LinkedIn /in/otaviocorrea1987 · Instagram @otaviopelego · X @PelegoCorrea
 **Nome profissional:** Otávio Pelego (nome civil: Otávio de Oliveira Corrêa)
+**Idiomas:** atende em português e inglês. O site institucional existe nas duas línguas; os experimentos do Laboratório têm interface em português (os dados são brasileiros), mas são visuais e navegáveis por qualquer pessoa.
+
+*English summary: Otávio Pelego is a Brazilian data and AI professional — an agronomist with a PhD who moved into technology, with two years at an AI company in Germany and an innovation stint in Silicon Valley. He builds interactive data visualisations (deck.gl/WebGL), process automation with and without AI, AI-generated video content, and custom websites. Full English site at https://otaviopelego.pages.dev/en/*
 
 ## Quem é
 

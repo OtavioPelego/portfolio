@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lab — experiments by Otávio Pelego</title>
+<meta name="description" content="Where I experiment in public: data, AI and automation projects. Today mostly data visualisation — football, a 3D atlas of Brazil and analytical dashboards.">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-top:22px}
+  .gcard{position:relative;display:flex;flex-direction:column;background:var(--panel);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;
+    transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .gcard:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 16px 40px -18px var(--ac)}
+  .gcard .cover{height:150px;background-size:cover;background-position:center;position:relative}
+  .gcard .cover::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,14,19,.05) 0%,rgba(11,14,19,.5) 70%,var(--panel) 100%)}
+  .gcard .glyph{position:absolute;right:14px;bottom:10px;z-index:2;font-size:30px;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+  .gcard .gbody{padding:15px 18px 17px;display:flex;flex-direction:column;flex:1}
+  .gcard h3{margin:0 0 3px;font-size:18.5px;letter-spacing:-.015em}
+  .gcard .tl{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ac);
+    text-transform:uppercase;margin:0 0 9px}
+  .gcard p{margin:0 0 13px;font-size:13.5px;color:var(--mut);flex:1}
+  .gcard .gfoot{display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--line);padding-top:11px;margin-top:auto}
+  .gcard .src{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+  .gcard .go{font-family:var(--mono);font-size:12px;color:var(--ac);display:flex;align-items:center;gap:5px}
+  .gcard:hover .go .arw{transform:translateX(4px)}
+  .gcard .go .arw{transition:transform .18s}
+  .stage{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:11px;border:1px solid}
+  .stage.wip{background:rgba(212,162,78,.13);color:var(--amber);border-color:rgba(212,162,78,.35)}
+  .card .meta{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+  .ptnote{font-size:12.5px;color:var(--dim);font-family:var(--mono);margin-top:10px}
+  @media (prefers-color-scheme:light){
+    .gcard .cover::after{background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.5) 70%,var(--panel) 100%)}
+  }
+</style>
+<meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://otaviopelego.pages.dev/en/laboratorio/">
+<link rel="alternate" hreflang="pt-BR" href="https://otaviopelego.pages.dev/laboratorio/">
+<link rel="alternate" hreflang="en" href="https://otaviopelego.pages.dev/en/laboratorio/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Otávio Pelego">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="The Lab — experiments by Otávio Pelego">
+<meta property="og:description" content="Where I experiment in public: data, AI and automation projects. Today mostly data visualisation — football, a 3D atlas of Brazil and analytical dashboards.">
+<meta property="og:url" content="https://otaviopelego.pages.dev/en/laboratorio/">
+<meta property="og:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PelegoCorrea">
+<meta name="twitter:title" content="The Lab — experiments by Otávio Pelego">
+<meta name="twitter:description" content="Where I experiment in public: data, AI and automation projects, honest about the stage each one is at.">
+<meta name="twitter:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" href="../index.html"><span class="dot"></span> Otávio Pelego</a>
+  <nav class="topnav">
+    <a href="../data-analytics/">Data Analytics</a>
+    <a href="../workflows/">Automation</a>
+    <a href="../contents/">Content</a>
+    <a href="../websites/">Websites</a>
+    <a href="../google-workspace/">Get found</a>
+    <a href="../consulting/">Consulting</a>
+    <a href="./" aria-current="page">Lab</a>
+    <span class="lang"><a href="../../laboratorio/">PT</a><a href="./" aria-current="true">EN</a></span>
+  </nav>
+</div></div>
+
+<header><div class="wrap">
+  <p class="kicker">The Lab</p>
+  <h1 class="wide">Where I <span class="g">experiment in public</span>.</h1>
+  <p class="lede">The services portfolio shows what I deliver with a finish on it. This is the lab: the experiments I built out of curiosity, to test a tool, or to join up data nobody had joined before. Today almost all of it is <strong>data visualisation</strong> — but the bench is always open.</p>
+</div></header>
+
+<div class="wrap">
+
+  <p class="sechead" id="experiments"><span>Visual Data Analytics</span><a href="../data-analytics/">this is what I do for companies →</a></p>
+  <p class="sub">Public data — IBGE, StatsBomb, USDA, TSE, Conab, Embrapa — turned into experiences you explore in the browser. Each one is a complete pipeline, from raw data to pixel.</p>
+  <p class="ptnote">Note: the experiments open with their interface in Portuguese — they're built on Brazilian public data. The visuals speak for themselves, and English versions are on the way.</p>
+
+  <div class="gallery">
+
+    <a class="gcard" style="--ac:var(--purple)" href="../../futebol/index.html">
+      <div class="cover" style="background-image:url('../../futebol/covers/onda-3d.png'),linear-gradient(135deg,#2a1a44,#3a1d55)"><span class="glyph">⚽</span></div>
+      <div class="gbody">
+        <h3>Football — 5 data portraits</h3>
+        <p class="tl">From 1930 to the 2026 World Cup</p>
+        <p>A whole match turned into sculpture: who controlled every metre of the pitch, computed from positional tracking at 25 frames per second. From the 1930 World Cup to 2026.</p>
+        <div class="gfoot"><span class="src">Metrica · StatsBomb · FBref</span><span class="go">explore <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--amber)" href="../../brasil-de-lupa/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#1b0c3b,#bc3754 60%,#f98e09)"><span class="glyph">🗺️</span></div>
+      <div class="gbody">
+        <h3>Brazil Under the Lens — 3D atlas</h3>
+        <p class="tl">10 maps · IBGE data</p>
+        <p>Where Brazilians move to, where income concentrates, how the country ages, how soy advanced across the map. Ten readings of Brazil in three dimensions, navigable with the mouse.</p>
+        <div class="gfoot"><span class="src">IBGE · Census and SIDRA</span><span class="go">explore <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--green)" href="../../dashboards/usda/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#2a2410,#6b5a1e 60%,#d4a24e)"><span class="glyph">🌽</span></div>
+      <div class="gbody">
+        <h3>Global agriculture — USDA</h3>
+        <p class="tl">12 commodities since 1960</p>
+        <p>Production, consumption and stocks for the whole world, with a map and a timeline. You can watch China become the planet's largest wheat producer, year by year.</p>
+        <div class="gfoot"><span class="src">USDA PSD</span><span class="go">open <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--blue)" href="../../dashboards/tse/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#0d1b3a,#1f3b7a 60%,#4aa3ff)"><span class="glyph">🗳️</span></div>
+      <div class="gbody">
+        <h3>Electoral history — TSE</h3>
+        <p class="tl">1994 to 2022</p>
+        <p>Every Brazilian presidential election since redemocratisation, with the profile of the electorate and the candidates, and the vote map by state, round by round.</p>
+        <div class="gfoot"><span class="src">TSE · official data</span><span class="go">open <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+    <a class="gcard" style="--ac:var(--green)" href="../../dashboards/conab/index.html">
+      <div class="cover" style="background-image:linear-gradient(135deg,#0d2a17,#1c5c34 60%,#3ddc97)"><span class="glyph">🌾</span></div>
+      <div class="gbody">
+        <h3>Brazilian harvests — Conab</h3>
+        <p class="tl">1976 to 2026</p>
+        <p>Half a century of area, production and yield for Brazil's crops in a single panel, with a map by state and a timeline — the agricultural frontier advancing before your eyes.</p>
+        <div class="gfoot"><span class="src">Conab · official data</span><span class="go">open <span class="arw">→</span></span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <p class="sechead"><span>Other benches</span></p>
+  <p class="sub">Beyond visualisation, I have experiments in automation, AI and data collection. This part is curated — what earns a place shows up here, with the real stage it's at.</p>
+  <div class="grid" style="margin-top:18px">
+    <div class="card" style="--ac:var(--dim)">
+      <span class="stage wip">Being curated</span>
+      <h3>More experiments land here</h3>
+      <p>I have dozens of tests on disk — automations, AI proofs of concept, data collection. This showcase grows slowly, and stays honest about what already works and what's still a sketch.</p>
+      <div class="meta">under construction</div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div>
+      <h3>Want to turn one of these into something real?</h3>
+      <p>A lot of what's here is the seed of a project. If a topic speaks to your company, we take it from the lab into production — that's my <a href="../data-analytics/">Visual Data Analytics service</a>.</p>
+    </div>
+    <div class="btnrow" style="margin-top:0">
+      <a class="btn wa" href="https://wa.me/5553981223304?text=Hi%20Ot%C3%A1vio%21%20I%20saw%20your%20lab%20and%20would%20like%20to%20talk." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:17px;height:17px;fill:currentColor;flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp</a>
+      <a class="btn ghost" href="mailto:pelegocorrea@gmail.com?subject=The%20Lab">Reach me by e-mail</a>
+    </div>
+  </div>
+
+  <footer>
+    <span>Otávio Pelego · <span class="civil">Otávio de Oliveira Corrêa</span></span>
+    <span><a href="../../laboratorio/">versão em português</a> · <a href="../index.html">home</a> · <a href="mailto:pelegocorrea@gmail.com">e-mail</a></span>
+  </footer>
+</div>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

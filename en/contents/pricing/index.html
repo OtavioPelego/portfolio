@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI video — price list | Otávio Pelego</title>
+<meta name="description" content="Pricing for AI-generated video production: reels, ads and brand films for social media.">
+<link rel="stylesheet" href="../../../assets/site.css">
+<style>
+  :root{--ac:var(--blue)}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:4px;
+    background:var(--panel);gap:4px;margin:0 0 20px}
+  .seg a{padding:8px 15px;border-radius:99px;font-size:13px;text-decoration:none;color:var(--mut);
+    white-space:nowrap;transition:color .16s,background .16s}
+  .seg a.on{background:var(--ac);color:#08131b;font-weight:650}
+  .seg a:hover:not(.on){color:var(--ink)}
+  @media (max-width:460px){ .seg{width:100%} .seg a{flex:1;text-align:center;font-size:12px;padding:8px 8px} }
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
+  .tier{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);
+    border-radius:15px;padding:20px 18px 18px;transition:transform .18s,border-color .18s}
+  .tier:hover{transform:translateY(-3px);border-color:var(--ac)}
+  .tier .dur{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac)}
+  .tier .price{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:10px 0 2px;line-height:1}
+  .tier .cenas{font-size:12.5px;color:var(--dim);font-family:var(--mono);margin-bottom:12px}
+  .tier .use{font-size:13px;color:var(--mut);border-top:1px solid var(--line);padding-top:11px;margin-top:auto}
+  .tier.custom{background:linear-gradient(150deg,var(--panel),var(--panel2));border-style:dashed}
+  .tier.custom .price{font-size:26px}
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:20px}
+  .rule{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--ac);
+    border-radius:12px;padding:16px 18px}
+  .rule b{display:block;font-size:14.5px;margin-bottom:5px}
+  .rule span{font-size:13px;color:var(--mut);line-height:1.55}
+  .steps{counter-reset:s;list-style:none;padding:0;margin:20px 0 0;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  .steps li{counter-increment:s;position:relative;padding:14px 16px 14px 46px;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;font-size:13.5px;color:var(--mut)}
+  .steps li::before{content:counter(s);position:absolute;left:15px;top:13px;width:21px;height:21px;
+    border-radius:50%;background:var(--ac);color:#08131b;font-weight:700;font-size:12px;
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+  .steps li b{color:var(--ink);display:block;font-size:14px;margin-bottom:2px;font-weight:600}
+  .addons{font-size:14px;color:var(--mut);margin-top:16px}
+  .addons li{margin-bottom:7px}
+  .addons b{color:var(--ink)}
+  .curr{font-size:12.5px;color:var(--dim);font-family:var(--mono);margin-top:14px}
+</style>
+<meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://otaviopelego.pages.dev/en/contents/pricing/">
+<link rel="alternate" hreflang="pt-BR" href="https://otaviopelego.pages.dev/contents/precos/">
+<link rel="alternate" hreflang="en" href="https://otaviopelego.pages.dev/en/contents/pricing/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Otávio Pelego">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="AI video — price list | Otávio Pelego">
+<meta property="og:description" content="Pricing for AI-generated video production: reels, ads and brand films for social media.">
+<meta property="og:url" content="https://otaviopelego.pages.dev/en/contents/pricing/">
+<meta property="og:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PelegoCorrea">
+<meta name="twitter:title" content="AI video — price list">
+<meta name="twitter:description" content="Pricing for AI-generated video production: reels, ads and brand films for social media.">
+<meta name="twitter:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" href="../../index.html"><span class="dot"></span> Otávio Pelego</a>
+  <nav class="topnav">
+    <a href="../../data-analytics/">Data Analytics</a>
+    <a href="../../workflows/">Automation</a>
+    <a href="../" aria-current="page">Content</a>
+    <a href="../../websites/">Websites</a>
+    <a href="../../consulting/">Consulting</a>
+    <a href="../../laboratorio/">Lab</a>
+    <span class="lang"><a href="../../../contents/precos/">PT</a><a href="./" aria-current="true">EN</a></span>
+  </nav>
+</div></div>
+
+<header><div class="wrap">
+  <p class="kicker">AI video · price list</p>
+  <div class="seg">
+    <a class="on" href="./">For business</a>
+    <a href="../moments/">For personal moments</a>
+  </div>
+  <h1 class="wide">Your brand on video, <span class="g">without a film set</span>.</h1>
+  <p class="lede">I produce video for social media — reels, ads and brand films — using generative AI (Google Veo / Flow) for the scenes, the sound and the score. Cinema without a crew, on the timeline and budget of a post.</p>
+  <div class="btnrow">
+    <a class="btn ghost" href="../#video">See the portfolio first →</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <p class="sechead"><span>Price list</span></p>
+  <p class="sub">The price follows the duration and the number of scenes — because the scene count is what drives the work of generating, editing and holding the visual coherence together.</p>
+
+  <div class="tiers">
+
+    <div class="tier">
+      <span class="dur">up to 15 seconds</span>
+      <div class="price">R$ 199</div>
+      <div class="cenas">up to 5 scenes</div>
+      <span class="use">A punchy reel or TikTok: one product, one concept, one idea.</span>
+    </div>
+
+    <div class="tier">
+      <span class="dur">up to 30 seconds</span>
+      <div class="price">R$ 399</div>
+      <div class="cenas">up to 10 scenes</div>
+      <span class="use">A short commercial or an ad built for conversion.</span>
+    </div>
+
+    <div class="tier">
+      <span class="dur">up to 60 seconds</span>
+      <div class="price">R$ 699</div>
+      <div class="cenas">up to 20 scenes</div>
+      <span class="use">A light corporate film or a brand manifesto.</span>
+    </div>
+
+    <div class="tier">
+      <span class="dur">up to 90 seconds</span>
+      <div class="price">R$ 999</div>
+      <div class="cenas">up to 30 scenes</div>
+      <span class="use">Needs a structured script and identity consistency across the whole film.</span>
+    </div>
+
+    <div class="tier custom">
+      <span class="dur">beyond that</span>
+      <div class="price">Let's talk</div>
+      <div class="cenas">90s+ and/or 30+ scenes</div>
+      <span class="use">At that scale, pacing, voice-over and editing become a project — quoted case by case.</span>
+    </div>
+
+  </div>
+  <p class="curr">Prices in Brazilian reais (BRL). For projects outside Brazil, tell me the scope and I'll quote in your currency.</p>
+
+  <p class="sechead"><span>Included in every package</span></p>
+  <ul class="checks">
+    <li><b>Scene generation</b> — moving images created with AI, in the visual style we agree on.</li>
+    <li><b>A score</b> tailored to the mood of the film.</li>
+    <li><b>Sound design</b> — what gives it texture and makes it feel properly produced.</li>
+    <li><b>AI voice-over</b> when the script calls for it, in a natural voice.</li>
+    <li><b>Final edit</b>, with pacing built to hold attention.</li>
+    <li><b>Delivery in the formats you need</b> — vertical, square or horizontal.</li>
+  </ul>
+
+  <p class="sechead"><span>Three rules that prevent misunderstandings</span></p>
+  <div class="rules">
+    <div class="rule">
+      <b>The script is on you</b>
+      <span>The list price assumes you bring an approved script or storyboard. If I create the concept from scratch, a conception fee applies — agreed up front, no surprises.</span>
+    </div>
+    <div class="rule">
+      <b>Two rounds of revisions</b>
+      <span>Every package includes up to 2 rounds of editing revisions. That's enough to get pacing, cuts and details right.</span>
+    </div>
+    <div class="rule">
+      <b>Regenerating a scene is extra</b>
+      <span>If you want to change a scene's concept after it's finished, it has to be generated again: R$ 35 per scene. Changing the idea is different from adjusting the cut.</span>
+    </div>
+  </div>
+
+  <p class="sechead"><span>How it works</span></p>
+  <ol class="steps">
+    <li><b>Brief</b> You tell me the brand, the goal and where the video will run.</li>
+    <li><b>Script</b> We align the script and visual style before generating anything.</li>
+    <li><b>Production</b> I generate the scenes, edit, and add sound and score.</li>
+    <li><b>Revisions</b> You review and we refine, up to 2 rounds.</li>
+    <li><b>Delivery</b> Final files in the formats you use.</li>
+  </ol>
+  <p class="sub" style="margin-top:16px">Timelines agreed per project, based on duration and current schedule.</p>
+
+  <p class="sechead"><span>Add-ons</span></p>
+  <ul class="addons">
+    <li><b>Script writing and creative direction</b> — when you have the idea but not the script.</li>
+    <li><b>Extra scene regeneration</b> — R$ 35 per scene, beyond the 2 included revision rounds.</li>
+    <li><b>Additional format versions</b> — the same film recut for another network.</li>
+    <li><b>Monthly package</b> — for anyone who needs consistency; we talk volume and price.</li>
+  </ul>
+
+  <div class="cta">
+    <div>
+      <h3>Shall we make yours?</h3>
+      <p>Tell me the brand and what you want to show. If I think your case calls for a different route — including not using AI — I'll say that too.</p>
+    </div>
+    <div class="btnrow" style="margin-top:0">
+      <a class="btn wa" href="https://wa.me/5553981223304?text=Hi%20Ot%C3%A1vio%21%20I%27d%20like%20a%20quote%20for%20an%20AI%20video%20for%20my%20business." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:17px;height:17px;fill:currentColor;flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp</a>
+      <a class="btn ghost" href="mailto:pelegocorrea@gmail.com?subject=AI%20video%20%E2%80%94%20quote">Request a quote</a>
+    </div>
+  </div>
+
+  <footer>
+    <span>Otávio Pelego · <span class="civil">Otávio de Oliveira Corrêa</span></span>
+    <span><a href="../../../contents/precos/">versão em português</a> · <a href="../moments/">for personal moments</a> · <a href="../../index.html">home</a></span>
+  </footer>
+</div>
+<script src="../../../assets/nav.js"></script>
+</body>
+</html>

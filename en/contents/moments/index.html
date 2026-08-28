@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI video for moments and tributes | Otávio Pelego</title>
+<meta name="description" content="AI-made videos for birthdays, weddings, gender reveals, baby showers and tributes. Your story, in the shape of a film.">
+<link rel="stylesheet" href="../../../assets/site.css">
+<style>
+  :root{--ac:var(--purple)}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:4px;
+    background:var(--panel);gap:4px;margin:0 0 20px}
+  .seg a{padding:8px 15px;border-radius:99px;font-size:13px;text-decoration:none;color:var(--mut);
+    white-space:nowrap;transition:color .16s,background .16s}
+  .seg a.on{background:var(--ac);color:#0d0618;font-weight:650}
+  .seg a:hover:not(.on){color:var(--ink)}
+  @media (max-width:460px){ .seg{width:100%} .seg a{flex:1;text-align:center;font-size:12px;padding:8px 8px} }
+  .ocas{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+  .ocas span{font-size:13.5px;padding:7px 14px;border-radius:99px;background:var(--panel);
+    border:1px solid var(--line);color:var(--mut)}
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
+  .tier{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);
+    border-radius:15px;padding:20px 18px 18px;transition:transform .18s,border-color .18s}
+  .tier:hover{transform:translateY(-3px);border-color:var(--ac)}
+  .tier .dur{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac)}
+  .tier .price{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:10px 0 2px;line-height:1}
+  .tier .cenas{font-size:12.5px;color:var(--dim);font-family:var(--mono);margin-bottom:12px}
+  .tier .use{font-size:13px;color:var(--mut);border-top:1px solid var(--line);padding-top:11px;margin-top:auto}
+  .tier.custom{background:linear-gradient(150deg,var(--panel),var(--panel2));border-style:dashed}
+  .tier.custom .price{font-size:26px}
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}
+  .rule{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--ac);
+    border-radius:12px;padding:16px 18px}
+  .rule b{display:block;font-size:14.5px;margin-bottom:5px}
+  .rule span{font-size:13px;color:var(--mut);line-height:1.55}
+  .steps{counter-reset:s;list-style:none;padding:0;margin:20px 0 0;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  .steps li{counter-increment:s;position:relative;padding:14px 16px 14px 46px;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;font-size:13.5px;color:var(--mut)}
+  .steps li::before{content:counter(s);position:absolute;left:15px;top:13px;width:21px;height:21px;
+    border-radius:50%;background:var(--ac);color:#0d0618;font-weight:700;font-size:12px;
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+  .steps li b{color:var(--ink);display:block;font-size:14px;margin-bottom:2px;font-weight:600}
+  .curr{font-size:12.5px;color:var(--dim);font-family:var(--mono);margin-top:14px}
+</style>
+<meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://otaviopelego.pages.dev/en/contents/moments/">
+<link rel="alternate" hreflang="pt-BR" href="https://otaviopelego.pages.dev/contents/momentos/">
+<link rel="alternate" hreflang="en" href="https://otaviopelego.pages.dev/en/contents/moments/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Otávio Pelego">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="AI video for moments and tributes | Otávio Pelego">
+<meta property="og:description" content="AI-made videos for birthdays, weddings, gender reveals, baby showers and tributes. Your story, in the shape of a film.">
+<meta property="og:url" content="https://otaviopelego.pages.dev/en/contents/moments/">
+<meta property="og:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PelegoCorrea">
+<meta name="twitter:title" content="AI video for moments and tributes">
+<meta name="twitter:description" content="AI-made videos for birthdays, weddings, gender reveals, baby showers and tributes. Your story, in the shape of a film.">
+<meta name="twitter:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" href="../../index.html"><span class="dot"></span> Otávio Pelego</a>
+  <nav class="topnav">
+    <a href="../../data-analytics/">Data Analytics</a>
+    <a href="../../workflows/">Automation</a>
+    <a href="../" aria-current="page">Content</a>
+    <a href="../../websites/">Websites</a>
+    <a href="../../consulting/">Consulting</a>
+    <a href="../../laboratorio/">Lab</a>
+    <span class="lang"><a href="../../../contents/momentos/">PT</a><a href="./" aria-current="true">EN</a></span>
+  </nav>
+</div></div>
+
+<header><div class="wrap">
+  <p class="kicker">AI video · moments &amp; tributes</p>
+  <div class="seg">
+    <a href="../pricing/">For business</a>
+    <a class="on" href="./">For personal moments</a>
+  </div>
+  <h1 class="wide">Your story, <span class="g">in the shape of a film</span>.</h1>
+  <p class="lede">Some moments a story post can't hold. I use artificial intelligence to turn memories, family history and celebrations into videos that feel like cinema — scenes, score and narration — with no camera, no set, no crew. And without needing that moment to happen again.</p>
+  <div class="btnrow">
+    <a class="btn ghost" href="../#video">See examples of my work →</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <p class="sechead"><span>What it's for</span></p>
+  <div class="ocas">
+    <span>🎂 Birthday</span>
+    <span>💍 Wedding &amp; anniversaries</span>
+    <span>🎀 Gender reveal</span>
+    <span>🍼 Baby shower</span>
+    <span>🎓 Graduation</span>
+    <span>💛 A tribute to someone you love</span>
+    <span>📽️ Family retrospective</span>
+    <span>✉️ Video invitation</span>
+  </div>
+
+  <p class="sechead"><span>What it costs</span></p>
+  <p class="sub">The price follows the duration and the number of scenes — the scene count is what drives the work of creating, editing and keeping it beautiful from start to finish.</p>
+
+  <div class="tiers">
+
+    <div class="tier">
+      <span class="dur">up to 15 seconds</span>
+      <div class="price">R$ 199</div>
+      <div class="cenas">up to 5 scenes</div>
+      <span class="use">A video invitation or a gender reveal announcement: short, playful, made for the family group chat.</span>
+    </div>
+
+    <div class="tier">
+      <span class="dur">up to 30 seconds</span>
+      <div class="price">R$ 399</div>
+      <div class="cenas">up to 10 scenes</div>
+      <span class="use">A focused tribute: the journey of a couple or a person, told in ten scenes.</span>
+    </div>
+
+    <div class="tier">
+      <span class="dur">up to 60 seconds</span>
+      <div class="price">R$ 699</div>
+      <div class="cenas">up to 20 scenes</div>
+      <span class="use">The film of our story: a birthday, a wedding, or the retrospective that plays at the party.</span>
+    </div>
+
+    <div class="tier">
+      <span class="dur">up to 90 seconds</span>
+      <div class="price">R$ 999</div>
+      <div class="cenas">up to 30 scenes</div>
+      <span class="use">A complete narrative, with memories reimagined, a score and narration — beginning to end.</span>
+    </div>
+
+    <div class="tier custom">
+      <span class="dur">beyond that</span>
+      <div class="price">Let's talk</div>
+      <div class="cenas">90s+ and/or 30+ scenes</div>
+      <span class="use">Longer stories become a project — we talk it through and settle the quote together.</span>
+    </div>
+
+  </div>
+  <p class="curr">Prices in Brazilian reais (BRL). For projects outside Brazil, tell me the scope and I'll quote in your currency.</p>
+
+  <p class="sechead"><span>What's already included</span></p>
+  <ul class="checks">
+    <li><b>Creating the scenes</b> — the moving images, in whatever mood we agree on.</li>
+    <li><b>A score</b> chosen for exactly the right emotion.</li>
+    <li><b>Sound design</b> — the detail that makes it feel like a real film.</li>
+    <li><b>Narration</b> when the story calls for a voice telling it.</li>
+    <li><b>Final edit</b>, with the pacing built to land the emotion at the right moment.</li>
+    <li><b>Delivery in the format you'll use</b> — to project at the party, send on WhatsApp or post.</li>
+  </ul>
+
+  <p class="sechead"><span>Two honest alignments before we start</span></p>
+  <div class="rules">
+    <div class="rule">
+      <b>About people's faces</b>
+      <span>AI creates settings, moods and whole worlds freely. Putting someone's <em>exact</em> face into a scene is possible, but it takes specific technique and doesn't always come out identical. In the brief we choose the route: a more conceptual, poetic film, or one with real photos and faces woven in. I'd rather agree that before you build up an expectation.</span>
+    </div>
+    <div class="rule">
+      <b>The script is usually mine to write</b>
+      <span>Nobody arrives with a tribute script already written — and that's fine. You send me the photos, the stories and what you want the person to feel; I structure the narrative and we approve it together before generating anything. That creation is agreed separately, always up front, with no surprise at the end.</span>
+    </div>
+  </div>
+
+  <p class="sechead"><span>How it works</span></p>
+  <ol class="steps">
+    <li><b>You tell me</b> The occasion, the person, the stories you want to tell.</li>
+    <li><b>Script</b> I shape the narrative from what you sent, and we approve it together.</li>
+    <li><b>Production</b> I create the scenes, edit, and add score and sound.</li>
+    <li><b>Revisions</b> You watch it and we refine, up to 2 rounds.</li>
+    <li><b>Delivery</b> In the right format for the party, the group chat or the feed.</li>
+  </ol>
+  <p class="sub" style="margin-top:16px">Timelines agreed per project. If the date is fixed — a party, a wedding, a shower — come to me early so I can hold the slot.</p>
+
+  <div class="cta">
+    <div>
+      <h3>Tell me who you want to celebrate</h3>
+      <p>The occasion, the person, what they mean to you. From there I'll tell you what's possible, what it costs and how long it takes.</p>
+    </div>
+    <div class="btnrow" style="margin-top:0">
+      <a class="btn wa" href="https://wa.me/5553981223304?text=Hi%20Ot%C3%A1vio%21%20I%27d%20like%20a%20quote%20for%20a%20video%20for%20a%20special%20moment." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:17px;height:17px;fill:currentColor;flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp</a>
+      <a class="btn ghost" href="mailto:pelegocorrea@gmail.com?subject=Video%20for%20a%20special%20moment">Request a quote</a>
+    </div>
+  </div>
+
+  <footer>
+    <span>Otávio Pelego · <span class="civil">Otávio de Oliveira Corrêa</span></span>
+    <span><a href="../../../contents/momentos/">versão em português</a> · <a href="../pricing/">for business</a> · <a href="../../index.html">home</a></span>
+  </footer>
+</div>
+<script src="../../../assets/nav.js"></script>
+</body>
+</html>
