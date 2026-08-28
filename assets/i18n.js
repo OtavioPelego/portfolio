@@ -23,6 +23,9 @@
 
     /* ---------- controles comuns dos mapas 3D ---------- */
     'Altura': 'Height',
+    'Altura = população · cor =': 'Height = population · colour =',
+    'Altura = valor · cor =': 'Height = value · colour =',
+    'Altura = produção · cor =': 'Height = production · colour =',
     'girar câmera sozinha': 'auto-rotate camera',
     'girar câmera': 'auto-rotate camera',
     'tudo': 'all',
@@ -49,6 +52,12 @@
       'drag = rotate · Ctrl/right-click = pan · scroll = zoom · hover over the arcs',
     'arraste = girar  ·  ctrl+arraste = mover': 'drag = rotate  ·  ctrl+drag = pan',
     'scroll = zoom  ·  passe o mouse nos picos': 'scroll = zoom  ·  hover over the peaks',
+
+    /* ---------- nomes de culturas (botoes do mapa de Culturas) ---------- */
+    'Soja': 'Soybeans', 'Milho': 'Corn', 'Café': 'Coffee', 'Cana': 'Sugarcane',
+    'Arroz': 'Rice', 'Feijão': 'Beans', 'Algodão': 'Cotton', 'Trigo': 'Wheat',
+    'Laranja': 'Orange', 'Mandioca': 'Cassava', 'Cacau': 'Cocoa', 'Uva': 'Grapes',
+    'Boi': 'Cattle',
 
     /* ---------- Brasil em Picos ---------- */
     'Brasil em Picos': 'Brazil in Peaks',
@@ -167,6 +176,21 @@
     'Produção (t, escala log)': 'Production (t, log scale)',
     'PAM · tabela 5457': 'PAM · table 5457',
 
+    /* ---------- números com formatação brasileira ---------- */
+    '213,4 mi': '213.4M',
+    '9,0 tri': '9.0tn',
+    'R$ 9,0 tri': 'R$ 9.0tn',
+    '2,24 Mt': '2.24 Mt',
+    '2,2 mi': '2.2M',
+    '2,5 mi': '2.5M',
+    '1.891': '1,891',
+    '2.603 municípios · top 100 = 46%': '2,603 municipalities · top 100 = 46%',
+    'municípios (34%)': 'municipalities (34%)',
+    'R$ 1.182': 'R$ 1,182',
+    'R$ 4.300': 'R$ 4,300',
+    'R$ 1.180': 'R$ 1,180',
+    'R$ 4.000+': 'R$ 4,000+',
+
     /* ---------- palavras soltas usadas em tooltips ---------- */
     'municípios': 'municipalities',
     'município': 'municipality',
@@ -193,10 +217,43 @@
   var lang = desired();
 
   /* ------------------------------------------------------------ tradução */
+  /* Regras para textos montados na hora (com numeros no meio). So entram
+     quando o texto NAO bate exatamente com o dicionario. Os numeros ficam. */
+  var RULES = [
+    [/^(.+) municípios . total (.+)$/, '$1 municipalities - total $2'],
+    [/^(.+) municípios . top (.+)$/, '$1 municipalities - top $2'],
+    [/^(.+) municípios$/, '$1 municipalities'],
+    [/^(.+) habitantes$/, '$1 inhabitants'],
+    [/^(.+) fluxos . (.+)$/, '$1 flows - $2'],
+    [/^mostrando (.+)$/, 'showing $1'],
+    [/^(.+) anos$/, '$1 years'],
+    [/^Maior: (.+)$/, 'Largest: $1'],
+    [/^(.+) \(mil R\$, escala log\)$/, '$1 (R$ thousand, log scale)'],
+    [/^(.+) \(t, escala log\)$/, '$1 (t, log scale)'],
+    [/^(.+) \(escala log\)$/, '$1 (log scale)'],
+    [/mil R\$/, 'R$ thousand']
+  ];
+
   function tr(s) {
-    // normaliza espaços especiais (&nbsp;) antes de comparar
     var k = s.replace(/ /g, ' ').trim();
-    return Object.prototype.hasOwnProperty.call(DICT, k) ? DICT[k] : null;
+    if (Object.prototype.hasOwnProperty.call(DICT, k)) return DICT[k];
+    for (var i = 0; i < RULES.length; i++) {
+      var re = RULES[i][0];
+      re.lastIndex = 0;
+      if (re.test(k)) {
+        re.lastIndex = 0;
+        // traduz tambem os trechos capturados (ex.: o nome da cultura na legenda)
+        var out = k.replace(re, function () {
+          var tpl = RULES[i][1], args = arguments;
+          return tpl.replace(/\$(\d)/g, function (_, d) {
+            var g = args[+d] || '';
+            return Object.prototype.hasOwnProperty.call(DICT, g) ? DICT[g] : g;
+          });
+        });
+        if (out !== k) return out;
+      }
+    }
+    return null;
   }
 
   function walk(root) {
@@ -259,9 +316,34 @@
   }
 
   /* ------------------------------------------------------------- execução */
+  /* título da aba: traduz o que estiver antes do separador e mantém a marca */
+  var TITLES = {
+    'Brasil em Picos': 'Brazil in Peaks',
+    'Brasil Desigual': 'Unequal Brazil',
+    'A Economia do Brasil': "Brazil's Economy",
+    'Brasil em Movimento': 'Brazil on the Move',
+    'Culturas do Brasil': 'Crops of Brazil',
+    'Brasil no Tempo': 'Brazil Over Time',
+    'Brasil que Envelhece': 'Brazil Growing Older',
+    'Brasil que Planta': 'Brazil that Sows',
+    'A Onda da Soja': 'The Soy Wave',
+    'Brasil Mosaico': 'Mosaic Brazil',
+    'Brasil de Lupa': 'Brazil Under the Lens'
+  };
+  function fixTitle() {
+    var t = document.title;
+    Object.keys(TITLES).forEach(function (k) {
+      if (t.indexOf(k) === 0) t = TITLES[k] + t.slice(k.length);
+    });
+    t = t.replace('Brasil de Lupa', 'Brazil Under the Lens')
+         .replace('População', 'Population').replace('Renda', 'Income');
+    document.title = t;
+  }
+
   function apply() {
     if (lang !== 'en') return;
     document.documentElement.lang = 'en';
+    fixTitle();
     walk(document.body);
     fixLinks();
   }
@@ -276,7 +358,13 @@
       clearTimeout(t);
       t = setTimeout(function () { walk(document.body); }, 120);
     }).observe(document.body, { childList: true, subtree: true, characterData: true });
-    [400, 1200, 3000].forEach(function (ms) { setTimeout(function () { walk(document.body); }, ms); });
+    [400, 1200, 3000, 6000].forEach(function (ms) { setTimeout(function () { walk(document.body); }, ms); });
+    // mapas animados reconstroem os paineis: reaplica periodicamente
+    var passes = 0;
+    var iv = setInterval(function () {
+      walk(document.body);
+      if (++passes > 90) clearInterval(iv);   // ~72s e para
+    }, 800);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
