@@ -66,6 +66,131 @@
     'arraste = girar  ·  ctrl+arraste = mover': 'drag = rotate  ·  ctrl+drag = pan',
     'scroll = zoom  ·  passe o mouse nos picos': 'scroll = zoom  ·  hover over the peaks',
 
+    /* ---------- correcoes da auditoria ---------- */
+    "Setor que mais gera valor": "The sector generating the most value",
+    "Migração entre estados — quem morava em outra UF 5 anos antes do Censo 2022. Cada arco vai da": "Migration between states — people living in a different state 5 years before the 2022 Census. Each arc runs from the",
+    "Migração entre estados — quem morava em outra UF 5 anos antes do Censo 2022.": "Migration between states — people living in a different state 5 years before the 2022 Census.",
+    "Cada arco vai da": "Each arc runs from the",
+    "ganha gente": "gains people",
+    "Uiramutã/RR": "Uiramutã/RR",
+    "Nova Lima/MG": "Nova Lima/MG",
+    "União da Serra/RS": "União da Serra/RS",
+    "Sorriso/MT": "Sorriso/MT",
+    "lidera": "leads",
+    "clique p/ filtrar": "click to filter",
+    "Maior": "Largest",
+    "Menor": "Smallest",
+    "ano": "year",
+    "anos": "years",
+    "Ano": "Year",
+    "Anos": "Years",
+    "Fonte": "Source",
+    "Fonte:": "Source:",
+    "Dados": "Data",
+    "Dados:": "Data:",
+    "Ver": "View",
+    "Clique": "Click",
+    "Selecione": "Select",
+    "Voltar": "Back",
+    "Ocultar": "Hide",
+    "total": "total",
+    "Total": "Total",
+    "mín.": "min.",
+    "máx.": "max.",
+    "jogo": "match",
+    "partida": "match",
+    "partidas": "matches",
+    "time": "team",
+    "times": "teams",
+    "gol": "goal",
+    "gols": "goals",
+    "seleção": "national team",
+    "primeiro": "first",
+    "último": "last",
+    "média": "average",
+    "Média": "Average",
+    "por partida": "per match",
+    "por jogo": "per match",
+
+    /* ---------- lote 1: mapas ---------- */
+    "População:": "Population:",
+    "Densidade:": "Density:",
+    "Área:": "Area:",
+    "Renda média:": "Average income:",
+    "Idade mediana:": "Median age:",
+    "Índice de envelhec.:": "Ageing index:",
+    "Setor líder:": "Leading sector:",
+    "Área colhida:": "Harvested area:",
+    "Valor agrícola total:": "Total agricultural value:",
+    "Dominante:": "Dominant:",
+    "Chegaram:": "Arrived:",
+    "Saíram:": "Left:",
+    "desde 2001:": "since 2001:",
+    "mais rica que": "richer than",
+    "% dos municípios": "% of municipalities",
+    "% do valor": "% of the value",
+    "pessoas migraram": "people migrated",
+    "nos 5 anos até 2022": "in the 5 years to 2022",
+    "t de soja": "t of soybeans",
+    "idosos/100 jovens": "older people per 100 young",
+    "hab/km²": "people/km²",
+    "Renda média": "Average income",
+    "Idade mediana": "Median age",
+    "Área colhida": "Harvested area",
+    "Valor agrícola total": "Total agricultural value",
+    "Índice de envelhec.": "Ageing index",
+    "Setor líder": "Leading sector",
+    "RS de Lupa": "Zoom on RS",
+    "Densidade demográfica por município — IBGE 2025": "Population density by municipality — IBGE 2025",
+    "Densidade hab/km² (escala log)": "Density people/km² (log scale)",
+    "213,4 mi habitantes 5.570 municípios": "213.4M inhabitants · 5,570 municipalities",
+    "11,2 mi habitantes 497 municípios": "11.2M inhabitants · 497 municipalities",
+    "11,2 mi": "11.2M",
+    "497 municípios": "497 municipalities",
+    "arraste = girar · ctrl+arraste = mover": "drag = rotate · ctrl+drag = pan",
+    "scroll = zoom · passe o mouse nos picos": "scroll = zoom · hover over the peaks",
+    "Renda domiciliar per capita — Censo 2022 (IBGE). Altura = população · cor = renda por pessoa .": "Household income per capita — 2022 Census (IBGE). Height = population · colour = income per person.",
+    "Renda domiciliar per capita — Censo 2022 (IBGE). Altura e cor = renda por pessoa (relevo da riqueza).": "Household income per capita — 2022 Census (IBGE). Height and colour = income per person (relief of wealth).",
+    "PIB municipal 2021 (IBGE). Altura = tamanho da economia · cor = setor que mais gera valor .": "Municipal GDP 2021 (IBGE). Height = size of the economy · colour = the sector generating the most value.",
+    "PIB municipal 2021 (IBGE). Altura = tamanho da economia · cor = PIB por habitante .": "Municipal GDP 2021 (IBGE). Height = size of the economy · colour = GDP per capita.",
+    "PIB por habitante": "GDP per capita",
+    "PIB per capita (R$, escala log)": "GDP per capita (R$, log scale)",
+    "Idade mediana por município — Censo 2022 (IBGE). Altura = população · cor = idade mediana .": "Median age by municipality — 2022 Census (IBGE). Height = population · colour = median age.",
+    "Idade mediana por município — Censo 2022 (IBGE). Altura e cor = idade mediana (relevo etário).": "Median age by municipality — 2022 Census (IBGE). Height and colour = median age (relief of age).",
+    "Brasil de Lupa · atlas 3D": "Brazil Under the Lens · 3D atlas",
+    "O Brasil em três dimensões": "Brazil in three dimensions",
+    "Uma coleção de mapas 3D interativos construídos com dados abertos do": "A collection of interactive 3D maps built from open data by",
+    "cada um explora uma faceta do país: quantos somos, como mudamos, quanto ganhamos. Arraste para girar, role para dar zoom, passe o mouse para os detalhes.": "each explores one facet of the country: how many we are, how we change, what we earn. Drag to rotate, scroll to zoom, hover for details.",
+    "mapas · todos prontos": "maps · all live",
+    "Renderização:": "Rendering:",
+    "mapas independentes, uma identidade só.": "independent maps, a single identity.",
+    "Dados © IBGE · uso educativo e exploratório.": "Data © IBGE · educational and exploratory use.",
+    "← Laboratório": "← Lab",
+    "← voltar para o Laboratório": "← back to the Lab",
+    "Projeto": "Project",
+    "Abrir menu": "Open menu",
+    "Fechar menu": "Close menu",
+    "Trilha de navegação": "Breadcrumb",
+    "Otávio Pelego · Otávio de Oliveira Corrêa": "Otávio Pelego · Otávio de Oliveira Corrêa",
+    "População de cada município como um pico 3D. O país inteiro e o modo \"RS de Lupa\".": "Every municipality as a 3D peak. The whole country, plus a \"Zoom on RS\" mode.",
+    "Crescimento populacional animado de 2001 a 2025. Quem cresce vs. quem encolhe.": "Animated population growth from 2001 to 2025. Who grows vs. who shrinks.",
+    "Renda per capita por município. A desigualdade vira cor — e vira topografia.": "Income per capita by municipality. Inequality becomes colour — and becomes terrain.",
+    "A transição demográfica: do RS grisalho à Amazônia jovem. Idade mediana por município.": "The demographic transition: from greying Rio Grande do Sul to the young Amazon. Median age by municipality.",
+    "Arcos de migração entre estados: SC atrai, o Rio perde. Censo 2022, janela de 5 anos.": "Migration arcs between states: Santa Catarina attracts, Rio loses. 2022 Census, a 5-year window.",
+    "O cinturão da soja: 152 Mt em 2023, de Mato Grosso ao MATOPIBA.": "The soybean belt: 152 Mt in 2023, from Mato Grosso to MATOPIBA.",
+    "A fronteira agrícola no tempo: 8 Mt em 1974 → 145 Mt em 2024, varrendo o Cerrado.": "The agricultural frontier over time: 8 Mt in 1974 → 145 Mt in 2024, sweeping the Cerrado.",
+    "A lavoura de maior valor em cada município — soja, cana, café, mandioca, milho…": "The highest-value crop in each municipality — soy, sugarcane, coffee, cassava, corn…",
+    "Escolha o produto: milho, café, cana, arroz… e o rebanho bovino. Onde o Brasil produz.": "Pick the product: corn, coffee, sugarcane, rice… and cattle. Where Brazil produces it.",
+    "PIB por município e o setor que mais gera valor. Em 34% dos municípios, é a administração pública.": "GDP by municipality and the sector generating the most value. In 34% of them, it is public administration.",
+    "Iniciar Animação Temporal": "Start time animation",
+    "Estável": "Stable",
+
+    /* ---------- lote 1b: rodape do atlas ---------- */
+    "Projeto": "Project",
+    "mapas independentes, uma identidade só.": "independent maps, a single identity.",
+    "Fonte:": "Source:",
+    "(Censos, estimativas, SIDRA)": "(Censuses, estimates, SIDRA)",
+
     /* ================= FUTEBOL ================= */
     /* --- narrativas geradas por JS --- */
     "Onde cada jogador realmente pisou durante os 90 minutos (ataque sempre da esquerda para a direita). Clique num jogador:":
@@ -833,6 +958,10 @@
     [/^mostrando (.+)$/, 'showing $1'],
     [/^(.+) anos$/, '$1 years'],
     [/^Maior: (.+)$/, 'Largest: $1'],
+    [/^([A-Z]{2} [+−-][\d.,]+) mil$/, '$1k'],
+    [/^(.+) mil$/, '$1k'],
+    [/^(.+) milh(?:ao|ões|ão)$/, '$1M'],
+
     [/^Jogador (\d+) \((.+)\) . (.+) min . (.+) km . vel\. máx (.+) km\/h . ataque sempre da esquerda para a direita$/, 'Player $1 ($2) — $3 min · $4 km · max speed $5 km/h · attacking left to right'],
     [/^posse (\d+)% . (\d+) chutes \((\d+) no alvo\) . formação (.+)$/, 'possession $1% · $2 shots ($3 on target) · formation $4'],
     [/^(.+) capítulos$/, '$1 chapters'],
@@ -857,9 +986,10 @@
     }
   })();
 
-  function tr(s) {
-    var k = s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
-    if (Object.prototype.hasOwnProperty.call(NORM, k)) return NORM[k];
+  var SEP = /^([\s·•–—›|:←‹]*)([\s\S]*?)([\s·•–—›|]*)$/;
+
+  function busca(k) {
+    if (Object.prototype.hasOwnProperty.call(DICT, k)) return DICT[k];
     for (var i = 0; i < RULES.length; i++) {
       var re = RULES[i][0];
       re.lastIndex = 0;
@@ -869,11 +999,24 @@
           var tpl = RULES[i][1], args = arguments;
           return tpl.replace(/\$(\d)/g, function (_, d) {
             var g = args[+d] || '';
-            return Object.prototype.hasOwnProperty.call(NORM, g) ? NORM[g] : g;
+            return Object.prototype.hasOwnProperty.call(DICT, g) ? DICT[g] : g;
           });
         });
         if (out !== k) return out;
       }
+    }
+    return null;
+  }
+
+  function tr(s) {
+    var k = s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
+    var direto = busca(k);
+    if (direto !== null) return direto;
+    // tenta de novo ignorando separadores nas pontas ("· Projeto" -> "Projeto")
+    var m = k.match(SEP);
+    if (m && m[2] && m[2] !== k) {
+      var meio = busca(m[2].trim());
+      if (meio !== null) return m[1] + meio + m[3];
     }
     return null;
   }
@@ -940,6 +1083,17 @@
   /* ------------------------------------------------------------- execução */
   /* título da aba: traduz o que estiver antes do separador e mantém a marca */
   var TITLES = {
+    "Brasil de Lupa — Atlas 3D com dados do IBGE": "Brazil Under the Lens — 3D atlas with IBGE data",
+    "Brasil em Picos | População IBGE 2025 — Brasil de Lupa": "Brazil in Peaks | Population IBGE 2025 — Brazil Under the Lens",
+    "Brasil Desigual — Renda per capita | Censo 2022 IBGE": "Unequal Brazil — Income per capita | 2022 Census IBGE",
+    "A Economia do Brasil — PIB por setor | IBGE — Brasil de Lupa": "Brazil's Economy — GDP by sector | IBGE — Brazil Under the Lens",
+    "Brasil em Movimento — Migração entre estados | Censo 2022 IBGE": "Brazil on the Move — Interstate migration | 2022 Census IBGE",
+    "Culturas do Brasil — Explorer da produção | PAM+PPM/IBGE — Brasil de Lupa": "Crops of Brazil — Production explorer | PAM+PPM/IBGE — Brazil Under the Lens",
+    "Brasil no Tempo — Crescimento populacional 2001–2025 | IBGE": "Brazil Over Time — Population growth 2001–2025 | IBGE",
+    "Brasil que Envelhece — Idade mediana | Censo 2022 IBGE": "Brazil Growing Older — Median age | 2022 Census IBGE",
+    "Brasil que Planta — A soja no mapa | PAM/IBGE 2023": "Brazil that Sows — Soy on the map | PAM/IBGE 2023",
+    "A Onda da Soja — Produção 1974–2024 | PAM/IBGE — Brasil de Lupa": "The Soy Wave — Production 1974–2024 | PAM/IBGE — Brazil Under the Lens",
+    "O que o Brasil Planta — Mosaico da cultura dominante | PAM/IBGE — Brasil de Lupa": "What Brazil Grows — Mosaic of the dominant crop | PAM/IBGE — Brazil Under the Lens",
     'Brasil em Picos': 'Brazil in Peaks',
     'Brasil Desigual': 'Unequal Brazil',
     'A Economia do Brasil': "Brazil's Economy",
@@ -957,14 +1111,13 @@
   };
   function fixTitle() {
     var t = document.title;
-    // titulo inteiro no dicionario? entao usa direto
-    if (Object.prototype.hasOwnProperty.call(DICT, t.trim())) { document.title = DICT[t.trim()]; return; }
-    Object.keys(TITLES).forEach(function (k) {
-      if (t.indexOf(k) === 0) t = TITLES[k] + t.slice(k.length);
-    });
-    t = t.replace('Brasil de Lupa', 'Brazil Under the Lens')
-         .replace('População', 'Population').replace('Renda', 'Income');
-    document.title = t;
+    if (Object.prototype.hasOwnProperty.call(TITLES, t)) { document.title = TITLES[t]; return; }
+    // tenta a chave mais especifica (mais longa) primeiro, e para na primeira que casar
+    var ks = Object.keys(TITLES).sort(function (a, b) { return b.length - a.length; });
+    for (var i = 0; i < ks.length; i++) {
+      if (t.indexOf(ks[i]) === 0) { document.title = TITLES[ks[i]] + t.slice(ks[i].length); return; }
+    }
+    document.title = t.replace('Brasil de Lupa', 'Brazil Under the Lens');
   }
 
   function apply() {

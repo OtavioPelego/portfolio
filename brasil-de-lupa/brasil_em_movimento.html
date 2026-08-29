@@ -215,6 +215,6 @@ const ufsel = document.getElementById('ufsel');
 NODES.map(n=>n[2]).sort().forEach(sig=>{ const o=document.createElement('option'); o.value=sig; o.textContent=sig; ufsel.appendChild(o); });
 ufsel.onchange = e => { ufFilter = e.target.value; dirty=true; };
 </script>
-<script src="../assets/i18n.js"></script>
+<script src="../assets/i18n.js?v=dd63b5ff"></script>
 </body>
 </html>
