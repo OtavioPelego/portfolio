@@ -319,9 +319,6 @@
     "chutes cedidos por 90": "shots conceded per 90",
     "% chutes no alvo": "% shots on target",
     "gols por chute": "goals per shot",
-    "cartões amarelos": "yellow cards",
-    "cartões vermelhos": "red cards",
-    "idade média": "average age",
     "gols sofridos": "goals conceded",
     "% vitórias": "% wins",
     "jogos posse": "matches possession",
@@ -365,7 +362,6 @@
     "Cartões amarelos por jogo apitado": "Yellow cards per match officiated",
     "Os palcos da Copa": "The stages of the World Cup",
     "Público acumulado por estádio · passe o mouse": "Cumulative attendance by stadium · hover for details",
-    "Comparador de seleções": "Team comparator",
     "força do calendário": "strength of schedule",
     "Como a nota é calculada (metodologia)": "How the score is calculated (methodology)",
     "Cada métrica é padronizada entre as 48 seleções (z-score) e entra com um peso": "Each metric is standardised across the 48 teams (z-score) and enters with a weight",
@@ -377,7 +373,6 @@
     "Idade (3%)": "Age (3%)",
     "proximidade do pico de maturidade (~27 anos)": "closeness to peak maturity (~27 years)",
     "A soma ponderada é re-escalonada de": "The weighted sum is rescaled from",
-    "Adv. médio (rank)": "Avg. opponent (rank)",
     "Retrato do torneio até": "A portrait of the tournament up to",
     "⏳ Torneio em andamento — retrato dos dados até": "⏳ Tournament in progress — a snapshot of the data up to",
     "sem dados de tracking/GPS (esses são proprietários da FIFA) · arquivo 100% offline.": "no tracking/GPS data (that is proprietary to FIFA) · 100% offline file.",
@@ -448,7 +443,6 @@
     "vs média mensal": "vs monthly average",
     "jogador de Copa nasceu": "World Cup player was born",
     "jogadores de Copa nasceram": "World Cup players were born",
-    "Ver como tabela": "View as table",
     "Meio-campo ofensivo · tamanho = xG": "Attacking half · size = xG",
     "= gol": "= goal",
     "Dois retratos que só existem com dados 360 e eventos de pressão": "Two portraits that only exist with 360 data and pressing events",
@@ -539,8 +533,6 @@
     "Eletrocardiograma (ECG) Inferior": "Lower Electrocardiogram (ECG)",
 
     /* ---------- lote 5 ---------- */
-    "Jogos": "Matches",
-    "posse (%)": "possession (%)",
     "Final": "Final",
     "FINAL": "FINAL",
 
@@ -863,7 +855,6 @@
     "Gana": "Ghana",
     "Austrália": "Australia",
     "Seleções": "Teams",
-    "Seleção": "Team",
     "Irã": "Iran",
     "Sérvia": "Serbia",
 
@@ -986,6 +977,42 @@
     "Mês": "Month",
     "Sem dados": "No data",
     "Análise Temporal e Espacial de Trigo (Dados Oficiais USDA PSD)": "Wheat over time and space (official USDA PSD data)",
+
+    /* ---------- lote 15: revisao da pagina Copa 2026 ---------- */
+    "posse (%)": "possession (%)",
+    "escanteios": "corners",
+    "cruzamentos": "crosses",
+    "faltas": "fouls",
+    "amarelos": "yellows",
+    "vermelhos": "reds",
+    "impedimentos": "offsides",
+    "cartões amarelos": "yellow cards",
+    "cartões vermelhos": "red cards",
+    "idade média": "average age",
+    "dourado": "gold",
+    "Ver como tabela": "View as table",
+    "Seleção": "Team",
+    "Jogos": "Matches",
+    "Chutes/90": "Shots/90",
+    "Sofridos": "Conceded",
+    "defendeu": "saved",
+    "Frente a frente": "Head to head",
+    "Comparador de seleções": "Team comparator",
+    "Nota": "Score",
+    "invertido": "inverted",
+    "invertidos": "inverted",
+    "profundidade": "depth",
+    "controle": "control",
+    "disciplina": "discipline",
+    "idade": "age",
+    "calendário": "schedule",
+    "Ataque": "Attack",
+    "Defesa": "Defence",
+    "Profundidade": "Depth",
+    "Controle": "Control",
+    "Calendário": "Schedule",
+    "Adv. médio (rank)": "Avg. opponent (rank)",
+    "Rank FIFA": "FIFA rank",
 
     /* ================= FUTEBOL ================= */
     /* --- narrativas geradas por JS --- */
@@ -1811,10 +1838,12 @@
     [/^(.+) anos$/, '$1 years'],
     [/^(.+) em (\d[\d.,]*) (jogos|partidas)$/, '$1 in $2 matches'],
     [/^(.+) milh(?:ao|ões|ão)$/, '$1M'],
+    [/^(\d+),(\d+) a (\d+),(\d+)$/, "$1.$2 to $3.$4"],
     [/^(Noruega|Argentina|França|Brasil|Portugal|Espanha|Inglaterra|Alemanha|Holanda|Bélgica|Croácia|Marrocos|Japão|México|Canadá|Uruguai|Colômbia|Itália) de ([A-ZÀ-Ú][\wÀ-ú]+)$/, "$2's $1"],
     [/^([A-Z]{2} [+−-][\d.,]+) mil$/, '$1k'],
     [/^(.+) mil$/, '$1k'],
     [/^(\d+) de (\d+)$/, "$1 of $2"],
+    [/^(Ataque|Defesa|Profundidade|Controle|Disciplina|Idade|Calend\u00e1rio) \((\d+)%\)$/, "$1 ($2%)"],
     [/^(.+) \((\d+)\)$/, "$1 ($2)"],
     [/^Dos$/, 'Of the'],
     [/^(Analista|Pesquisador|T\u00e9cnico|Assistente) \u00b7 (.+)$/, "$1 · $2"],
@@ -1833,6 +1862,17 @@
 
   var SEP = /^([\s·•–—›|:←‹]*)([\s\S]*?)([\s·•–—›|]*)$/;
 
+  /* Numero em formato pt-BR (1.234,56) para o formato ingles (1,234.56).
+     Roda SO no caminho de fallback do tr(): os valores escritos a mao no
+     DICT e nas RULES ja estao em ingles ("10,401 players") e uma segunda
+     passada os corromperia. */
+  var NUM_PT = /\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+,\d+/g;
+  function numeros(s) {
+    return s.replace(NUM_PT, function (m) {
+      return m.replace(/\./g, '\u0001').replace(/,/g, '.').replace(/\u0001/g, ',');
+    });
+  }
+
   function busca(k) {
     if (Object.prototype.hasOwnProperty.call(DICT, k)) return DICT[k];
     for (var i = 0; i < RULES.length; i++) {
@@ -1844,7 +1884,10 @@
           var tpl = RULES[i][1], args = arguments;
           return tpl.replace(/\$(\d)/g, function (_, d) {
             var g = args[+d] || '';
-            return Object.prototype.hasOwnProperty.call(DICT, g) ? DICT[g] : g;
+            if (Object.prototype.hasOwnProperty.call(DICT, g)) return DICT[g];
+            // o trecho capturado vem do texto em portugues, entao um numero
+            // ali esta em formato pt-BR: 6.393.887 -> 6,393,887
+            return numeros(g);
           });
         });
         if (out !== k) return out;
@@ -1858,6 +1901,10 @@
      inteiro nao bate no dicionario nem nas regras. Cada par usa limite de
      palavra para nao atingir nome proprio. Ordem importa (mais longo antes). */
   var PARTIALS = [
+    ["defendeu", "saved"],
+    ["sofreu", "conceded"],
+    ["marcou", "scored"],
+    ["finalizou", "shot"],
     ["Alemanha Ocidental", "West Germany"],
     ["Índias Holandesas", "Dutch East Indies"],
     ["Alemanha Oriental", "East Germany"],
@@ -2051,6 +2098,7 @@
     return mudou ? out : null;
   }
 
+
   function tr(s) {
     var k = s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
     var direto = busca(k);
@@ -2061,7 +2109,10 @@
       var meio = busca(m[2].trim());
       if (meio !== null) return m[1] + meio + m[3];
     }
-    return parcial(k);
+    // nada bateu inteiro: substituicao parcial + numero em formato ingles
+    var p = parcial(k);
+    var out = numeros(p === null ? k : p);
+    return out === k ? null : out;
   }
 
   function walk(root) {
@@ -2079,6 +2130,10 @@
     });
     var n, changed = 0;
     while ((n = it.nextNode())) {
+      // ja tratamos este no e ninguem mexeu nele desde entao: pular.
+      // Sem isso a normalizacao de numero rodaria de novo a cada passada
+      // periodica e corromperia o que ela mesma escreveu (1.234 -> 1,234 -> 1.234).
+      if (n.__opFeito === n.nodeValue) continue;
       var t = tr(n.nodeValue);
       if (t !== null && t !== n.nodeValue.replace(/\s+/g, ' ').trim()) {
         // preserva o espaçamento original em volta do texto
@@ -2086,6 +2141,7 @@
         n.nodeValue = m[1] + t + m[3];
         changed++;
       }
+      n.__opFeito = n.nodeValue;
     }
     // atributos visiveis
     if (root.querySelectorAll) {
