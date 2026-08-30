@@ -1791,6 +1791,7 @@
     [/^(.+) das (.+) convoca\u00e7\u00f5es aparecem sem unidade e sem cidade\.$/, "$1 of $2 call-ups have no unit and no city."],
     [/^⏳ Torneio em andamento — retrato dos dados até (.+) \((.+)\)$/, "⏳ Tournament in progress — a snapshot of the data up to $1 ($2)"],
     [/^ataque \u2192 \u00b7 ter\u00e7o defensivo (\d+) \u00b7 m\u00e9dio (\d+) \u00b7 final (\d+)$/, "attack → · defensive third $1 · middle $2 · final $3"],
+    [/^🏆 Torneio encerrado — (.+) campeã em (.+) · (.+) partidas$/, "🏆 Tournament over — $1 crowned champions on $2 · $3 matches"],
     [/^Mostrando (.+) de (.+) convoca\u00e7\u00f5es \u2014 filtrando por (.+)\.$/, "Showing $1 of $2 call-ups — filtered by $3."],
     [/^posse (\d+)% . (\d+) chutes \((\d+) no alvo\) . formação (.+)$/, 'possession $1% · $2 shots ($3 on target) · formation $4'],
     [/^(\d+) envolvimentos em passes completos$/, "$1 involvements in completed passes"],
