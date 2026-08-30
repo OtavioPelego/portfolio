@@ -1325,6 +1325,10 @@
     "Pessoas": "People",
     "pessoas": "people",
 
+    /* ---------- lote 21: modalidade de concorrencia da Embrapa ---------- */
+    "Pessoa Preta ou Parda": "Black or mixed-race person",
+    "Pessoa Preta ou Parda (214)": "Black or mixed-race person (214)",
+
     /* ================= FUTEBOL ================= */
     /* --- narrativas geradas por JS --- */
     "Onde cada jogador realmente pisou durante os 90 minutos (ataque sempre da esquerda para a direita). Clique num jogador:":
@@ -2199,6 +2203,7 @@
     [/^(.+) \((\d+)\)$/, "$1 ($2)"],
     [/^Dos$/, 'Of the'],
     [/^(Analista|Pesquisador|T\u00e9cnico|Assistente) \u00b7 (.+)$/, "$1 · $2"],
+    [/^(.+) · ([\d.,]+)$/, "$1 · $2"],
     [/^› (.+)$/, '› $1'],
   ];
 
@@ -2552,19 +2557,53 @@
     if (document.getElementById('op-lang-sw')) return;
     var css = document.createElement('style');
     css.textContent =
-      '#op-lang-sw{position:fixed;z-index:99999;bottom:14px;left:14px;display:inline-flex;gap:1px;' +
+      '#op-lang-sw{z-index:99999;display:inline-flex;gap:1px;vertical-align:middle;' +
       'font:600 11px/1 ui-monospace,Consolas,monospace;background:rgba(10,13,20,.82);' +
-      'border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:3px;backdrop-filter:blur(6px)}' +
+      'border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:3px;' +
+      'backdrop-filter:blur(6px);flex:none}' +
       '#op-lang-sw a{padding:5px 10px;border-radius:99px;color:#b9c3d6;text-decoration:none}' +
-      '#op-lang-sw a.on{background:#eef2f7;color:#0b0e13}';
+      '#op-lang-sw a.on{background:#eef2f7;color:#0b0e13}' +
+      '#op-lang-sw.solto{position:fixed}' +
+      '#op-lang-sw.no-nav{margin-left:auto}';
     document.head.appendChild(css);
+
     var d = document.createElement('div');
     d.id = 'op-lang-sw';
     d.innerHTML =
       '<a href="?lang=pt" class="' + (lang === 'pt' ? 'on' : '') + '">PT</a>' +
       '<a href="?lang=en" class="' + (lang === 'en' ? 'on' : '') + '">EN</a>';
+
+    var trilha = document.querySelector('.bc-trail, .crumb, .trail');
+    var barra = trilha && trilha.closest('nav');
+
+    if (barra) {
+      // pagina-artigo: vira o ultimo item da barra, como o seletor .lang do site
+      d.className = 'no-nav';
+      barra.appendChild(d);
+      return;
+    }
+    // mapa: fixo ao lado da trilha, porque os quatro cantos estao ocupados
+    d.className = 'solto';
     document.body.appendChild(d);
+    posicionar(d, trilha);
+    addEventListener('resize', function () { posicionar(d, trilha); });
   }
+
+  function posicionar(d, trilha) {
+    var links = trilha ? trilha.querySelectorAll('a') : [];
+    var alvo = links.length ? links[links.length - 1] : null;
+    var r = alvo && alvo.getBoundingClientRect();
+    if (!r || (!r.width && !r.height)) {          // sem trilha ou ainda sem layout
+      d.style.left = '14px'; d.style.top = ''; d.style.bottom = '14px';
+      return;
+    }
+    d.style.bottom = '';
+    d.style.left = Math.round(r.right + 14) + 'px';
+    d.style.top = Math.round(r.top + (r.height - d.offsetHeight) / 2) + 'px';
+  }
+
+
+
 
   /* ------------------------------------------------------------- execução */
   /* título da aba: traduz o que estiver antes do separador e mantém a marca */
