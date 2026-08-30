@@ -812,9 +812,6 @@
     "Ocorrências": "Occurrences",
     "Copas": "World Cups",
     "Copa": "World Cup",
-    "Oitavas": "Round of 16",
-    "Quartas": "Quarter-finals",
-    "Semifinais": "Semi-finals",
     "México": "Mexico",
     "Alemanha": "Germany",
     "Espanha": "Spain",
@@ -1014,6 +1011,19 @@
     "Adv. médio (rank)": "Avg. opponent (rank)",
     "Rank FIFA": "FIFA rank",
 
+    /* ---------- lote 16b: fases do torneio (grupos de captura) ---------- */
+    "quartas de final": "quarter-finals",
+    "oitavas de final": "round of 16",
+    "semifinais": "semi-finals",
+    "semifinal": "semi-final",
+    "fase de grupos": "group stage",
+    "disputa de terceiro lugar": "third-place play-off",
+    "16-avos": "round of 32",
+    "final": "final",
+    "Quartas": "Quarter-finals",
+    "Oitavas": "Round of 16",
+    "Semifinais": "Semi-finals",
+
     /* ================= FUTEBOL ================= */
     /* --- narrativas geradas por JS --- */
     "Onde cada jogador realmente pisou durante os 90 minutos (ataque sempre da esquerda para a direita). Clique num jogador:":
@@ -1044,8 +1054,6 @@
       "Participating teams by confederation",
     "Feito com dados, SVG e amor pelo futebol. Nenhuma biblioteca externa — este arquivo funciona offline.":
       "Made with data, SVG and a love of football. No external libraries — this file works offline.",
-    "⏳ Torneio em andamento — retrato dos dados até 10/07/2026 (quartas de final)":
-      "⏳ Tournament in progress — a snapshot of the data up to 10 July 2026 (quarter-finals)",
     "— e com a melhor média por 90 minutos do pelotão da frente. Erling Haaland vem logo atrás, depois de atropelar o Brasil nas oitavas.":
       "— and with the best per-90 average of the leading pack. Erling Haaland is right behind, after running over Brazil in the round of 16.",
     "= semifinalistas confirmados no retrato dos dados":
@@ -1781,6 +1789,7 @@
     [/^Jogador (\d+) \((.+)\) . (.+) min . (.+) km . vel\. máx (.+) km\/h . ataque sempre da esquerda para a direita$/, 'Player $1 ($2) — $3 min · $4 km · max speed $5 km/h · attacking left to right'],
     [/^\u2014 territ\u00f3rios calculados em (\d+) instantes amostrados a cada 20 s de jogo\.$/, "— territories computed from $1 instants sampled every 20 s of play."],
     [/^(.+) das (.+) convoca\u00e7\u00f5es aparecem sem unidade e sem cidade\.$/, "$1 of $2 call-ups have no unit and no city."],
+    [/^⏳ Torneio em andamento — retrato dos dados até (.+) \((.+)\)$/, "⏳ Tournament in progress — a snapshot of the data up to $1 ($2)"],
     [/^ataque \u2192 \u00b7 ter\u00e7o defensivo (\d+) \u00b7 m\u00e9dio (\d+) \u00b7 final (\d+)$/, "attack → · defensive third $1 · middle $2 · final $3"],
     [/^Mostrando (.+) de (.+) convoca\u00e7\u00f5es \u2014 filtrando por (.+)\.$/, "Showing $1 of $2 call-ups — filtered by $3."],
     [/^posse (\d+)% . (\d+) chutes \((\d+) no alvo\) . formação (.+)$/, 'possession $1% · $2 shots ($3 on target) · formation $4'],
@@ -1873,6 +1882,23 @@
     });
   }
 
+
+  /* Data numerica pt-BR (10/07/2026 ou 30/06) para "10 Jul 2026" / "30 Jun".
+     Mes fora de 1..12 e sinal de que nao e data (placar, proporção): fica quieto. */
+  var MES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var DATA_PT = /\b(\d{2})\/(\d{2})(?:\/(\d{4}))?\b/g;
+  function datas(s) {
+    return s.replace(DATA_PT, function (todo, d, mes, ano) {
+      var i = +mes - 1;
+      if (i < 0 || i > 11 || +d < 1 || +d > 31) return todo;
+      return d + ' ' + MES_EN[i] + (ano ? ' ' + ano : '');
+    });
+  }
+
+  /* Formato de saida: data antes de numero, para o ano nao virar milhar. */
+  function formatos(s) { return numeros(datas(s)); }
+
   function busca(k) {
     if (Object.prototype.hasOwnProperty.call(DICT, k)) return DICT[k];
     for (var i = 0; i < RULES.length; i++) {
@@ -1887,7 +1913,7 @@
             if (Object.prototype.hasOwnProperty.call(DICT, g)) return DICT[g];
             // o trecho capturado vem do texto em portugues, entao um numero
             // ali esta em formato pt-BR: 6.393.887 -> 6,393,887
-            return numeros(g);
+            return formatos(g);
           });
         });
         if (out !== k) return out;
@@ -2111,7 +2137,7 @@
     }
     // nada bateu inteiro: substituicao parcial + numero em formato ingles
     var p = parcial(k);
-    var out = numeros(p === null ? k : p);
+    var out = formatos(p === null ? k : p);
     return out === k ? null : out;
   }
 
