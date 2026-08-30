@@ -51,8 +51,13 @@
   /* graficos largos rolam dentro da propria caixa: no celular o SVG encolheria
      ate o texto virar 3px, que foi o problema de "A Copa em Numeros" */
   .chart-scroll { overflow-x: auto; }
-  .chart-scroll > svg { display: block; width: 100%; }
-  @media (max-width: 640px) { .chart-scroll > svg { min-width: 560px; } }
+  /* descendente, nao filho direto: a teia fica dentro de um wrapper e o
+     seletor ">" deixava o SVG encolher em vez de rolar */
+  .chart-scroll svg { display: block; width: 100%; }
+  @media (max-width: 640px) { .chart-scroll svg { min-width: 560px; } }
+  /* viewBox de 900 encolhido para 460 renderiza fonte 10px a 5px:
+     os largos ganham largura minima propria */
+  @media (max-width: 640px) { .chart-scroll svg.largo { min-width: 780px; } }
 
   .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--ink-2); margin: 4px 0 14px; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -575,6 +580,6 @@ const DATA = {"times":["Algeria","Argentina","Australia","Austria","Belgium","Bo
 })();
 </script>
 <script src="../assets/nav.js"></script>
-<script src="../assets/i18n.js?v=74a02e40"></script>
+<script src="../assets/i18n.js?v=8313648f"></script>
 </body>
 </html>
