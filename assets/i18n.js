@@ -486,8 +486,6 @@
     "Pressão e roubo de bola": "Pressing and ball recovery",
     "Eventos · construção": "Events · build-up",
     "Posse e sequências de passes": "Possession and passing sequences",
-    "Volume de passes": "Passing volume",
-    "As sequências mais longas": "The longest sequences",
     "Passes consecutivos sem perder a bola": "Consecutive passes without losing the ball",
     "Lençol de domínio: modelo simplificado de": "Control sheet: a simplified model of",
     "(inspirado em W. Spearman e nos Football Data Portraits de Alexander Bogachev)": "(inspired by W. Spearman and the Football Data Portraits of Alexander Bogachev)",
@@ -924,9 +922,6 @@
     "Finalizações": "Shots",
     "Gols esperados (xG)": "Expected goals (xG)",
     "GOL": "GK",
-    "caminhada": "walking",
-    "trote": "jogging",
-    "corrida": "running",
     "alta intensidade": "high intensity",
 
     /* ---------- lote 12: pendencias da varredura estatica ---------- */
@@ -1332,6 +1327,18 @@
     "mediana": "median",
     "times-partida": "team-matches",
     "em média": "on average",
+
+    /* ---------- lote 23: Laboratorio da Partida ---------- */
+    "alta intens.": "high intens.",
+    "trote": "jogging",
+    "caminhada": "walking",
+    "corrida": "running",
+    "Volume de passes": "Passing volume",
+    "As sequências mais longas": "The longest sequences",
+
+    /* ---------- lote 23b: forma minuscula para grupos de captura ---------- */
+    "mandante": "home",
+    "visitante": "away",
 
     /* ================= FUTEBOL ================= */
     /* --- narrativas geradas por JS --- */
@@ -2137,9 +2144,13 @@
     [/^(.+) contratados \u00b7 (.+) do total$/, '$1 hired · $2 of the total'],
     [/^As fases n\u00e3o somam 100%\.$/, "The phases do not add up to 100%."],
     [/^varia\u00e7\u00e3o t\u00edpica \u00b1(.+) pontos$/, "typical spread ±$1 points"],
+    [/^(.+) m percorridos pelo time$/, "$1 m covered by the team"],
+    [/^(.+) envolvimentos em passes$/, "$1 involvements in passes"],
+    [/^Mandante (.+) × (.+) Visitante$/, "Home $1 × $2 Away"],
     [/^(.+) \(mil R\$, escala log\)$/, '$1 (R$ thousand, log scale)'],
     [/^diferen\u00e7a de (.+) pontos$/, "a gap of $1 points"],
     [/^(.+) atuações de 60\+ min$/, "$1 appearances of 60+ min"],
+    [/^Jogador (\d+) → Jogador (\d+):$/, "Player $1 → Player $2:"],
     [/^(.+) municípios . total (.+)$/, '$1 municipalities - total $2'],
     [/^Líder em Produção: (.+)$/, 'Production leader: $1'],
     [/^(.+)% contra (.+)% da m\u00e9dia$/, "$1% against the average of $2%"],
@@ -2193,6 +2204,7 @@
     [/^Jogador (\d+) (\U0001f9e4)$/, "Player $1 $2"],
     [/^Como ler\.$/, "How to read it."],
     [/^(.+)% do jogo$/, "$1% of the match"],
+    [/^O (mandante|visitante) trocou$/, "The $1 side exchanged"],
     [/^\u00b7 op\u00e7\u00e3o (\d+)$/, "· option $1"],
     [/^unidade (.+)$/, "unit $1"],
     [/^(\d+) avan\u00e7os$/, "$1 carries"],
@@ -2214,11 +2226,13 @@
     [/^(.+) milh(?:ao|ões|ão)$/, '$1M'],
     [/^(\d+),(\d+) a (\d+),(\d+)$/, "$1.$2 to $3.$4"],
     [/^· nº (\d+)$/, "· no. $1"],
+    [/^(\d+)–(\d+) min$/, "$1–$2 min"],
     [/^(Noruega|Argentina|França|Brasil|Portugal|Espanha|Inglaterra|Alemanha|Holanda|Bélgica|Croácia|Marrocos|Japão|México|Canadá|Uruguai|Colômbia|Itália) de ([A-ZÀ-Ú][\wÀ-ú]+)$/, "$2's $1"],
     [/^([A-Z]{2} [+−-][\d.,]+) mil$/, '$1k'],
     [/^(.+) mil$/, '$1k'],
     [/^(\d+) de (\d+)$/, "$1 of $2"],
     [/^(Ataque|Defesa|Profundidade|Controle|Disciplina|Idade|Calend\u00e1rio) \((\d+)%\)$/, "$1 ($2%)"],
+    [/^(caminhada|trote|corrida|alta intens\.|sprint): (.+) m$/, "$1: $2 m"],
     [/^(.+) \((\d+)\)$/, "$1 ($2)"],
     [/^Dos$/, 'Of the'],
     [/^(Analista|Pesquisador|T\u00e9cnico|Assistente) \u00b7 (.+)$/, "$1 · $2"],
