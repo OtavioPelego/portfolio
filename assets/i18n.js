@@ -2590,10 +2590,20 @@
   }
 
   function posicionar(d, trilha) {
-    var links = trilha ? trilha.querySelectorAll('a') : [];
-    var alvo = links.length ? links[links.length - 1] : null;
-    var r = alvo && alvo.getBoundingClientRect();
-    if (!r || (!r.width && !r.height)) {          // sem trilha ou ainda sem layout
+    // Mede o CONTEUDO da trilha, nao o ultimo <a>. Em TSE e USDA a trilha
+    // termina em texto puro ("> Historico eleitoral (TSE)"), entao ancorar no
+    // ultimo link jogava o seletor em cima desse texto. O Range pega a extensao
+    // visual real, inclusive de nos de texto, mesmo quando o container tem
+    // largura computada 0 — que e o caso dos paineis absolutos dos mapas.
+    var r = null;
+    if (trilha) {
+      try {
+        var faixa = document.createRange();
+        faixa.selectNodeContents(trilha);
+        r = faixa.getBoundingClientRect();
+      } catch (e) { r = trilha.getBoundingClientRect(); }
+    }
+    if (!r || (!r.width && !r.height)) {
       d.style.left = '14px'; d.style.top = ''; d.style.bottom = '14px';
       return;
     }
@@ -2601,6 +2611,7 @@
     d.style.left = Math.round(r.right + 14) + 'px';
     d.style.top = Math.round(r.top + (r.height - d.offsetHeight) / 2) + 'px';
   }
+
 
 
 
