@@ -2225,6 +2225,7 @@
     [/^(.+) · ([\d.,]+)$/, "$1 · $2"],
     [/^(.+) · (Goleiro|Defensor|Meio-campo|Atacante)$/, "$1 · $2"],
     [/^(Goleiro|Defensor|Meio-campo|Atacante) · (.+)$/, "$1 · $2"],
+    [/^(.+) · (Goleiro|Defesa|Meio|Ataque)$/, "$1 · $2"],
     [/^› (.+)$/, '› $1'],
   ];
 
