@@ -1172,7 +1172,6 @@
     "como": "how",
     "o jogo transcorreu. Dezessete fases — oito com a bola, nove sem ela — para cada seleção em cada partida de 2026. É a impressão digital tática de 48 times.": "the match unfolded. Seventeen phases — eight with the ball, nine without it — for every team in every match of 2026. It is the tactical fingerprint of 48 sides.",
     "fases medidas": "phases measured",
-    "times-partida": "team-matches",
     "medições": "measurements",
     "partidas": "matches",
     "O vocabulário": "The vocabulary",
@@ -1328,6 +1327,11 @@
     /* ---------- lote 21: modalidade de concorrencia da Embrapa ---------- */
     "Pessoa Preta ou Parda": "Black or mixed-race person",
     "Pessoa Preta ou Parda (214)": "Black or mixed-race person (214)",
+
+    /* ---------- lote 22: tooltips de A Teia ---------- */
+    "mediana": "median",
+    "times-partida": "team-matches",
+    "em média": "on average",
 
     /* ================= FUTEBOL ================= */
     /* --- narrativas geradas por JS --- */
@@ -2127,6 +2131,8 @@
     [/^Mostrando (.+) de (.+) convoca\u00e7\u00f5es\.$/, 'Showing $1 of $2 call-ups.'],
     [/^(.+) chutes \(p\u00eanaltis ocultos\)$/, "$1 shots (penalties hidden)"],
     [/^Mostrando (.+) de (.+) jogadores\.$/, "Showing $1 of $2 players."],
+    [/^(.+) passes na rede, em média$/, "$1 passes in the network, on average"],
+    [/^mediana (.+) · (.+) times-partida$/, "median $1 · $2 team-matches"],
     [/^(.+) contratados \u00b7 (.+) do total$/, '$1 hired · $2 of the total'],
     [/^As fases n\u00e3o somam 100%\.$/, "The phases do not add up to 100%."],
     [/^varia\u00e7\u00e3o t\u00edpica \u00b1(.+) pontos$/, "typical spread ±$1 points"],
@@ -2146,6 +2152,7 @@
     [/^coloca\u00e7\u00e3o de (.+) a (.+)$/, "rank from $1 to $2"],
     [/^(.+) \(t, escala log\)$/, '$1 (t, log scale)'],
     [/^(Mandante|Visitante) \u2014 (\d+) recupera\u00e7\u00f5es$/, "$1 — $2 recoveries"],
+    [/^(Goleiro|Defesa|Meio|Ataque) · entrou depois$/, "$1 · came on later"],
     [/^(.+) j\u00e1 contratados$/, '$1 already hired'],
     [/^Menos tempo em (.+)$/, "Least time in $1"],
     [/^(.+) desvios-padr\u00e3o$/, "$1 standard deviations"],
@@ -2195,6 +2202,7 @@
     [/^(.+) em (\d[\d.,]*) (jogos|partidas)$/, '$1 in $2 matches'],
     [/^(.+) milh(?:ao|ões|ão)$/, '$1M'],
     [/^(\d+),(\d+) a (\d+),(\d+)$/, "$1.$2 to $3.$4"],
+    [/^· nº (\d+)$/, "· no. $1"],
     [/^(Noruega|Argentina|França|Brasil|Portugal|Espanha|Inglaterra|Alemanha|Holanda|Bélgica|Croácia|Marrocos|Japão|México|Canadá|Uruguai|Colômbia|Itália) de ([A-ZÀ-Ú][\wÀ-ú]+)$/, "$2's $1"],
     [/^([A-Z]{2} [+−-][\d.,]+) mil$/, '$1k'],
     [/^(.+) mil$/, '$1k'],
