@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NobreHora — esporte de raquete para quem não teria acesso | Otávio Pelego</title>
+<meta name="description" content="Ideação de um projeto que usa a faixa ociosa das quadras de Pádel e Beach Tennis para dar aula a crianças sem acesso ao esporte, pago por incentivo fiscal. Design thinking inicial, com o que ainda não sei.">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  /* Verde da GoBora como acento, com par legível no tema claro — o site
+     redefine seus próprios tokens em prefers-color-scheme:light, então
+     esta página precisa redefinir o dela também. */
+  :root{--ac:#0BF58C; --c-meio:rgba(11,245,140,.30); --c-vazio:rgba(238,242,247,.055);
+        --c-ring:rgba(11,245,140,.5)}
+  @media (prefers-color-scheme:light){
+    :root{--ac:#0a8f57; --c-meio:rgba(10,143,87,.20); --c-vazio:rgba(19,25,34,.045);
+          --c-ring:rgba(10,143,87,.55)}
+  }
+
+  .stage{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:12px;
+    background:color-mix(in srgb,var(--ac) 14%,transparent);color:var(--ac);
+    border:1px solid color-mix(in srgb,var(--ac) 38%,transparent)}
+  .need{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+  .need b{display:block;font-size:12px;font-family:var(--mono);letter-spacing:.1em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+
+  .tagline{font-size:19px;font-weight:600;line-height:1.35;color:var(--ac);
+    max-width:32ch;margin:0 0 20px;text-wrap:balance}
+  .col{max-width:68ch}
+  .col p{margin:0 0 15px}
+
+  /* nota lateral — o mesmo papel do .pain do site, sem a carga de "dor" */
+  .nt{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line);
+    border-radius:0 12px 12px 0;padding:16px 20px;margin:22px 0;max-width:68ch}
+  .nt.ac{border-left-color:var(--ac)}
+  .nt .h{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .nt.ac .h{color:var(--ac)}
+  .nt p{margin:0 0 11px}
+  .nt p:last-child{margin:0}
+  .duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:22px 0}
+  .duo .nt{margin:0;max-width:none}
+
+  /* grade semanal */
+  .scroll{overflow-x:auto;margin:18px 0 0}
+  .grade{display:grid;grid-template-columns:46px repeat(7,minmax(48px,1fr));gap:3px;min-width:540px}
+  .gh,.gl{font-family:var(--mono);font-size:10px;color:var(--dim)}
+  .gh{text-align:center;padding-bottom:6px;text-transform:uppercase}
+  .gl{display:flex;align-items:center;justify-content:flex-end;padding-right:8px}
+  .c{height:20px;border-radius:2px}
+  .cheio{background:var(--ac)}
+  .meio{background:var(--c-meio)}
+  .vazio{background:var(--c-vazio);box-shadow:inset 0 0 0 1px var(--line)}
+  .c.faixa{box-shadow:inset 0 0 0 1.5px var(--c-ring)}
+  .legenda{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-family:var(--mono);
+    font-size:11px;color:var(--dim);align-items:center}
+  .lg{display:flex;align-items:center;gap:7px}
+  .sw{width:13px;height:13px;border-radius:2px;flex:none}
+  .sw.faixa-sw{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c-ring)}
+  .lg.on{color:var(--ac);font-weight:600}
+
+  /* números */
+  .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:24px 0}
+  .n{background:var(--panel);padding:18px 18px 16px}
+  .n b{display:block;font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1;
+    font-variant-numeric:tabular-nums;color:var(--ink)}
+  .n span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--dim);margin-top:9px;line-height:1.45}
+  .n.hi{background:color-mix(in srgb,var(--ac) 11%,var(--panel))}
+  .n.hi b{color:var(--ac)}
+
+  /* partes do modelo */
+  .parts{list-style:none;margin:22px 0;padding:0;display:grid;gap:10px}
+  .parts li{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:15px 18px;display:grid;grid-template-columns:132px 1fr;gap:18px;align-items:start}
+  .parts li.key{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--panel))}
+  .parts .who{font-family:var(--mono);font-size:12.5px;color:var(--ac);line-height:1.35}
+  .parts .who i{display:block;font-style:normal;font-size:10px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--dim);margin-top:5px}
+  .parts p{margin:0;font-size:14.5px;color:var(--mut)}
+  .parts p strong{color:var(--ink)}
+  @media (max-width:560px){.parts li{grid-template-columns:1fr;gap:8px}}
+
+  /* o cenário */
+  .cena{list-style:none;counter-reset:cn;margin:22px 0 0;padding:0}
+  .cena li{counter-increment:cn;position:relative;padding:18px 0 18px 50px;
+    border-top:1px solid var(--line)}
+  .cena li::before{content:counter(cn);position:absolute;left:0;top:18px;width:30px;height:30px;
+    border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:12px;
+    background:var(--panel2);color:var(--dim);border:1px solid var(--line)}
+  .cena li.on::before{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+  .cena li b{display:block;font-family:var(--mono);font-size:12.5px;color:var(--ac);margin-bottom:7px}
+  .cena li p{margin:0 0 11px;max-width:66ch;color:var(--mut)}
+  .cena li p:last-child{margin:0}
+  .cena li p strong{color:var(--ink)}
+  .leis{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;
+    margin:14px 0;max-width:66ch}
+  .lei{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .lei .tag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+    text-transform:uppercase;background:var(--ac);color:var(--bg);padding:2px 7px;
+    border-radius:4px;margin-bottom:9px}
+  .cena .lei b{color:var(--ink);font-family:var(--sans);font-size:14.5px;margin-bottom:5px}
+  .lei p{font-size:13.5px;margin:0}
+  @media (max-width:560px){.cena li{padding-left:40px}.cena li::before{width:26px;height:26px}}
+
+  /* tabelas */
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin:0}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--dim);text-align:left;padding:0 14px 10px 0;border-bottom:1px solid var(--line);
+    font-weight:400}
+  td{padding:12px 14px 12px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--mut)}
+  tr:last-child td{border-bottom:0}
+  td strong{color:var(--ink)}
+  .sub-td{display:block;color:var(--dim);font-size:12.5px;margin-top:3px;line-height:1.4}
+  td.no{color:var(--dim);text-decoration:line-through}
+  td.yes{color:var(--ac)}
+  td.dir,th.dir{text-align:right;padding-right:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr.foco td{background:color-mix(in srgb,var(--ac) 9%,transparent)}
+  tr.tot td{border-bottom:0;border-top:2px solid var(--line)}
+  .orc{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 20px 18px;margin:26px 0 0;max-width:68ch}
+  .orc-t{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--dim);margin:0 0 14px}
+  .orc-t em{font-style:normal;color:var(--amber)}
+  .orc-n{font-size:13px;color:var(--dim);margin:14px 0 0}
+
+  /* linha do tempo */
+  .tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:0;margin:22px 0}
+  .mrc{padding:16px 16px 18px 0;border-top:2px solid var(--line);border-right:1px solid var(--line);
+    position:relative}
+  .mrc:last-child{border-right:0}
+  .mrc::before{content:"";position:absolute;top:-6px;left:0;width:9px;height:9px;
+    border-radius:50%;background:var(--line)}
+  .mrc.on::before{background:var(--ac)}
+  .mrc.off::before{background:transparent;border:2px solid var(--line);width:7px;height:7px}
+  .mrc b{display:block;font-family:var(--mono);font-size:11px;color:var(--ac);margin-bottom:8px;
+    font-variant-numeric:tabular-nums}
+  .mrc.off b{color:var(--dim)}
+  .mrc p{margin:0;font-size:13.5px;color:var(--mut);line-height:1.5}
+  .mrc p strong{color:var(--ink)}
+
+  /* fases */
+  .fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:22px 0}
+  .fase{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .fase b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .fase h3{margin:0 0 8px;font-size:16px;letter-spacing:-.01em}
+  .fase p{margin:0 0 12px;font-size:14px;color:var(--mut)}
+  .fase ul{margin:0;padding-left:17px;font-size:13.5px;color:var(--mut)}
+  .fase li{margin-bottom:5px}
+
+  /* perguntas em aberto */
+  .abertas{margin:20px 0 0}
+  .ab{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:15px 0;
+    border-bottom:1px solid var(--line)}
+  .ab:last-child{border-bottom:0}
+  .mk{font-family:var(--mono);font-size:11px;color:var(--amber);padding-top:3px}
+  .ab p{margin:0;color:var(--mut);max-width:66ch}
+  .ab p b{color:var(--ink)}
+
+  /* assinatura */
+  .fim{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:30px 32px;margin-top:40px}
+  .sig{font-size:clamp(20px,4vw,30px);font-weight:700;letter-spacing:.01em;
+    text-transform:uppercase;color:var(--ac);margin:0 0 8px;line-height:1.1}
+  .sig2{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--dim);margin:0 0 18px}
+  .sig2 span{text-transform:none;letter-spacing:0;font-style:italic;margin-right:9px;opacity:.8}
+  .fim p{color:var(--mut);max-width:64ch}
+  .fim p strong{color:var(--ink)}
+  .nomebox{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}
+  .nomebox .h{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ac);margin-bottom:9px}
+</style>
+<meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://otaviopelego.pages.dev/mvps/nobrehora/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Otávio Pelego">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="NobreHora — esporte de raquete para quem não teria acesso">
+<meta property="og:description" content="A hora que o clube chama de morta é a única em que ela pode jogar. Ideação de um projeto de esporte social pago por incentivo fiscal, em Pelotas.">
+<meta property="og:url" content="https://otaviopelego.pages.dev/mvps/nobrehora/">
+<meta property="og:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PelegoCorrea">
+<meta name="twitter:title" content="NobreHora — esporte de raquete para quem não teria acesso">
+<meta name="twitter:description" content="A hora que o clube chama de morta é a única em que ela pode jogar. Ideação de um projeto de esporte social pago por incentivo fiscal.">
+<meta name="twitter:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" href="../../index.html"><span class="dot"></span> Otávio Pelego</a>
+  <nav class="topnav">
+    <a href="../../data-analytics/">Data Analytics</a>
+    <a href="../../workflows/">Automações</a>
+    <a href="../../contents/">Conteúdo</a>
+    <a href="../../websites/">Sites</a>
+    <a href="../../google-workspace/">Ser encontrado</a>
+    <a href="../../consulting/">Consultoria</a>
+    <a href="../" aria-current="page">MVPs</a>
+    <a href="../../laboratorio/">Laboratório</a>
+    <a href="../../index.html#historia">Minha história</a>
+  </nav>
+</div></div>
+
+<header><div class="wrap">
+  <p class="kicker">MVPs · ideação · design thinking inicial</p>
+  <h1 class="wide">Nobre<span class="g">Hora</span></h1>
+  <p class="tagline">A hora que o clube chama de morta é a única em que ela pode jogar.</p>
+  <p class="lede">Das 9h às 17h, todo clube de Pádel e Beach Tennis enche a quadra no esforço — e ainda assim sobra entre um terço e dois terços da faixa. Quem tem dinheiro para jogar está trabalhando; quem está livre nesse horário não tem como pagar. Este projeto liga as duas pontas com dinheiro de incentivo fiscal.</p>
+  <div class="btnrow">
+    <a class="btn" href="#convite">O que eu procuro</a>
+    <a class="btn ghost" href="../">Voltar aos MVPs</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <p class="sechead"><span>O ativo — a faixa que ninguém consegue encher</span></p>
+
+  <div class="scroll">
+    <div class="grade" role="img" aria-label="Grade semanal de ocupação de quadra: noite e fim de semana cheios; das 9h às 17h nos dias úteis a ocupação é parcial, entre 35 e 65 por cento">
+      <div></div>
+      <div class="gh">seg</div><div class="gh">ter</div><div class="gh">qua</div><div class="gh">qui</div><div class="gh">sex</div><div class="gh">sáb</div><div class="gh">dom</div>
+
+      <div class="gl">7h</div>
+      <div class="c meio"></div><div class="c meio"></div><div class="c meio"></div><div class="c meio"></div><div class="c meio"></div><div class="c vazio"></div><div class="c vazio"></div>
+
+      <div class="gl">9h</div>
+      <div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c cheio"></div><div class="c meio"></div>
+
+      <div class="gl">11h</div>
+      <div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c meio faixa"></div><div class="c cheio"></div><div class="c meio"></div>
+
+      <div class="gl">13h</div>
+      <div class="c vazio faixa"></div><div class="c meio faixa"></div><div class="c vazio faixa"></div><div class="c meio faixa"></div><div class="c vazio faixa"></div><div class="c meio"></div><div class="c vazio"></div>
+
+      <div class="gl">15h</div>
+      <div class="c meio faixa"></div><div class="c vazio faixa"></div><div class="c meio faixa"></div><div class="c vazio faixa"></div><div class="c meio faixa"></div><div class="c meio"></div><div class="c vazio"></div>
+
+      <div class="gl">17h</div>
+      <div class="c meio"></div><div class="c meio"></div><div class="c meio"></div><div class="c meio"></div><div class="c meio"></div><div class="c cheio"></div><div class="c meio"></div>
+
+      <div class="gl">19h</div>
+      <div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c meio"></div>
+
+      <div class="gl">21h</div>
+      <div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c cheio"></div><div class="c meio"></div><div class="c vazio"></div>
+    </div>
+  </div>
+  <div class="legenda">
+    <span class="lg"><span class="sw cheio"></span>cheio, sem esforço</span>
+    <span class="lg"><span class="sw meio"></span>parcial</span>
+    <span class="lg"><span class="sw vazio"></span>vazio</span>
+    <span class="lg on"><span class="sw faixa-sw"></span>a faixa de 9h às 17h: 35% a 65% de ocupação — e conquistada no braço</span>
+    <span style="opacity:.7">esquema do padrão observado, não medição de um clube específico</span>
+  </div>
+
+  <p class="sechead"><span>01 · O problema</span></p>
+  <div class="col">
+    <h2 style="margin:0 0 14px;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.02em;line-height:1.15">A faixa das 9h às 17h não está vazia. Está sendo enchida no braço.</h2>
+    <p>Dizer que a quadra fica parada o dia inteiro seria mentira — e mentira que qualquer dono de clube desmonta em trinta segundos. <strong>Com esforço, os clubes chegam a 35% ou 65% de ocupação nesse horário</strong>, dependendo do clube, da época do ano e da faixa. O ponto de partida honesto é esse número, e ele diz duas coisas ao mesmo tempo.</p>
+  </div>
+
+  <div class="nums">
+    <div class="n"><b>70</b><span>quadras em Pelotas</span></div>
+    <div class="n"><b>2 mil</b><span>jogadores na cidade</span></div>
+    <div class="n"><b>R$ 25 Mi</b><span>por ano em aluguéis<br>estimativa de 2022</span></div>
+    <div class="n hi"><b>35–65%</b><span>de ocupação das 9h às 17h<br>e no esforço</span></div>
+  </div>
+
+  <div class="duo">
+    <div class="nt ac">
+      <span class="h">1 · A ocupação que existe é cara de produzir</span>
+      <p>Quem enche aquele horário são <strong>o dono do clube, o montador de jogo e o professor</strong> — na unha, um grupo de cada vez, toda semana. É trabalho humano que não acumula: parou de ligar, esvaziou. <strong>Não escala e não compõe.</strong></p>
+    </div>
+    <div class="nt ac">
+      <span class="h">2 · E recruta sempre do mesmo poço</span>
+      <p>Todo esse esforço mexe as mesmas <strong>2 mil pessoas</strong> que já jogam e já podem pagar. Move gente de horário — <strong>não cria jogador novo.</strong> Por isso o teto é esse: mais esforço do mesmo tipo não passa dos 65%.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <p><strong>O que sobra da faixa não vai ser preenchido com mais telefonema.</strong> Vai ser preenchido por outro público, com outro dinheiro — ou não vai ser preenchido.</p>
+  </div>
+
+  <p class="sechead"><span>02 · Para quem, exatamente</span></p>
+  <div class="col">
+    <p>Quem <em>pode</em> estar numa quadra às 14h de uma terça-feira é, antes de todo mundo, <strong>uma criança ou um adolescente em turno oposto de escola</strong>. Está livre exatamente na hora em que a quadra sobra. <strong>E é a única pessoa desse horário para quem entrar ali muda alguma coisa de verdade.</strong></p>
+  </div>
+
+  <div class="nt ac">
+    <span class="h">A definição, sem eufemismo</span>
+    <p>Criança e adolescente que <strong>não praticariam esse esporte de outro jeito</strong>, por um de dois motivos — e o segundo é o que quase ninguém enxerga:</p>
+    <p><strong>1 · Falta dinheiro.</strong> Mensalidade de escolinha, aluguel de quadra, raquete, tênis. A conta simplesmente não cabe.</p>
+    <p><strong>2 · Falta convite.</strong> Nunca pisou num clube, não conhece o esporte, e ninguém nunca deu a entender que aquilo também era para ela. <strong>Às vezes o dinheiro até caberia — a ideia é que nunca chegou.</strong></p>
+    <p>Por isso <strong>não é demanda reprimida. É demanda que ainda não existe.</strong> Ninguém acorda querendo aprender Pádel numa terça às 14h — alguém precisa levar a ideia até lá. E é isso que separa este projeto de uma promoção de horário vago: <strong>promoção alcança quem já queria. Aqui, o trabalho é chegar em quem nem sabia que podia querer.</strong></p>
+  </div>
+
+  <p class="sechead"><span>03 · O modelo</span></p>
+  <div class="col">
+    <p>A Lei Federal de Incentivo ao Esporte (abate IR) e o Pró-Esporte RS (abate ICMS) existem exatamente para isto. A empresa direciona imposto que pagaria de qualquer jeito — e leva a marca junto. <strong>Cinco partes, e uma delas é a razão das outras quatro.</strong></p>
+  </div>
+
+  <ul class="parts">
+    <li class="key">
+      <span class="who">A criança<i>joga</i></span>
+      <p><strong>Não é a beneficiária do arranjo. É o motivo dele.</strong> Aprende um esporte que nunca esteve ao alcance, com professor de verdade, numa quadra de clube — de graça, e sem que isso pareça favor. <strong>As outras quatro partes existem para que esta linha aconteça.</strong></p>
+    </li>
+    <li>
+      <span class="who">Empresa<i>paga</i></span>
+      <p>Converte imposto devido em patrocínio, com contrapartida de marca e relatório de impacto. Não é doação: é destinação de tributo com contrapartida.</p>
+    </li>
+    <li>
+      <span class="who">Clube<i>cede a quadra</i></span>
+      <p>Fatura a parte da faixa das 9h às 17h que ele não consegue vender <em>nem no esforço</em>. <strong>É pago, não doa</strong> — e essa é a diferença que faz o projeto durar depois do primeiro ano.</p>
+    </li>
+    <li>
+      <span class="who">Professor<i>dá a aula</i></span>
+      <p>Ganha turma fixa no horário em que estava ocioso, com remuneração previsível. É quem entrega o valor e quem dá legitimidade ao projeto no campo.</p>
+    </li>
+    <li>
+      <span class="who">Escola<i>traz os alunos</i></span>
+      <p><strong>A peça que quase todo projeto esquece.</strong> A Secretaria de Educação já reuniu as crianças e já sabe quem precisa — é por ela que a turma chega, nunca por anúncio.</p>
+    </li>
+  </ul>
+
+  <div class="nt ac">
+    <span class="h">O teste que este desenho tem que passar</span>
+    <p>Todo arranjo de várias partes tem uma tentação: <strong>otimizar para quem paga.</strong> É assim que projeto social vira ação de marketing com criança de figurante.</p>
+    <p>O teste é simples e vale para qualquer decisão daqui pra frente: <strong>se a mudança melhora o relatório do patrocinador e não melhora a aula, ela está errada.</strong> A quadra boa, o professor pago direito e a turma fixa vêm antes da logomarca.</p>
+  </div>
+
+  <div class="nt">
+    <span class="h">A estrutura jurídica ainda está por confirmar</span>
+    <p>Nesses mecanismos <strong>o proponente costuma precisar ser entidade sem fins lucrativos</strong>. O desenho provável é uma <strong>associação como proponente</strong>, contratando clube e professor, e com a coordenação entrando como prestação de serviço.</p>
+    <p>A dúvida específica: <strong>precisa passar por edital?</strong> As janelas do Pró-Esporte RS em 2025 foram janeiro e julho. Confirmar no edital vigente antes de qualquer decisão.</p>
+  </div>
+
+  <p class="sechead"><span>04 · O cenário, para uma pessoa só</span></p>
+  <div class="col">
+    <p>Vale imaginar a coisa inteira acontecendo uma vez, do começo ao fim. É aqui que as duas leis entram — e é aqui que fica claro que <strong>o dinheiro não sai do bolso de ninguém: ele só muda de destino.</strong></p>
+  </div>
+
+  <ol class="cena">
+    <li>
+      <b>A menina</b>
+      <p>Doze anos, escola pública, estuda de manhã. À tarde está em casa. <strong>Nunca segurou uma raquete</strong> — não porque não quis, mas porque escolinha custa mensalidade e ninguém nunca disse que aquilo também era para ela.</p>
+    </li>
+    <li>
+      <b>A quadra</b>
+      <p>Terça-feira, 14h. O clube tentou vender esse horário: ligou, montou jogo, ofereceu desconto. <strong>Encheu parte da faixa e essa quadra sobrou</strong> — como sobra quase toda terça.</p>
+    </li>
+    <li>
+      <b>A escola faz a ponte</b>
+      <p>A Secretaria de Educação indica a turma: vinte crianças do turno da manhã, com transporte já resolvido, porque isso ela já faz. <strong>Ninguém precisou anunciar nada.</strong></p>
+    </li>
+    <li class="on">
+      <b>Aqui entram as leis</b>
+      <p>Uma empresa de Pelotas — indústria, atacado, cooperativa, qualquer uma que apure lucro real ou deva ICMS — <strong>tem imposto a pagar de qualquer maneira</strong>. Em vez de recolher tudo, direciona uma parte para um projeto esportivo aprovado:</p>
+      <div class="leis">
+        <div class="lei">
+          <span class="tag">Federal</span>
+          <b>Lei de Incentivo ao Esporte</b>
+          <p>Abate do <strong>Imposto de Renda</strong> devido, dentro do limite que a lei fixa. Projeto aprovado pelo Ministério do Esporte.</p>
+        </div>
+        <div class="lei">
+          <span class="tag">Estadual · RS</span>
+          <b>Pró-Esporte RS</b>
+          <p>Abate do <strong>ICMS</strong> devido. É a via que corresponde à carta enviada à Secretaria de Esportes do RS em outubro de 2025.</p>
+        </div>
+      </div>
+      <p><strong>São dois caminhos separados</strong>, com regras e calendários próprios — não é o mesmo projeto submetido duas vezes. Um projeto pode nascer por um, por outro, ou por ambos em partes diferentes do orçamento.</p>
+    </li>
+    <li>
+      <b>O dinheiro vira aula</b>
+      <p>O clube <strong>recebe pela quadra</strong> — não doa. O professor <strong>recebe pela aula</strong> — não é voluntário. Compra-se raquete, bola e tênis. Sobra uma parte para a coordenação e a prestação de contas, que é obrigatória e dá trabalho de verdade.</p>
+    </li>
+    <li class="on">
+      <b>Terça, 14h</b>
+      <p><strong>A menina está na quadra.</strong> Não como cortesia de alguém, não numa quadra emprestada de má vontade: numa turma que tem professor pago, horário fixo e material. <strong>E o custo disso, para a empresa que pagou, foi trocar o destino de um imposto que ela já devia.</strong></p>
+    </li>
+  </ol>
+
+  <div class="orc">
+    <p class="orc-t">Ordem de grandeza — <em>exercício, não orçamento</em></p>
+    <div class="scroll" style="margin:0">
+      <table>
+        <thead><tr><th>Uma turma, um ano</th><th class="dir">estimativa</th></tr></thead>
+        <tbody>
+          <tr><td>Quadra paga ao clube <span class="sub-td">≈ 4h/semana no horário ocioso</span></td><td class="dir">R$ 20 mil</td></tr>
+          <tr><td>Professor <span class="sub-td">turma fixa, remuneração previsível</span></td><td class="dir">R$ 20 mil</td></tr>
+          <tr><td>Material <span class="sub-td">raquete, bola, tênis, uniforme — maior no 1º ano</span></td><td class="dir">R$ 15 mil</td></tr>
+          <tr><td>Coordenação e prestação de contas <span class="sub-td">obrigatória, e o que ninguém orça</span></td><td class="dir">R$ 10 mil</td></tr>
+          <tr class="tot"><td><strong>Total aproximado</strong> <span class="sub-td">≈ 20 crianças · ≈ R$ 270 por criança/mês</span></td><td class="dir"><strong>R$ 65 mil</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="orc-n">Estes números são <strong>chute informado para dar escala à conversa</strong> — servem para responder “cabe no orçamento de qual empresa?”, não para submeter a edital. O orçamento real sai da conversa com o professor e com o clube, e o peso do material veio do que o projeto de Cruz Alta arrecadou.</p>
+  </div>
+
+  <p class="sechead"><span>05 · Distribuição</span></p>
+  <div class="col">
+    <h2 style="margin:0 0 14px;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.02em;line-height:1.15">O cliente nunca é a pessoa. É quem já reuniu as pessoas.</h2>
+    <p>Este era o buraco do projeto até pouco tempo atrás. A resposta veio de um projeto que já funciona — e o público que importa é o primeiro da tabela.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Quem joga</th><th>Não se alcança por</th><th>Alcança-se por</th><th>Quem paga</th></tr></thead>
+      <tbody>
+        <tr class="foco">
+          <td><strong>Criança e adolescente</strong><span class="sub-td">rede pública, turno oposto</span></td>
+          <td class="no">anúncio, panfleto, a família</td>
+          <td class="yes">Secretaria de Educação</td>
+          <td>incentivo fiscal</td>
+        </tr>
+        <tr>
+          <td><strong>Profissional com flexibilidade</strong><span class="sub-td">autonomia de agenda</span></td>
+          <td class="no">o próprio profissional</td>
+          <td class="yes">o RH da empresa</td>
+          <td>a empresa, como benefício</td>
+        </tr>
+        <tr>
+          <td><strong>Idoso e aposentado</strong><span class="sub-td">tempo livre no dia</span></td>
+          <td class="no">o próprio aposentado</td>
+          <td class="yes">centro de convivência, sindicato</td>
+          <td>incentivo, ou eles mesmos</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <p>A consequência prática é grande: <strong>isto não é um negócio de marketing, é um negócio de parceria institucional.</strong> Custo de aquisição perto de zero, volume garantido, ciclo de venda longo.</p>
+    <p>E eu já tinha feito isso sem saber que era uma regra: <strong>o apoio de 2022 foi a um projeto dentro da ESEF/UFPel</strong> — a instituição que já tinha reunido as pessoas.</p>
+    <p><strong>Mas a linha destacada é o projeto.</strong> As outras duas são extensões possíveis, com dinheiro diferente e provavelmente com regra diferente — e por isso ficam para depois, não para o piloto.</p>
+  </div>
+
+  <p class="sechead"><span>06 · Precedente</span></p>
+  <div class="col">
+    <p>Em <strong>Cruz Alta, no Rio Grande do Sul</strong>, o <strong>Projeto Padel Ponto de Ouro</strong> — idealizado pela atleta Caroline Silveira Netto — roda uma versão disto há tempo. Virou referência nacional e apareceu no Globo Esporte.</p>
+    <p>A prefeitura entra pelas Secretarias de <strong>Esporte e Educação</strong>; o <strong>Park Padel Clube</strong> cede a quadra; crianças e adolescentes da rede pública jogam de graça.</p>
+  </div>
+
+  <div class="nums">
+    <div class="n"><b>20+</b><span>crianças atendidas</span></div>
+    <div class="n"><b>3</b><span>órgãos municipais</span></div>
+    <div class="n"><b>~600</b><span>itens arrecadados<br>PAR Open · COBRAPA</span></div>
+    <div class="n"><b>2</b><span>projetos sociais<br>de Pádel no país</span></div>
+  </div>
+
+  <div class="col">
+    <p><strong>A escala real é vinte crianças.</strong> Não duzentas. Um projeto relevante de esporte social começa com uma turma fixa — e isso é bom, porque torna o primeiro passo possível.</p>
+  </div>
+
+  <div class="nt ac">
+    <span class="h">A diferença de desenho que eu quero testar</span>
+    <p>Ceder a quadra é <strong>mais fácil de começar e mais frágil de manter</strong> — depende de alguém continuar generoso. Pagar o clube é <strong>mais difícil de destravar e é o que permite ir de vinte crianças para duzentas</strong> sem depender de boa vontade.</p>
+  </div>
+
+  <p class="sechead"><span>07 · De onde vem</span></p>
+  <div class="col">
+    <p>A vontade de levar esporte de raquete a quem não teria acesso <strong>não é de agora</strong>. É de 2021. O que nunca existiu foi um jeito de pagar por ela que não fosse <strong>o próprio bolso</strong>.</p>
+  </div>
+
+  <div class="tl">
+    <div class="mrc">
+      <b>06 OUT 2021</b>
+      <p><strong>A GoBora nasce.</strong> Conectar jogadores, montar partida, reservar quadra — tudo interligado, com efeito de rede de verdade.</p>
+    </div>
+    <div class="mrc on">
+      <b>25 JUN 2022</b>
+      <p><strong>O primeiro apoio, com dinheiro próprio.</strong> Parceria com um projeto de <strong>tênis de mesa na ESEF/UFPel</strong> — alguns reais por mês, por alguns meses. <strong>Até onde o fôlego alcançava.</strong></p>
+    </div>
+    <div class="mrc on">
+      <b>NO PERÍODO</b>
+      <p><strong>+1.000 partidas</strong> viabilizadas, direta e indiretamente — com um ou mais jogadores nossos em cada uma. <strong>A demanda existia.</strong></p>
+    </div>
+    <div class="mrc off">
+      <b>O QUE FALTOU</b>
+      <p><strong>Nenhum clube pagou um real.</strong> Não havia modelo de negócio que financiasse terminar de construir. Standby — e segue até hoje.</p>
+    </div>
+    <div class="mrc">
+      <b>OUT 2025</b>
+      <p>No aniversário de 4 anos, <strong>alguns dias de estudo</strong>: a carta à Secretaria de Esportes do RS e o mercado da cidade dimensionado. E parou aí.</p>
+    </div>
+    <div class="mrc on">
+      <b>SET 2026</b>
+      <p><strong>Retomada agora.</strong> Entra o professor no desenho, e a distribuição finalmente ganha resposta.</p>
+    </div>
+  </div>
+
+  <div class="nt ac">
+    <span class="h">O que muda entre 2022 e agora</span>
+    <p>Em 2022 o apoio ao projeto de tênis de mesa <strong>parava exatamente onde o caixa da GoBora parava</strong>. Era generosidade dentro do fôlego — e generosidade dentro do fôlego tem um teto muito baixo e some no primeiro mês ruim.</p>
+    <p><strong>É esse teto que o incentivo fiscal derruba.</strong> Não é o bolso de ninguém que paga: é imposto que a empresa devia de qualquer maneira, apenas com outro destino.</p>
+    <p><strong>A intenção é a mesma de cinco anos atrás.</strong> O que mudou foi aparecer um jeito de ela não depender de quanto sobra no fim do mês.</p>
+  </div>
+
+  <div class="nt">
+    <span class="h">E o que aquele standby ensinou</span>
+    <p>Mil partidas provam que <strong>o problema era real e a solução funcionava</strong>. O que não funcionou foi de onde viria o dinheiro: <strong>o clube não paga por jogador que ele acha que já teria</strong> — e o jogador, que já paga a quadra, não paga de novo para ser apresentado a alguém.</p>
+    <p><strong>Aqui o dinheiro vem de fora dos dois</strong>, e compra um valor que nenhum dos dois tinha para vender: <strong>uma criança numa quadra às duas da tarde.</strong></p>
+  </div>
+
+  <p class="sechead"><span>08 · Caminho</span></p>
+  <div class="col">
+    <h2 style="margin:0 0 14px;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.02em;line-height:1.15">Uma turma primeiro. Software só quando doer.</h2>
+  </div>
+
+  <div class="fases">
+    <div class="fase">
+      <b>Fase 1 · provar o mecanismo</b>
+      <h3>Uma turma, um clube, um patrocinador</h3>
+      <p>O objetivo não é escala — é atravessar o processo inteiro uma vez e descobrir onde trava.</p>
+      <ul>
+        <li>Professor ou projeto social parceiro</li>
+        <li>Um clube com sobra na faixa das 9h às 17h</li>
+        <li>Uma empresa disposta a ser a primeira</li>
+        <li>Associação proponente definida</li>
+        <li>Coordenação no braço — de propósito</li>
+      </ul>
+    </div>
+    <div class="fase">
+      <b>Fase 2 · repetir</b>
+      <h3>Mais turmas, mesmo desenho</h3>
+      <p>Quando a mesma operação acontece três ou quatro vezes, o controle no braço começa a doer. É aí que a estrutura entra — e não antes.</p>
+      <ul>
+        <li>Segundo e terceiro clube</li>
+        <li>Mais turmas, mesma régua</li>
+        <li>Prestação de contas padronizada</li>
+        <li>Horários combinados com antecedência</li>
+      </ul>
+    </div>
+    <div class="fase">
+      <b>Fase 3 · virar plataforma</b>
+      <h3>O que só se justifica com volume</h3>
+      <p>Coordenação multi-lado com dinheiro carimbado e prestação de contas é um problema de software real — mas só depois de existir demanda para ele.</p>
+      <ul>
+        <li>Matching clube × professor × turma</li>
+        <li>Painel para o patrocinador</li>
+        <li>Relatório de impacto automático</li>
+        <li>Replicação em outras cidades</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="nt ac">
+    <span class="h">A ordem importa mais do que parece</span>
+    <p>A tentação, para quem sabe construir, é <strong>começar pelo sistema</strong> — porque é a parte que se faz sozinho, sem depender de ninguém dizer sim.</p>
+    <p><strong>Aqui isso seria começar pelo fim.</strong> Não existe nada para coordenar antes de existir uma turma. Primeiro a criança na quadra; depois, se a mesma operação começar a se repetir e a doer, aí se pensa em construir — <strong>do jeito certo, na hora certa e no formato certo.</strong></p>
+  </div>
+
+  <p class="sechead"><span>09 · Honestidade</span></p>
+  <div class="col">
+    <p>Isto é ideação. Prefiro listar as lacunas a fingir que o projeto está pronto.</p>
+  </div>
+
+  <div class="abertas">
+    <div class="ab"><span class="mk">01</span><p><b>Precisa passar por edital?</b> A dúvida é de outubro de 2025 e continua. É a primeira coisa a resolver, porque muda o calendário inteiro.</p></div>
+    <div class="ab"><span class="mk">02</span><p><b>Federal ou estadual — ou os dois?</b> A Lei de Incentivo ao Esporte abate IR; o Pró-Esporte RS abate ICMS. São projetos separados, com regras próprias.</p></div>
+    <div class="ab"><span class="mk">03</span><p><b>A associação já existe ou precisa ser criada?</b> Se o parceiro de campo já tem CNPJ de associação, metade do caminho está andada.</p></div>
+    <div class="ab"><span class="mk">04</span><p><b>Quanto pesa o material?</b> Raquete, tênis e roupa apareceram como o gargalo real do projeto de Cruz Alta. Não estava no orçamento pensado aqui.</p></div>
+    <div class="ab"><span class="mk">05</span><p><b>Quanto cada lei permite abater?</b> Há teto sobre o imposto devido, e ele muda por lei e por ano. Isso define de que tamanho de empresa é a conversa.</p></div>
+    <div class="ab"><span class="mk">06</span><p><b>A empresa quer marca ou quer imposto?</b> Se o motivo é reputação, a contrapartida precisa ser desenhada. Se é só o abatimento, o argumento é outro.</p></div>
+    <div class="ab"><span class="mk">07</span><p><b>Quanto sobra, de verdade?</b> Os 35% a 65% são leitura de campo, não medição — varia por clube, por época e por faixa de horário. <strong>Antes de prometer horário a qualquer patrocinador, isso precisa virar número</strong>, clube por clube, com o próprio clube junto.</p></div>
+  </div>
+
+  <p class="sechead" id="convite"><span>10 · O convite</span></p>
+  <div class="proof">
+    <span class="stage">Ideação · procuro três coisas, e nenhuma é código</span>
+    <h4>O que falta não se resolve sozinho</h4>
+    <p>A parte técnica eu construo quando ela fizer falta — e ela só faz falta lá na frente. O que trava tudo agora é legitimidade no campo, o primeiro patrocinador e o caminho jurídico.</p>
+    <div class="need">
+      <b>O que procuro</b>
+      <strong>Um professor ou projeto social de esportes de raquete</strong> que já tenha turma e credibilidade com clube e comunidade — é quem faz isto existir de verdade, e o resto é estrutura em volta. <strong>Uma empresa disposta a ser a primeira patrocinadora</strong>, mesmo em escala pequena: uma turma de vinte crianças é suficiente para provar o mecanismo. E <strong>alguém que entenda de captação e edital</strong>, porque é exatamente a parte que eu não domino.
+    </div>
+    <div class="chips">
+      <span class="chip">incentivo fiscal ao esporte</span>
+      <span class="chip">Pró-Esporte RS</span>
+      <span class="chip">esporte social</span>
+      <span class="chip">esportes de raquete</span>
+      <span class="chip">parceria institucional</span>
+    </div>
+  </div>
+
+  <div class="fim">
+    <p class="sig">Sports are made of people</p>
+    <p class="sig2"><span>e depois</span>Conectando Jogadores</p>
+    <p>— as duas assinaturas da GoBora: a primeira, no logo de 2021; a segunda, quando o produto foi ficando mais concreto. <strong>A troca entre elas conta a história inteira.</strong> “Conectando jogadores” só funciona onde <em>já existe</em> jogador — e foi exatamente por isso que mais de mil partidas aconteceram sem que uma única gerasse receita.</p>
+    <p><strong>O NobreHora é a volta à primeira frase.</strong> Antes de conectar quem joga, alguém precisa poder chegar até a quadra.</p>
+
+    <div class="nomebox">
+      <span class="h">Sobre o nome</span>
+      <p><strong>NobreHora.</strong> O clube chama aquela faixa de horário morto — e do lugar dele, faz sentido: é quando a quadra sobra. Mas para quem estuda de manhã e está em casa à tarde, <strong>é a única hora possível.</strong> Não é a hora que sobrou. É a hora em que dá.</p>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div>
+      <h3>Isso conversa com o que você faz?</h3>
+      <p>Se você é professor de esporte de raquete, toca um projeto social, decide patrocínio numa empresa ou entende de lei de incentivo — me chama. Não precisa vir com proposta pronta.</p>
+    </div>
+    <div class="btnrow" style="margin-top:0">
+      <a class="btn wa" href="https://wa.me/5553981223304?text=Oi%2C%20Ot%C3%A1vio%21%20Vi%20a%20p%C3%A1gina%20do%20NobreHora%20e%20queria%20conversar." target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn ghost" href="mailto:pelegocorrea@gmail.com?subject=NobreHora">Falar por e-mail</a>
+    </div>
+  </div>
+
+  <footer>
+    <span>Otávio Pelego · <span class="civil">Otávio de Oliveira Corrêa</span></span>
+    <span><a href="../">MVPs</a> · <a href="../../index.html">início</a> · <a href="mailto:pelegocorrea@gmail.com">e-mail</a></span>
+    <span style="color:var(--dim)">Ideação de setembro de 2026 · números de mercado: levantamento próprio, Pelotas · dados do Ponto de Ouro: comunicação pública do projeto · estrutura jurídica não verificada em edital</span>
+  </footer>
+</div>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>
