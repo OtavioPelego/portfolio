@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Histórico de eventos — Convocações da Embrapa</title>
+<meta name="description" content="Linha do tempo de tudo que mudou nas convocações do concurso da Embrapa: quem entrou, quem mudou de situação e quem saiu da lista, com filtros e gráfico por dia.">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="styles.css">
+<meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://otaviopelego.pages.dev/dashboards/embrapa/historico.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Otávio Pelego">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Histórico de eventos — Convocações da Embrapa">
+<meta property="og:description" content="Quem entrou, quem mudou de situação e quem saiu da lista de convocações da Embrapa, dia a dia.">
+<meta property="og:url" content="https://otaviopelego.pages.dev/dashboards/embrapa/historico.html">
+<meta property="og:image" content="https://otaviopelego.pages.dev/assets/og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@PelegoCorrea">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="brand" href="../../index.html"><span class="dot"></span> Otávio Pelego</a>
+  <nav class="topnav">
+    <a href="../../data-analytics/">Data Analytics</a>
+    <a href="../../workflows/">Automações</a>
+    <a href="../../contents/">Conteúdo</a>
+    <a href="../../websites/">Sites</a>
+    <a href="../../google-workspace/">Ser encontrado</a>
+    <a href="../../consulting/">Consultoria</a>
+    <a href="../../mvps/">MVPs</a>
+    <a href="../../laboratorio/">Laboratório</a>
+    <a href="../../index.html#historia">Minha história</a>
+  </nav>
+</div></div>
+
+<div class="wrap painel">
+
+  <nav class="bc" aria-label="Trilha de navegação">
+    <a href="../../index.html">Otávio Pelego</a> ›
+    <a href="../../laboratorio/">Laboratório</a> ›
+    <a href="index.html">Convocações da Embrapa</a> ›
+    <span aria-current="page">Histórico de eventos</span>
+  </nav>
+
+  <div class="subnav" aria-label="Navegação do painel">
+    <a href="index.html">Painel</a>
+    <a href="historico.html" aria-current="page">Histórico de eventos</a>
+  </div>
+
+  <header class="cab">
+    <div>
+      <p class="olho">Concurso público Embrapa · Edital nº 1/2024</p>
+      <h1>Histórico de eventos</h1>
+      <p class="sub">Quem entrou na lista, quem mudou de situação e quem saiu dela —
+        dia a dia. Existe porque filtrar só por “Situação: Convocado” não pega quem
+        passou rápido demais por esse estado entre uma checagem e a próxima.</p>
+    </div>
+    <div class="carimbos">
+      <div class="carimbo">
+        <span class="rot">Período coberto</span>
+        <strong id="carimbo-periodo">—</strong>
+      </div>
+      <div class="carimbo">
+        <span class="rot">Checagens com evento</span>
+        <strong id="carimbo-checagens">—</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- ---------- aviso sobre a data (bem visível, de propósito) ---------- -->
+  <aside class="aviso-data" role="note">
+    <strong>⏱ O que significa “Verificado em”.</strong>
+    <span id="texto-aviso-data">carregando…</span>
+  </aside>
+
+  <!-- ---------- KPIs ---------- -->
+  <section class="kpis" aria-label="Resumo dos eventos">
+    <button class="kpi total" data-tipo="" aria-pressed="false">
+      <span class="rot">Eventos no total</span>
+      <strong class="val" id="kpi-total">—</strong>
+      <span class="det" id="kpi-total-det">—</span>
+    </button>
+    <button class="kpi" data-tipo="novo" style="--ac:var(--barra)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Novas convocações</span>
+      <strong class="val" id="kpi-novo">—</strong>
+      <span class="det">entraram na lista</span>
+    </button>
+    <button class="kpi" data-tipo="alterado" style="--ac:var(--atencao)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Mudanças de situação</span>
+      <strong class="val" id="kpi-alterado">—</strong>
+      <span class="det">ex.: Convocado → Aceitou</span>
+    </button>
+    <button class="kpi" data-tipo="saiu" style="--ac:var(--grave)" aria-pressed="false">
+      <span class="rot"><i class="pip"></i>Saídas da fonte</span>
+      <strong class="val" id="kpi-saiu">—</strong>
+      <span class="det">registro removido pela Embrapa</span>
+    </button>
+  </section>
+  <p class="nota-kpi">Clique num cartão para filtrar a página inteira por esse tipo de evento.</p>
+
+  <!-- ---------- gráfico ---------- -->
+  <section class="painel-bloco largo grafico-tempo-bloco" aria-label="Eventos por checagem">
+    <h2>Eventos por checagem</h2>
+    <p class="dica">Cada barra é um dia em que a checagem encontrou alguma mudança —
+      dias sem barra foram dias sem novidade. <strong>Novas convocações</strong> aparecem
+      em destaque; o resto (mudanças de situação e saídas) fica agrupado em
+      “outras mudanças”, para a barra não virar ruído.</p>
+    <div class="grafico-tempo" id="grafico-tempo" role="img"></div>
+    <ul class="legenda">
+      <li><i class="pip" style="background:var(--barra)"></i>Novas convocações</li>
+      <li><i class="pip" style="background:var(--mut)"></i>Outras mudanças (alteradas + saídas)</li>
+    </ul>
+    <div class="tooltip-grafico" id="tooltip-grafico" hidden></div>
+  </section>
+
+  <!-- ---------- filtros ---------- -->
+  <section class="filtros" aria-label="Filtros">
+    <div class="linha-busca">
+      <label class="campo busca">
+        <span>Buscar por nome</span>
+        <input type="search" id="f-nome" placeholder="digite parte do nome…"
+               autocomplete="off" spellcheck="false">
+      </label>
+      <button class="limpar" id="limpar" type="button">Limpar filtros</button>
+      <button class="baixar" id="baixar" type="button">Baixar CSV do que está na tela</button>
+    </div>
+
+    <div class="grade-filtros">
+      <label class="campo"><span>Tipo de evento</span><select id="f-tipo"></select></label>
+      <label class="campo"><span>Cargo</span><select id="f-cargo"></select></label>
+      <label class="campo"><span>Nº da opção</span><select id="f-opcao"></select></label>
+      <label class="campo faixa">
+        <span>Verificado entre</span>
+        <div>
+          <input type="date" id="f-data-min">
+          <em>e</em>
+          <input type="date" id="f-data-max">
+        </div>
+      </label>
+    </div>
+
+    <p class="resumo-filtro" id="resumo-filtro" role="status"></p>
+  </section>
+
+  <!-- ---------- lista cronológica ---------- -->
+  <section class="bloco-lista" aria-label="Linha do tempo">
+    <div class="cab-tabela">
+      <h2>Linha do tempo</h2>
+      <span class="contador" id="contador-lista"></span>
+    </div>
+    <div class="lista-cronologica" id="lista-cronologica"></div>
+  </section>
+
+  <!-- ---------- tabela ---------- -->
+  <section class="bloco-tabela">
+    <div class="cab-tabela">
+      <h2>Todos os eventos</h2>
+      <span class="contador" id="contador-tabela"></span>
+    </div>
+    <div class="rolagem-tabela">
+      <table class="tabela" id="tabela">
+        <thead>
+          <tr>
+            <th scope="col" data-ord="verificadoEm">Verificado em</th>
+            <th scope="col" data-ord="tipo">Tipo</th>
+            <th scope="col" data-ord="nome">Nome</th>
+            <th scope="col" data-ord="cargo">Cargo</th>
+            <th scope="col" data-ord="subarea">Área / subárea</th>
+            <th scope="col" data-ord="mudanca">O que mudou</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-tabela"></tbody>
+      </table>
+    </div>
+    <div class="mais-wrap">
+      <button class="mais" id="mais" type="button">Mostrar mais</button>
+    </div>
+  </section>
+
+  <footer class="rodape-painel">
+    <p><strong>Por que essa página existe.</strong> O painel principal mostra o estado
+      atual — quem está em cada situação agora. Mas alguém pode ser convocado e já
+      aceitar antes da próxima checagem, e o filtro “Situação: Convocado” nunca mostraria
+      esse nome. Esta página registra o evento no momento em que ele foi percebido, não
+      só o resultado final.</p>
+
+    <p><strong>“Verificado em” não é a data da convocação oficial.</strong> É a data em
+      que esta checagem (manual, cerca de uma vez por dia) percebeu a mudança. Pode haver
+      alguns dias de defasagem entre a convocação real, feita pela Embrapa, e o momento
+      em que ela aparece aqui.</p>
+
+    <p class="mini">Os primeiros eventos aqui foram reconstruídos a partir do histórico
+      de publicações deste site (desde 11/08/2026); antes disso não temos como saber o
+      que mudou dia a dia. A partir de 17/09/2026 cada checagem já entra no ar assim que
+      acontece.</p>
+    <p class="voltar"><a href="index.html">← voltar para o painel</a></p>
+  </footer>
+
+</div>
+
+<script src="../../assets/nav.js"></script>
+<script src="data/historico.js"></script>
+<script src="historico-app.js"></script>
+<script src="../../assets/i18n.js?v=a46d60e9"></script>
+</body>
+</html>

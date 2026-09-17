@@ -273,3 +273,65 @@
   .ver-todas{padding:13px 14px}
   .tabela-situacao td{padding:11px 10px 11px 0}
 }
+
+/* ============================================================
+   Histórico de eventos (historico.html)
+   ============================================================ */
+
+/* abas simples entre "Painel" e "Histórico de eventos" */
+.subnav{display:flex;gap:4px;margin-bottom:22px;border-bottom:1px solid var(--line)}
+.subnav a{font-family:var(--mono);font-size:12.5px;color:var(--mut);text-decoration:none;
+  padding:9px 4px;margin-bottom:-1px;border-bottom:2px solid transparent}
+.subnav a:hover{color:var(--ink)}
+.subnav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--barra);font-weight:600}
+
+/* o aviso sobre "Verificado em" precisa ser visto ANTES de qualquer numero da
+   pagina — por isso fica logo abaixo do cabecalho, nao escondido no rodape. */
+.aviso-data{display:flex;gap:10px;align-items:flex-start;background:var(--panel);
+  border:1px solid var(--line);border-left:3px solid var(--atencao);border-radius:12px;
+  padding:13px 16px;margin-bottom:22px;font-size:13px;color:var(--mut);line-height:1.5}
+.aviso-data strong{color:var(--ink);white-space:nowrap}
+
+/* gráfico de eventos por checagem — colunas verticais, tempo da esquerda pra
+   direita. So os dias com evento aparecem (nao ha 40 colunas vazias). */
+.grafico-tempo-bloco{position:relative}
+.grafico-tempo{display:flex;align-items:flex-end;gap:6px;height:180px;padding:20px 4px 0;
+  overflow-x:auto}
+.coluna-tempo{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1 0 34px;
+  min-width:34px;height:100%;background:none;border:0;font:inherit;color:inherit;
+  cursor:pointer;padding:0;border-radius:6px 6px 0 0;transition:background .16s}
+.coluna-tempo:hover,.coluna-tempo:focus-visible{background:var(--panel2)}
+.coluna-tempo:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.valor-coluna{font-size:11px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.pilha-coluna{width:20px;flex:1;display:flex;flex-direction:column-reverse;
+  background:var(--trilho);border-radius:3px 3px 1px 1px;overflow:hidden;min-height:2px}
+.seg-novo{background:var(--barra);min-height:0}
+.seg-outras{background:var(--mut);min-height:0}
+.rotulo-coluna{font-family:var(--mono);font-size:9.5px;color:var(--dim);white-space:nowrap}
+.tooltip-grafico{position:absolute;transform:translate(-50%,-100%);background:var(--ink);
+  color:var(--panel);font-size:11.5px;padding:5px 9px;border-radius:7px;white-space:nowrap;
+  pointer-events:none;z-index:5;box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+.grafico-tempo-bloco .vazio{font-size:13px;color:var(--dim);font-style:italic;padding:20px 0}
+
+/* etiqueta de tipo de evento — icone + cor, nunca so cor */
+.et-tipo{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
+  border-radius:50%;font-size:11px;font-weight:700;line-height:1;flex:none}
+.et-tipo[data-t="novo"]{background:color-mix(in srgb, var(--barra) 18%, transparent);color:var(--barra)}
+.et-tipo[data-t="alterado"]{background:color-mix(in srgb, var(--atencao) 18%, transparent);color:var(--atencao)}
+.et-tipo[data-t="saiu"]{background:color-mix(in srgb, var(--grave) 18%, transparent);color:var(--grave)}
+
+/* lista cronológica */
+.bloco-lista{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  margin-top:16px;padding:18px 20px 8px}
+.lista-cronologica{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.dia-cronologico header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.dia-cronologico header strong{font-size:14.5px}
+.dia-cronologico ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.dia-cronologico li{font-size:13px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.dia-cronologico .nome-item{color:var(--ink);font-weight:500}
+.dia-cronologico .mut-item{color:var(--dim);font-style:italic;font-size:12.5px}
+
+@media (max-width:640px){
+  .grafico-tempo{height:150px}
+}
