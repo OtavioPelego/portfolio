@@ -2142,7 +2142,48 @@
     'ano': 'year',
     'anos': 'years',
     'mil': 'k',
-    'milhões': 'million'
+    'milhões': 'million',
+
+    /* ---------- lote 10: histórico de eventos (Embrapa) ---------- */
+    "Histórico de eventos": "Event history",
+    "Painel": "Dashboard",
+    "Quem entrou na lista, quem mudou de situação e quem saiu dela — dia a dia. Existe porque filtrar só por “Situação: Convocado” não pega quem passou rápido demais por esse estado entre uma checagem e a próxima.": "Who joined the list, who changed status and who left it — day by day. This page exists because filtering only by “Status: Called up” misses anyone who passed through that state too quickly between one check and the next.",
+    "Período coberto": "Period covered",
+    "Checagens com evento": "Checks with an event",
+    "⏱ O que significa “Verificado em”.": "⏱ What “Verified on” means.",
+    "carregando…": "loading…",
+    "Eventos no total": "Total events",
+    "Novas convocações": "New call-ups",
+    "entraram na lista": "joined the list",
+    "Mudanças de situação": "Status changes",
+    "ex.: Convocado → Aceitou": "e.g., Called up → Accepted",
+    "Saídas da fonte": "Removed from the source",
+    "registro removido pela Embrapa": "record removed by Embrapa",
+    "Clique num cartão para filtrar a página inteira por esse tipo de evento.": "Click a card to filter the whole page by that type of event.",
+    "Eventos por checagem": "Events per check",
+    "Cada barra é um dia em que a checagem encontrou alguma mudança — dias sem barra foram dias sem novidade.": "Each bar is a day when the check found some change — days with no bar were days with nothing new.",
+    "aparecem em destaque; o resto (mudanças de situação e saídas) fica agrupado em “outras mudanças”, para a barra não virar ruído.": "stand out; the rest (status changes and removals) is grouped into “other changes”, so the bar doesn’t turn into noise.",
+    "Outras mudanças (alteradas + saídas)": "Other changes (altered + removed)",
+    "Filtros": "Filters",
+    "Tipo de evento": "Event type",
+    "Verificado entre": "Verified between",
+    "Linha do tempo": "Timeline",
+    "Todos os eventos": "All events",
+    "Verificado em": "Verified on",
+    "Tipo": "Type",
+    "O que mudou": "What changed",
+    "Por que essa página existe.": "Why this page exists.",
+    "O painel principal mostra o estado atual — quem está em cada situação agora. Mas alguém pode ser convocado e já aceitar antes da próxima checagem, e o filtro “Situação: Convocado” nunca mostraria esse nome. Esta página registra o evento no momento em que ele foi percebido, não só o resultado final.": "The main dashboard shows the current state — who stands in each status right now. But someone can be called up and already accept before the next check, and the “Status: Called up” filter would never show that name. This page logs the event at the moment it was noticed, not just the final outcome.",
+    "“Verificado em” não é a data da convocação oficial.": "“Verified on” is not the official call-up date.",
+    "É a data em que esta checagem (manual, cerca de uma vez por dia) percebeu a mudança. Pode haver alguns dias de defasagem entre a convocação real, feita pela Embrapa, e o momento em que ela aparece aqui. Para a confirmação oficial e exata, confira sua caixa de e-mail — é assim que a Embrapa comunica os aprovados. Para conferir a veracidade destes dados, você também pode revisar o": "It is the date this check (manual, roughly once a day) noticed the change. There can be a few days’ lag between the real call-up, made by Embrapa, and the moment it shows up here. For the official, exact confirmation, check your inbox — that is how Embrapa notifies those approved. To verify these data, you can also review the",
+    "painel oficial da Embrapa no Looker Studio": "official Embrapa dashboard on Looker Studio",
+    "Os primeiros eventos aqui foram reconstruídos a partir do histórico de publicações deste site (desde 11/08/2026); antes disso não temos como saber o que mudou dia a dia. A partir de 17/09/2026 cada checagem já entra no ar assim que acontece.": "The earliest events here were reconstructed from this site’s publishing history (since 11/08/2026); before that there is no way to know what changed day by day. As of 17/09/2026 each check goes live as soon as it happens.",
+    "← voltar para o painel": "← back to the dashboard",
+    "Não consegui carregar o histórico.": "Could not load the history.",
+    "Nova convocação": "New call-up",
+    "Mudança de situação": "Status change",
+    "Saída da fonte": "Removed from source",
+    "sem mudança visível": "no visible change"
   };
 
   /* ---------------------------------------------------------------- estado */
@@ -2332,7 +2373,7 @@
     [/^(caminhada|trote|corrida|alta intens\.|sprint): (.+) m$/, "$1: $2 m"],
     [/^(.+) \((\d+)\)$/, "$1 ($2)"],
     [/^Dos$/, 'Of the'],
-    [/^(Analista|Pesquisador|T\u00e9cnico|Assistente) \u00b7 (.+)$/, "$1 · $2"],
+    [/^(Analista|Pesquisador|T\u00e9cnico|Assistente) \u00b7 ([^\u2014]+)$/, "$1 · $2"],
     [/^(.+) · ([\d.,]+)$/, "$1 · $2"],
     [/^(.+) · (Goleiro|Defensor|Meio-campo|Atacante)$/, "$1 · $2"],
     [/^(Goleiro|Defensor|Meio-campo|Atacante) · (.+)$/, "$1 · $2"],
@@ -2410,6 +2451,23 @@
      inteiro nao bate no dicionario nem nas regras. Cada par usa limite de
      palavra para nao atingir nome proprio. Ordem importa (mais longo antes). */
   var PARTIALS = [
+    /* ---------- histórico de eventos (Embrapa): frases com valor embutido ---------- */
+    ["Contratado subjudice", "Hired (sub judice)"],
+    ["Aceitou subjudice", "Accepted (sub judice)"],
+    ["Não se manifestou", "Did not respond"],
+    ["Desclassificado", "Disqualified"],
+    ["Desistente", "Withdrew"],
+    ["Contratado", "Hired"],
+    ["Convocado", "Called up"],
+    ["Aceitou", "Accepted"],
+    ["Entrou como", "Entered as"],
+    ["Saiu da lista", "Left the list"],
+    ["unidade:", "unit:"],
+    ["cidade:", "city:"],
+    ["Pesquisador", "Researcher"],
+    ["Analista", "Analyst"],
+    ["Técnico", "Technician"],
+    ["Assistente", "Assistant"],
     ["Bósnia e Herzegovina", "Bosnia and Herzegovina"],
     ["Tchéquia", "Czechia"],
     ["Catar", "Qatar"],
@@ -2754,6 +2812,7 @@
   /* ------------------------------------------------------------- execução */
   /* título da aba: traduz o que estiver antes do separador e mantém a marca */
   var TITLES = {
+    "Histórico de eventos — Convocações da Embrapa": "Event history — Embrapa call-ups",
     "O Jeito de Jogar — as 17 fases da Copa 2026": "The Way They Played — the 17 phases of the 2026 World Cup",
     "A Teia — as redes de passe da Copa 2026": "The Web — the passing networks of the 2026 World Cup",
     "O Corpo da Copa — o esforço físico da Copa 2026": "The Body of the World Cup — the physical effort of 2026",
