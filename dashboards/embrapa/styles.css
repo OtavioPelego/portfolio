@@ -334,4 +334,8 @@
 
 @media (max-width:640px){
   .grafico-tempo{height:150px}
+  /* em coluna estreita, "rótulo · texto" lado a lado espreme o texto numa
+     coluna fina e deixa um vão vazio sob o rótulo — empilha os dois. */
+  .aviso-data{flex-direction:column;gap:4px}
+  .aviso-data strong{white-space:normal}
 }
