@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campo Experimental — Cidade do Agro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2EEE7; --paper:#FBF9F4; --ink:#072F2A; --ink-2:#5E6B66; --acc:#7CC65E;
+    --line:rgba(7,47,42,.14); --display:'Manrope',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  header{display:flex;justify-content:space-between;align-items:flex-start;padding:22px clamp(16px,3vw,36px) 6px}
+  .brand{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.04em;line-height:1;text-decoration:none}
+  .brand img{height:46px;display:block}
+  .brand small{display:block;font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:0;margin-top:8px;color:var(--ink-2)}
+  .btn{font:500 13px/1 var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+  .btn:hover{background:rgba(7,47,42,.06)}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(340px,1fr);gap:clamp(16px,2.5vw,40px);max-width:1500px;margin:0 auto;padding:0 clamp(16px,3vw,36px) 60px;align-items:start}
+  .left{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding-bottom:14px}
+  .hero{padding:8px 0 0}
+  .kick{font:600 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(44px,6.2vw,96px);line-height:.86;letter-spacing:-.055em;margin:10px 0 0}
+  .stage{position:relative;flex:1;min-height:0}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+  #scene:active{cursor:grabbing}
+  #scene.hover{cursor:pointer}
+  #labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .wl{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:6px;padding:5px 10px 5px 5px;border-radius:999px;border:1px solid var(--line);background:rgba(251,249,244,.92);font:600 11.5px/1 var(--body);color:var(--ink);cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(7,47,42,.08);transition:background .2s,opacity .3s}
+  .wl .n{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;color:var(--ink);font-size:9.5px;box-shadow:inset 0 0 0 1.5px rgba(7,47,42,.35)}
+  .wl.on{background:var(--acc);border-color:var(--ink)}
+  .wl:hover{background:#fff}
+  .tip{position:absolute;left:0;top:0;pointer-events:none;background:var(--ink);color:var(--bg);font:600 12px/1.25 var(--body);padding:7px 10px;border-radius:10px;opacity:0;transition:opacity .15s;white-space:nowrap}
+  .tip small{display:block;font-weight:400;opacity:.8}
+  .hud{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
+  .hud > *{pointer-events:auto}
+  .hint{font:500 11.5px/1.3 var(--body);color:var(--ink-2)}
+  #loader{position:absolute;inset:0;display:grid;place-items:center;font:600 12px/1.5 var(--body);letter-spacing:.1em;text-transform:uppercase;text-align:center;transition:opacity .5s}
+  #loader.gone{opacity:0;pointer-events:none}
+
+  .right{padding-top:22px}
+  .intro p{font-size:15.5px;line-height:1.55;margin:0 0 12px;color:#16312D}
+  .note{display:flex;gap:6px 14px;flex-wrap:wrap;font:500 11.5px/1.3 var(--body);color:var(--ink-2);margin-bottom:16px}
+  .note span{display:inline-flex;align-items:center;gap:6px}
+  .note i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font:500 12.5px/1 var(--body);padding:8px 11px;border-radius:999px;border:1px solid var(--line);background:rgba(251,249,244,.6)}
+  .chip i{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .chip b{font-weight:600;font-size:10px;color:var(--ink-2)}
+  .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip.on b{color:var(--acc)}
+  .chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,2.2vw,30px)}
+  .panel .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .panel h2{font-family:var(--display);font-weight:800;font-size:clamp(30px,3vw,44px);line-height:.98;letter-spacing:-.035em;margin:12px 0 12px}
+  .lead{font-size:15.5px;line-height:1.55;margin:0 0 18px;color:#16312D}
+  .swatch{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:2px;margin-right:9px}
+  .nav{display:flex;gap:6px}
+  .round{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:transparent;cursor:pointer;color:var(--ink);padding:0;font-size:15px}
+  .round:hover{background:#fff}
+  .items{display:grid;gap:12px}
+  .item{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:rgba(255,255,255,.45);transition:box-shadow .3s,border-color .3s,background .3s}
+  .item.hl{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px var(--acc)}
+  .item h3{font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:-.02em;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .item h3 em{font:italic 400 13px var(--body);color:var(--ink-2);letter-spacing:0}
+  .item dl{margin:10px 0 0;display:grid;gap:8px}
+  .item dt{font:600 10.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);display:flex;gap:8px;align-items:center;margin-top:4px}
+  .item dd{margin:0;font-size:14.5px;line-height:1.5;color:#16312D}
+  .item ul{margin:0;padding-left:18px}
+  .item li{margin:2px 0}
+  .pill{font:600 9.5px/1 var(--body);letter-spacing:.08em;padding:4px 7px;border-radius:999px;text-transform:uppercase}
+  .pill.ctx{background:#e3ecd3;color:#3e5a1e}
+  .pill.team{background:#dfe6f5;color:#243f7a}
+  .pill.idea{background:#f6e3bd;color:#7a5410}
+  .breeds{display:grid;gap:10px;margin-top:2px}
+  .breed{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+  .bsw{width:34px;height:34px;border-radius:50%;background:var(--b);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+  .bsw::after{content:"";position:absolute;right:3px;top:9px;width:13px;height:15px;border-radius:40%;background:var(--f)}
+  .breed b{font-weight:600}
+  .breed small{color:var(--ink-2);font-size:12px}
+  .breed p{margin:2px 0 0;font-size:13.5px;line-height:1.45}
+  .status{display:inline-flex;align-items:center;gap:6px;font:500 11.5px/1 var(--body);color:var(--ink-2);border:1px dashed rgba(7,47,42,.3);border-radius:999px;padding:6px 10px}
+  .status i{width:7px;height:7px;border-radius:50%;background:#e0a33a}
+  .empty{color:var(--ink-2);font-size:15px;line-height:1.55;margin:0}
+  footer{max-width:1500px;margin:0 auto;padding:0 clamp(16px,3vw,36px) 36px;font:400 12px/1.5 var(--body);color:var(--ink-2)}
+
+  @media (max-width:980px){
+    .layout{grid-template-columns:1fr}
+    .left{position:relative;height:auto}
+    .stage{height:64vh;flex:none}
+    .right{padding-top:4px}
+  }
+
+  /* rótulo com tracinho, como no site oficial */
+  .kick,.card .kicker{display:inline-flex;align-items:center;gap:10px;font-weight:800!important;letter-spacing:.16em!important}
+  .kick::before,.card .kicker::before{content:"";width:28px;height:2px;background:#7CC65E;flex:none}
+  h1,h2,h3{font-weight:800}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html"><img src="assets/logo-cidade-do-agro.png" alt="Cidade do Agro"><small>maquete digital · protótipo v0.3</small></a>
+  <nav style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+    <a class="btn" href="index.html">Maquete</a>
+    <a class="btn" href="campo-experimental.html" style="background:var(--ink);color:var(--bg)">Campo experimental</a>
+    <a class="btn" href="parceiros.html">Parceiros</a>
+  </nav>
+</header>
+
+<section class="layout">
+  <div class="left">
+    <div class="hero">
+      <div class="kick">Capão do Leão · RS · Pesquisa</div>
+      <h1>campo experimental</h1>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="scene"></canvas>
+      <div id="labels"></div>
+      <div class="tip" id="tip"></div>
+      <div id="loader">montando o campo…</div>
+      <div class="hud">
+        <span class="hint">arraste para girar · roda/pinça para zoom · passe o mouse nos animais</span>
+        <button class="btn" id="reset">Ver tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="intro">
+      <p>Oito setores em volta do hub, do arroz irrigado às oliveiras e parreiras. Clique numa fatia (ou nos botões) para abrir a ficha de cada cultura, raça e criação.</p>
+      <div class="note">
+        <span><i style="background:#3f63b0"></i>Setores e raças: informados pela equipe</span>
+        <span><i style="background:#7aa04a"></i>Contexto: informação geral</span>
+        <span><i style="background:#e0a33a"></i>Ideias de ensaio: sugestões, a confirmar</span>
+      </div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="panel" id="panel" aria-live="polite"></div>
+  </div>
+</section>
+
+<footer>Protótipo conceitual. O formato circular segue a representação do projeto publicada pela <a href="https://agfeed.com.br/esg/da-tragedia-das-enchentes-ao-desenvolvimento-gauchos-lancam-sementes-para-criar-a-cidade-do-agro-no-rs/" target="_blank" rel="noopener">AgFeed</a> (jun/2026). A posição de cada setor é ilustrativa; o layout real do campo ainda não foi divulgado.</footer>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* =========================================================
+   CONTEÚDO — edite aqui
+   Ordem = sentido horário a partir do topo. items: de dentro (perto do hub) para fora,
+   exceto quando outerFirst:true (o 1º item fica na faixa de fora).
+   ========================================================= */
+const GROUPS = [
+  { id:'arroz', name:'Arroz irrigado', short:'Arroz', color:'#D9C25A',
+    desc:'O carro-chefe da metade sul. Lavoura em várzea, com as taipas (curvas de nível) segurando a lâmina d’água.',
+    items:[{ id:'arroz', name:'Arroz irrigado', sci:'Oryza sativa',
+      why:'O Rio Grande do Sul responde por cerca de 70% do arroz do Brasil, e a metade sul concentra as grandes lavouras irrigadas.',
+      facts:['Irrigação por inundação, com lâmina d’água mantida por taipas construídas em nível','Semeadura direta ou em solo seco é o sistema mais comum no estado','Rotação com soja e pecuária ajuda no controle do arroz-vermelho e diversifica a renda'],
+      tests:'Cultivares, manejo da água e da adubação, redução de custo por hectare, rotação com soja e pecuária.' }]},
+  { id:'soja', name:'Soja em terras baixas', short:'Soja', color:'#8FA844',
+    desc:'A soja chegou às várzeas do arroz e mudou a paisagem: rotação que quebra ciclos de pragas e invasoras.',
+    items:[{ id:'soja', name:'Soja', sci:'Glycine max',
+      why:'Nos últimos anos a soja entrou nas terras baixas em rotação com o arroz, ajudando no controle de plantas daninhas e diversificando a renda.',
+      facts:['Solos de várzea são mal drenados: drenagem superficial é decisiva','Sulco-camalhão permite drenar e também irrigar quando falta chuva','Fixa nitrogênio, que fica para a cultura seguinte'],
+      tests:'Drenagem e sulco-camalhão, cultivares para solos mal drenados, época de semeadura.' }]},
+  { id:'gramineas', name:'Gramíneas de inverno', short:'Gramíneas', color:'#9CC45F',
+    desc:'No inverno o campo nativo para de crescer. As gramíneas anuais seguram o gado (e a palhada do plantio direto) até a primavera.',
+    items:[
+      { id:'azevem', name:'Azevém', sci:'Lolium multiflorum',
+        why:'Principal pastagem de inverno do RS: produtivo, ressemeia sozinho e combina bem com trevos e cornichão.',
+        tests:'Comparação de cultivares, adubação nitrogenada, consórcio com leguminosas.' },
+      { id:'aveiab', name:'Aveia branca', sci:'Avena sativa',
+        why:'Dupla aptidão: grão para alimentação humana e animal, ou forragem de inverno.',
+        tests:'Cultivares para grão e qualidade industrial, sistema pastejo + colheita de grão.' },
+      { id:'aveiap', name:'Aveia preta', sci:'Avena strigosa',
+        why:'Rústica e precoce, é a forrageira que abre o inverno e uma das principais plantas de cobertura do plantio direto.',
+        tests:'Produção de palha, supressão de invasoras, sucessão com soja e milho.' },
+    ]},
+  { id:'leguminosas', name:'Leguminosas forrageiras', short:'Leguminosas', color:'#C98BB0',
+    desc:'Com bactérias nas raízes, fixam nitrogênio do ar: pasto de mais qualidade com menos adubo.',
+    items:[
+      { id:'trevov', name:'Trevo vermelho', sci:'Trifolium pratense',
+        why:'Alto teor de proteína; costuma ser usado em consórcio com azevém.',
+        tests:'Persistência, inoculação, proporção ideal no consórcio.' },
+      { id:'trevob', name:'Trevo branco', sci:'Trifolium repens',
+        why:'Perene e rasteiro, se espalha por estolões e aguenta bem o pisoteio e o pastejo.',
+        tests:'Persistência sob pastejo, desempenho em terras baixas.' },
+      { id:'cornichao', name:'Cornichão', sci:'Lotus corniculatus',
+        why:'Tolera solos ácidos e de baixa fertilidade; seus taninos reduzem o risco de timpanismo nos animais.',
+        tests:'Produção de sementes, ressemeadura natural, manejo de pastejo.' },
+    ]},
+  { id:'pecuaria', name:'Pecuária', short:'Pecuária', color:'#B8906A', note:'por enquanto', outerFirst:true,
+    desc:'O Pampa sempre foi terra de criação. Ao lado das pastagens, os piquetes mostram na prática a integração entre pasto, lavoura e gado.',
+    items:[
+      { id:'bovinos', name:'Bovinos de corte', sci:'Bos taurus · raças britânicas e sintéticas',
+        why:'A pecuária de corte é a vocação histórica da região. Raças britânicas se adaptam bem ao frio do sul; as sintéticas somam a rusticidade do zebu.',
+        breeds:[
+          { name:'Hereford', origin:'Inglaterra', body:'#8A3B1F', face:'#F3EEE6', belly:true,
+            desc:'Vermelha de cara branca. Rústica, dócil e precoce; uma das raças mais tradicionais dos campos gaúchos.' },
+          { name:'Braford', origin:'Sintética · Hereford × Brahman', body:'#9A4A22', face:'#F3EEE6', hump:true,
+            desc:'Mantém a carne do Hereford e ganha, do zebu, tolerância ao calor e ao carrapato.' },
+          { name:'Angus', origin:'Escócia', body:'#1E1C1C',
+            desc:'Preta (ou vermelha, no Red Angus) e mocha. Famosa pelo marmoreio e por programas de carne certificada.' },
+          { name:'Brangus', origin:'Sintética · Angus × Brahman', body:'#262322', hump:true,
+            desc:'Preta e mocha; une a qualidade de carne do Angus à rusticidade do Brahman.' },
+          { name:'Montana', origin:'Composto racial', body:'#6E4A30', face:'#7A5538',
+            desc:'Composto que combina grupos biológicos (britânicos, continentais, adaptados e zebuínos), no modelo de compostos criado nos EUA. Foco em adaptação e eficiência a pasto.' },
+        ],
+        tests:'Integração lavoura-pecuária, recria em pastagens de inverno, cruzamentos, bem-estar animal.' },
+      { id:'ovinos', name:'Ovinos', sci:'Ovis aries · lã e carne',
+        why:'O RS é o maior produtor de lã do país, e a carne de cordeiro vem ganhando espaço.',
+        breeds:[
+          { name:'Ideal (Polwarth)', origin:'Austrália', body:'#EDE3CC', face:'#EFE8D8',
+            desc:'Lã fina e macia; uma das raças mais tradicionais das estâncias gaúchas.' },
+          { name:'Corriedale', origin:'Nova Zelândia', body:'#E6DCC5', face:'#F4F0E8',
+            desc:'Dupla aptidão, lã e carne. Por muito tempo foi a raça mais criada no RS.' },
+          { name:'Texel', origin:'Holanda (ilha de Texel)', body:'#F1ECE0', face:'#FBF8F2',
+            desc:'Raça de carne, com carcaça musculosa e magra; cara e pernas brancas, sem lã.' },
+        ],
+        more:'Outras raças (a confirmar): Merino Australiano, Suffolk, Crioula Lanada…',
+        tests:'Cordeiro precoce, controle de verminose, pastejo junto com bovinos.' },
+      { id:'equinos', name:'Equinos', sci:'Equus caballus · Crioulo',
+        why:'O Cavalo Crioulo é a raça símbolo do RS e parceiro da lida campeira.',
+        breeds:[
+          { name:'Crioulo', origin:'Pampa (Brasil, Uruguai, Argentina)', body:'#B99056', face:'#2E2118',
+            desc:'Descende dos cavalos ibéricos trazidos pelos colonizadores. Resistente, ágil e pouco exigente. Na maquete: gateado, tordilho, zaino, colorado e baio.' },
+        ],
+        tests:'Manejo, nutrição e uso no trabalho com o gado.' },
+    ]},
+  { id:'temperadas', name:'Frutíferas de clima temperado', short:'Temperadas', color:'#F2A9B8',
+    desc:'Precisam acumular horas de frio no inverno para florescer e produzir bem, e o sul do RS tem esse frio. Na maquete, os pessegueiros estão em flor.',
+    items:[
+      { id:'pessego', name:'Pessegueiro', sci:'Prunus persica',
+        why:'A região de Pelotas é o principal polo de pêssego para conserva do país.',
+        tests:'Cultivares por exigência de frio, poda e raleio, pós-colheita.' },
+      { id:'outrasT', name:'Outras temperadas', sci:'lista a definir',
+        why:'Ameixeira, pereira, mirtilo, noz-pecã e outras são exemplos de frutíferas de clima temperado cultivadas no sul. Quais entram no campo ainda está por confirmar.',
+        tests:'Vitrine de espécies e cultivares, calendário de colheita escalonado.' },
+    ]},
+  { id:'nativas', name:'Frutíferas nativas', short:'Nativas', color:'#E0795B',
+    desc:'Espécies do Pampa e da Mata Atlântica do sul, com sabor único e potencial econômico ainda pouco explorado.',
+    items:[
+      { id:'butia', name:'Butiá', sci:'Butia odorata',
+        why:'Palmeira símbolo do sul gaúcho, de folhas acinzentadas. Os frutos viram suco, licor, geleia e sorvete; os butiazais nativos estão ameaçados.',
+        tests:'Manejo e conservação de butiazais, produção de mudas, novos produtos.' },
+      { id:'araca', name:'Araçá', sci:'Psidium cattleyanum',
+        why:'Parente da goiaba, com frutos amarelos ou vermelhos ricos em vitamina C.',
+        tests:'Seleção de plantas produtivas, propagação, processamento.' },
+      { id:'pitanga', name:'Pitanga', sci:'Eugenia uniflora',
+        why:'Presente em quintais e matas do sul, com frutos aromáticos e ricos em antioxidantes.',
+        tests:'Pomar comercial, cultivares, polpa e derivados.' },
+      { id:'outrasN', name:'E outras nativas', sci:'lista a definir',
+        why:'Guabiroba, uvaia e goiaba-serrana (feijoa) são outras frutíferas nativas do sul do Brasil. Quais entram ainda está por confirmar.',
+        tests:'Coleção de nativas, vitrine para produtores e visitantes.' },
+    ]},
+  { id:'olivi', name:'Olivicultura & Vitivinicultura', short:'Oliveiras & Videiras', color:'#8A7AA0',
+    desc:'Duas culturas mediterrâneas que acharam casa na metade sul: azeite e vinho fino.',
+    items:[
+      { id:'oliveiras', name:'Oliveiras', sci:'Olea europaea',
+        why:'O Rio Grande do Sul lidera a produção de azeite de oliva no Brasil, com a metade sul na dianteira; o azeite gaúcho vem ganhando prêmios.',
+        facts:['Cultivares comuns no estado: Arbequina, Koroneiki, Picual, Frantoio'],
+        tests:'Comparação de cultivares, manejo de doenças, ponto de colheita e extração.' },
+      { id:'videiras', name:'Videiras', sci:'Vitis vinifera',
+        why:'A Campanha Gaúcha tem Indicação de Procedência para vinhos finos; verões secos e boa amplitude térmica favorecem a uva.',
+        facts:['Condução em espaldeira (fileiras com arames), como na maquete','Variedades comuns na região: Tannat, Cabernet Sauvignon, Merlot, Chardonnay'],
+        tests:'Variedades, porta-enxertos, manejo do dossel e da sanidade.' },
+    ]},
+];
+
+/* =========================================================
+   CHIPS + PAINEL
+   ========================================================= */
+const NG=GROUPS.length, pad2=n=>String(n).padStart(2,'0');
+const chips=document.getElementById('chips'), panel=document.getElementById('panel');
+GROUPS.forEach((g,gi)=>{ const c=document.createElement('button'); c.className='chip'; c.innerHTML=`<b>${pad2(gi+1)}</b><i style="background:${g.color}"></i>${g.short}`; c.onclick=()=>select(gi); chips.appendChild(c); });
+let cur=-1;
+function renderEmpty(){
+  const total=GROUPS.reduce((s,g)=>s+g.items.length,0);
+  panel.innerHTML=`<div class="kick">${NG} setores · ${total} culturas e criações</div><h2>Escolha um setor</h2>
+  <p class="empty">Cada fatia do círculo é um setor; dentro dela, cada faixa é uma cultura ou criação. Pastagens ficam ao lado dos animais, e as frutíferas ao lado das oliveiras e parreiras.</p>`;
+}
+function itemHTML(g,it,k,hl){
+  return `<article class="item${hl?' hl':''}" id="it-${it.id}">
+    <h3>${it.name}<em>${it.sci}</em></h3>
+    <dl><dt><span class="pill ctx">contexto</span></dt><dd>${it.why}</dd>
+    ${it.facts?`<dt><span class="pill ctx">destaques</span></dt><dd><ul>${it.facts.map(f=>`<li>${f}</li>`).join('')}</ul></dd>`:''}
+    ${it.breeds?`<dt><span class="pill team">raças</span></dt><dd><div class="breeds">${it.breeds.map(b=>`<div class="breed"><span class="bsw" style="--b:${b.body};--f:${b.face||b.body}"></span><div><b>${b.name}</b> <small>· ${b.origin}</small><p>${b.desc}</p></div></div>`).join('')}</div>${it.more?`<p style="margin:8px 0 0;font-size:13px;color:var(--ink-2)">${it.more}</p>`:''}</dd>`:''}
+    <dt><span class="pill idea">ideia de ensaio · a confirmar</span></dt><dd>${it.tests}</dd></dl></article>`;
+}
+function select(gi,ii,{fly=true}={}){
+  cur=gi; const g=GROUPS[gi];
+  [...chips.children].forEach((c,i)=>c.classList.toggle('on',i===gi));
+  wlEls.forEach((w,i)=>w.classList.toggle('on',i===gi));
+  panel.innerHTML=`<div class="top"><div class="kick">Setor ${pad2(gi+1)} / ${pad2(NG)}${g.note?' · '+g.note:''}</div>
+      <div class="nav"><button class="round" aria-label="Setor anterior" data-nav="-1">←</button><button class="round" aria-label="Próximo setor" data-nav="1">→</button></div></div>
+    <h2><span class="swatch" style="background:${g.color}"></span>${g.name}</h2><p class="lead">${g.desc}</p>
+    <div class="items">${g.items.map((it,k)=>itemHTML(g,it,k,k===ii)).join('')}</div>
+    <p style="margin:18px 0 0"><span class="status"><i></i>Setor informado pela equipe · detalhes a confirmar</span></p>`;
+  history.replaceState(null,'','#'+g.id+(ii!=null?'-'+ii:''));
+  highlight(gi);
+  if(fly) flyTo(gi);
+  if(ii!=null){ const t=document.getElementById('it-'+g.items[ii].id); t && t.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+}
+panel.addEventListener('click',e=>{ const b=e.target.closest('[data-nav]'); if(b) select((cur+ +b.dataset.nav+NG)%NG); });
+addEventListener('keydown',e=>{ if(cur<0) return; if(e.key==='ArrowRight') select((cur+1)%NG); if(e.key==='ArrowLeft') select((cur+NG-1)%NG); });
+
+/* =========================================================
+   3D
+   ========================================================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng=mulberry32(21), R=(a,b)=>a+(b-a)*rng(), pick=a=>a[Math.floor(rng()*a.length)];
+const D2R=Math.PI/180;
+const mc={}; const M=(c,o={})=>{const k=c+JSON.stringify(o); return mc[k]||(mc[k]=new THREE.MeshStandardMaterial({color:c,roughness:.88,flatShading:true,...o}));};
+
+const stage=document.getElementById('stage'), canvas=document.getElementById('scene');
+const BG=0xF2EEE7;
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setClearColor(BG);
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
+const scene=new THREE.Scene(); scene.fog=new THREE.Fog(BG,190,420);
+const camera=new THREE.PerspectiveCamera(34,1,.5,900);
+scene.add(new THREE.HemisphereLight(0xfff7e8,0x8a7a58,1.35));
+const sun=new THREE.DirectionalLight(0xfff0d4,2.7); sun.position.set(45,80,30); sun.castShadow=true;
+sun.shadow.mapSize.set(4096,4096); Object.assign(sun.shadow.camera,{left:-66,right:66,top:66,bottom:-66,near:5,far:220});
+sun.shadow.bias=-0.0004; sun.shadow.normalBias=0.03; scene.add(sun);
+
+const RIN=9, ROUT=50, GAP=1.3*D2R;
+const P=(r,a)=>[r*Math.cos(a), r*Math.sin(a)];
+const tangentRot=a=>Math.atan2(-Math.cos(a),-Math.sin(a));
+
+/* ---- ilha ---- */
+{ const top=new THREE.Mesh(new THREE.CylinderGeometry(ROUT+7,ROUT+6.4,5,120),[M('#9A7550'),M('#7A9A52'),M('#6E5238')]); top.position.y=-2.5; top.receiveShadow=true; scene.add(top);
+  const l2=new THREE.Mesh(new THREE.CylinderGeometry(ROUT+5.6,ROUT+4.4,4,120),M('#7C5C3E')); l2.position.y=-7; scene.add(l2);
+  const l3=new THREE.Mesh(new THREE.CylinderGeometry(ROUT+3.8,ROUT+1.5,4,120),M('#5F4630')); l3.position.y=-11; scene.add(l3);
+  const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d'); const gr=x.createRadialGradient(128,128,20,128,128,128); gr.addColorStop(0,'rgba(60,50,30,.35)'); gr.addColorStop(1,'rgba(60,50,30,0)'); x.fillStyle=gr; x.fillRect(0,0,256,256);
+  const sh=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false})); sh.rotation.x=-Math.PI/2; sh.position.y=-30; scene.add(sh); }
+
+function ring(r0,r1,a0,a1,color,y,mat){ const g=new THREE.RingGeometry(r0,r1,Math.max(8,Math.ceil((a1-a0)*r1/1.2)),1,-a1,a1-a0); g.rotateX(-Math.PI/2);
+  const m=new THREE.Mesh(g,mat||M(color)); m.position.y=y; m.receiveShadow=true; scene.add(m); return m; }
+ring(0,ROUT+2.4,0,Math.PI*2,'#D9D2BC',.01);                 // base de chão batido (caminhos)
+ring(ROUT+.4,ROUT+2.2,0,Math.PI*2,'#E2DCCB',.03);            // anel viário
+ring(RIN-1.2,RIN-.3,0,Math.PI*2,'#CFC6AE',.03);
+
+/* ---- instancing ---- */
+const INST={};
+function def(key,geo,mat){ INST[key]={geo,mat,arr:[]}; }
+function put(key,o){ INST[key].arr.push(o); }
+def('rice',   new THREE.ConeGeometry(.09,.7,4).translate(0,.35,0), M('#ffffff'));
+def('levee',  new THREE.BoxGeometry(1,.3,.5).translate(0,.15,0), M('#7F8B56'));
+def('soy',    new THREE.IcosahedronGeometry(.34,0), M('#ffffff'));
+def('tuft',   new THREE.ConeGeometry(.15,.5,4).translate(0,.25,0), M('#ffffff'));
+def('panicle',new THREE.IcosahedronGeometry(.09,0), M('#ffffff'));
+def('clump',  new THREE.IcosahedronGeometry(.3,0), M('#ffffff'));
+def('flower', new THREE.IcosahedronGeometry(.085,0), M('#ffffff',{roughness:.6}));
+def('post',   new THREE.CylinderGeometry(.06,.07,1,5).translate(0,.5,0), M('#8A6E4B'));
+def('wire',   new THREE.BoxGeometry(1,.03,.03), M('#A3A3A0'));
+def('trunk',  new THREE.CylinderGeometry(.09,.14,1,6).translate(0,.5,0), M('#6B4E33'));
+def('crown',  new THREE.IcosahedronGeometry(1,0), M('#ffffff'));
+def('palm',   new THREE.CylinderGeometry(.2,.27,1,7).translate(0,.5,0), M('#7A6C5B'));
+def('frond',  new THREE.BoxGeometry(1.5,.04,.3).translate(.75,0,0), M('#8FA392'));
+def('fruit',  new THREE.IcosahedronGeometry(.1,0), M('#ffffff',{roughness:.5}));
+def('hedge',  new THREE.BoxGeometry(1,.75,.38).translate(0,.375,0), M('#5B8A38'));
+def('grape',  new THREE.IcosahedronGeometry(.11,0), M('#4A2C5A',{roughness:.5}));
+def('euc',    new THREE.ConeGeometry(1,1,6).translate(0,.5,0), M('#56734A'));
+def('stone',  new THREE.BoxGeometry(1,.14,.3), M('#E9E3D1'));
+
+function polar(r0,r1,a0,a1,dr,ds,margin,cb){ let row=0; for(let r=r0+margin;r<=r1-margin+1e-6;r+=dr,row++){ const arc=(a1-a0)*r-2*margin; const n=Math.max(0,Math.floor(arc/ds)); const am=margin/r;
+  for(let k=0;k<=n;k++){ const a=n?a0+am+(k/n)*((a1-a0)-2*am):(a0+a1)/2; const [x,z]=P(r,a); cb(x,z,r,a,row,k); } } }
+const jit=(v)=>R(-v,v);
+
+function fenceArc(r,a0,a1){ const n=Math.max(2,Math.ceil((a1-a0)*r/1.8)); let prev=null; for(let k=0;k<=n;k++){ const a=a0+(a1-a0)*k/n; const [x,z]=P(r,a); put('post',{x,z,s:[1,.95,1]}); if(prev) wireSeg(prev,[x,z]); prev=[x,z]; } }
+function fenceRad(a,r0,r1){ const n=Math.max(2,Math.ceil((r1-r0)/1.8)); let prev=null; for(let k=0;k<=n;k++){ const [x,z]=P(r0+(r1-r0)*k/n,a); put('post',{x,z,s:[1,.95,1]}); if(prev) wireSeg(prev,[x,z]); prev=[x,z]; } }
+function wireSeg(p,q){ const dx=q[0]-p[0], dz=q[1]-p[1], l=Math.hypot(dx,dz); for(const y of [.45,.78]) put('wire',{x:(p[0]+q[0])/2,y,z:(p[1]+q[1])/2,ry:Math.atan2(-dz,dx),s:[l,1,1]}); }
+function tree(x,z,h,crownR,color,{sy=1}={}){ put('trunk',{x,z,s:[1,h,1]}); put('crown',{x,y:h+crownR*.6*sy,z,ry:R(0,6),s:[crownR,crownR*sy,crownR],c:color}); }
+
+/* ---- construtores por cultura ---- */
+const BUILD={
+  arroz(b){ const w=ring(b.r0,b.r1,b.a0,b.a1,null,.1,new THREE.MeshStandardMaterial({color:'#6FA3AE',roughness:.12,metalness:.1,transparent:true,opacity:.72})); w.receiveShadow=true; water.push(w);
+    for(let k=1;k<5;k++){ const rb=b.r0+(b.r1-b.r0)*k/5; const n=Math.ceil((b.a1-b.a0)*rb/.8); for(let i=0;i<=n;i++){ const a=b.a0+(b.a1-b.a0)*i/n, r=rb+Math.sin(a*9+k)*.9; const [x,z]=P(r,a); put('levee',{x,z,ry:tangentRot(a)+Math.cos(a*9+k)*.25}); } }
+    polar(b.r0,b.r1,b.a0,b.a1,.62,.5,.5,(x,z)=>put('rice',{x:x+jit(.08),z:z+jit(.08),ry:R(0,3),s:[1,R(.8,1.2),1],c:pick(['#6DAE3E','#78B845','#5FA238','#84BE4E'])})); },
+  soja(b){ polar(b.r0,b.r1,b.a0,b.a1,.95,.5,.6,(x,z)=>put('soy',{x,y:.3,z,ry:R(0,3),s:[1,R(.75,.95),1],c:pick(['#4E7D2D','#588A33','#46732A'])})); },
+  azevem(b){ polar(b.r0,b.r1,b.a0,b.a1,.5,.45,.4,(x,z)=>put('tuft',{x:x+jit(.15),z:z+jit(.15),ry:R(0,3),s:[1,R(.8,1.2),1],c:pick(['#7DBA4A','#89C454','#71AE42'])})); },
+  aveiab(b){ polar(b.r0,b.r1,b.a0,b.a1,.55,.5,.4,(x,z)=>{ const h=R(1.2,1.5); put('tuft',{x,z,ry:R(0,3),s:[.9,h,.9],c:pick(['#A7C267','#9DBB5E'])}); put('panicle',{x,y:h*.5+.05,z,c:'#DCD08E'}); }); },
+  aveiap(b){ polar(b.r0,b.r1,b.a0,b.a1,.5,.45,.4,(x,z)=>put('tuft',{x:x+jit(.1),z:z+jit(.1),ry:R(0,3),s:[1,R(1,1.3),1],c:pick(['#5E8E3A','#557F36','#6A7F46'])})); },
+  trevov(b){ clover(b,['#C9477A','#B8386B','#D25A8A']); },
+  trevob(b){ clover(b,['#F4F2EA','#FFFFFF','#EDEBE0']); },
+  cornichao(b){ clover(b,['#F2C230','#EDB21F','#F7D04A']); },
+  bovinos(b){ paddock(b); }, ovinos(b){ paddock(b); }, equinos(b){ paddock(b); },
+  pessego(b){ polar(b.r0,b.r1,b.a0,b.a1,2.5,2.3,1.3,(x,z)=>tree(x,z,.9,.95,pick(['#F2A7B8','#F5B5C3','#EE9CAF']),{sy:.8})); grass(b); },
+  outrasT(b){ polar(b.r0,b.r1,b.a0,b.a1,2.5,2.3,1.3,(x,z,r,a,row)=>{ const t=row%3; if(t===0) tree(x,z,.9,.85,pick(['#F4F1EC','#EFEBE2']),{sy:.85}); else if(t===1) tree(x,z,1.1,.8,pick(['#6E9A45','#628F3E'])); else { put('crown',{x,y:.45,z,s:[.55,.45,.55],c:'#5C7F6A'}); for(let i=0;i<4;i++) put('fruit',{x:x+jit(.4),y:R(.4,.8),z:z+jit(.4),s:.8,c:'#3B4E8C'}); } }); grass(b); },
+  butia(b){ polar(b.r0,b.r1,b.a0,b.a1,3.4,3.2,1.8,(x,z)=>{ const h=R(1.4,2.2); put('palm',{x,z,s:[1,h,1]}); for(let i=0;i<9;i++){ const phi=i/9*Math.PI*2+R(-.2,.2); put('frond',{x,y:h,z,ry:phi,rz:R(.15,.55),c:null}); } for(let i=0;i<2;i++) put('fruit',{x:x+jit(.3),y:h-.2,z:z+jit(.3),s:1.6,c:'#E8A33A'}); }); grass(b); },
+  araca(b){ shrubs(b,'#4E7A3A',['#E9C94A','#C8412E']); },
+  pitanga(b){ shrubs(b,'#3F6E33',['#C8321E','#A5221A']); },
+  outrasN(b){ shrubs(b,'#557F3E',['#E6B84A','#8A3A5A','#D8D06A']); },
+  oliveiras(b){ polar(b.r0,b.r1,b.a0,b.a1,2.6,2.5,1.4,(x,z)=>{ put('trunk',{x,z,rz:R(-.15,.15),s:[1.3,.9,1.3]}); put('crown',{x,y:1.35,z,ry:R(0,6),s:[1.05,.7,1.05],c:pick(['#8E9E7A','#97A585','#879877'])}); }); ring(b.r0,b.r1,b.a0,b.a1,'#B3A57C',.03); },
+  videiras(b){ ring(b.r0,b.r1,b.a0,b.a1,'#A08A64',.03);
+    for(let r=b.r0+.9;r<b.r1-.5;r+=1.55){ const n=Math.ceil((b.a1-b.a0-1.2/r)*r/.95); for(let i=0;i<=n;i++){ const a=b.a0+.6/r+(b.a1-b.a0-1.2/r)*i/n; const [x,z]=P(r,a); put('hedge',{x,y:.3,z,ry:tangentRot(a),s:[1.02,1,1]});
+        if(i%4===0) put('post',{x,z,s:[.9,1.25,.9]}); if(rng()<.5) put('grape',{x:x+jit(.3),y:.42,z:z+jit(.3)}); }
+      const [gx,gz]=[0,0]; } },
+};
+function clover(b,cols){ polar(b.r0,b.r1,b.a0,b.a1,.55,.5,.4,(x,z)=>{ put('clump',{x:x+jit(.12),y:.12,z:z+jit(.12),ry:R(0,3),s:[1,.55,1],c:pick(['#5E9A45','#6AA64D','#548F3E'])}); if(rng()<.55) put('flower',{x:x+jit(.15),y:.3,z:z+jit(.15),c:pick(cols)}); }); }
+function shrubs(b,leaf,fruits){ polar(b.r0,b.r1,b.a0,b.a1,2.2,2,1.1,(x,z)=>{ put('crown',{x,y:.8,z,ry:R(0,6),s:[.85,.8,.85],c:leaf}); for(let i=0;i<6;i++) put('fruit',{x:x+jit(.75),y:R(.5,1.25),z:z+jit(.75),c:pick(fruits)}); }); grass(b); }
+function grass(b){ polar(b.r0,b.r1,b.a0,b.a1,1.2,1.1,.6,(x,z)=>{ if(rng()<.5) put('tuft',{x:x+jit(.4),z:z+jit(.4),s:[1.1,.5,1.1],c:pick(['#7FA653','#8BB05B'])}); }); }
+function paddock(b){ fenceArc(b.r0+.35,b.a0+.5/b.r0,b.a1-.5/b.r0); fenceArc(b.r1-.35,b.a0+.5/b.r1,b.a1-.5/b.r1); fenceRad(b.a0+.5/b.r0,b.r0+.35,b.r1-.35); fenceRad(b.a1-.5/b.r0,b.r0+.35,b.r1-.35);
+  polar(b.r0,b.r1,b.a0,b.a1,1.1,1.1,.8,(x,z)=>{ if(rng()<.45) put('tuft',{x:x+jit(.4),z:z+jit(.4),s:[1.2,R(.4,.7),1.2],c:pick(['#6E9A48','#7FA653','#8FB35E'])}); });
+  const am=(b.a0+b.a1)/2, rm=(b.r0+b.r1)/2; const [tx,tz]=P(rm,b.a1-2.2/rm); tree(tx,tz,1.6,1.5,'#4C7B3B');
+  const [wx,wz]=P(b.r0+1.4,am); const tr=new THREE.Mesh(new THREE.BoxGeometry(1.6,.45,.7),M('#8C99A6',{metalness:.3})); tr.position.set(wx,.23,wz); tr.rotation.y=tangentRot(am); tr.castShadow=true; scene.add(tr);
+  const wt=new THREE.Mesh(new THREE.BoxGeometry(1.4,.05,.5),M('#6FA3C0',{roughness:.2})); wt.position.set(wx,.47,wz); wt.rotation.y=tangentRot(am); scene.add(wt); }
+
+/* ---- montagem das fatias ---- */
+const GROUND={arroz:'#6B5A40',soja:'#7B5F42',azevem:'#86AE55',aveiab:'#9DB85E',aveiap:'#6F9444',trevov:'#7DAA52',trevob:'#83B158',cornichao:'#8AAE50',
+  bovinos:'#92B45F',ovinos:'#98B863',equinos:'#8FB05C',pessego:'#88A860',outrasT:'#8DAA62',butia:'#A2A56A',araca:'#86A55C',pitanga:'#80A058',outrasN:'#8AA75E',oliveiras:'#A99C74',videiras:'#9C8662'};
+const bandMeshes=[], bands=[], water=[], wedgeInfo=[];
+GROUPS.forEach((g,gi)=>{
+  const ca=(-90+gi*360/NG)*D2R, half=180/NG*D2R, a0=ca-half+GAP, a1=ca+half-GAP, n=g.items.length, bw=(ROUT-RIN)/n;
+  wedgeInfo.push({ca,a0,a1});
+  g.items.forEach((it,ii)=>{
+    const k=g.outerFirst?n-1-ii:ii, r0=RIN+k*bw+(k?.3:0), r1=RIN+(k+1)*bw-(k<n-1?.3:0);
+    const mat=new THREE.MeshStandardMaterial({color:GROUND[it.id]||'#86A955',roughness:.95,flatShading:true,emissive:'#7CC65E',emissiveIntensity:0});
+    const m=ring(r0,r1,a0,a1,null,.02,mat); m.userData={gi,ii}; bandMeshes.push(m);
+    const b={r0,r1,a0,a1,gi,ii,it}; bands.push(b); (BUILD[it.id]||(()=>{}))(b);
+  });
+  // caminho radial (divisa entre fatias)
+  const pa=ca+half; for(let r=RIN+.5;r<ROUT;r+=1.05){ const [x,z]=P(r,pa); put('stone',{x,y:.05,z,ry:-pa,s:[.95,1,1.9]}); }
+});
+
+/* ---- hub central ---- */
+{ ring(0,RIN-1.2,0,Math.PI*2,'#EAE4D3',.04);
+  const dome=new THREE.Mesh(new THREE.SphereGeometry(4.2,32,14,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:'#EAF2F5',roughness:.15,metalness:.1,transparent:true,opacity:.9})); scene.add(dome);
+  const ribs=new THREE.Mesh(new THREE.SphereGeometry(4.24,14,7,0,Math.PI*2,0,Math.PI/2),new THREE.MeshBasicMaterial({color:'#9FB0BE',wireframe:true})); scene.add(ribs);
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(4.4,4.5,.35,40),M('#F5F3EC')); base.position.y=.17; scene.add(base);
+  for(let i=0;i<8;i++){ const a=(i+.5)/8*Math.PI*2; const [x,z]=P(6.6,a); const bench=new THREE.Mesh(new THREE.BoxGeometry(1.2,.3,.4),M('#C9B08A')); bench.position.set(x,.2,z); bench.rotation.y=tangentRot(a); scene.add(bench); }
+  const mast=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,7,6),M('#5A6270')); mast.position.set(3,3.5,-4.8); scene.add(mast);
+  const vane=new THREE.Mesh(new THREE.BoxGeometry(.9,.5,.05),M('#7CC65E')); vane.position.set(3.45,6.6,-4.8); scene.add(vane);
+}
+/* ---- quebra-vento em volta ---- */
+for(let a=0;a<Math.PI*2;a+=.075){ if(rng()<.18) continue; const r=ROUT+4.6+R(-.5,.5); const [x,z]=P(r,a); const h=R(4,6.5); put('trunk',{x,z,s:[.8,h*.4,.8]}); put('euc',{x,y:h*.3,z,s:[R(.8,1.1),h*.75,R(.8,1.1)]}); }
+
+/* ---- instanciar tudo ---- */
+for(const key in INST){ const {geo,mat,arr}=INST[key]; if(!arr.length) continue;
+  const im=new THREE.InstancedMesh(geo,mat,arr.length); const m=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),s=new THREE.Vector3(),p=new THREE.Vector3(),c=new THREE.Color(); const hasC=arr.some(o=>o.c);
+  arr.forEach((o,i)=>{ e.set(o.rx||0,o.ry||0,o.rz||0); q.setFromEuler(e); p.set(o.x,o.y||0,o.z); const sc=o.s??1; typeof sc==='number'?s.set(sc,sc,sc):s.set(sc[0],sc[1],sc[2]); m.compose(p,q,s); im.setMatrixAt(i,m); if(hasC){ c.set(o.c||'#ffffff'); if(!o.c&&key==='frond') c.set('#8FA392'); im.setColorAt(i,c);} });
+  if(key==='frond'&&hasC) im.material=M('#ffffff');
+  im.castShadow=key!=='stone'&&key!=='wire'; im.receiveShadow=true; scene.add(im); }
+
+/* =========================================================
+   ANIMAIS
+   ========================================================= */
+function box(g,s,p,mat,rz=0){ const m=new THREE.Mesh(new THREE.BoxGeometry(...s),mat); m.position.set(...p); m.rotation.z=rz; m.castShadow=true; g.add(m); return m; }
+function cow(b){ const g=new THREE.Group(), body=M(b.body), face=M(b.face||b.body);
+  box(g,[1.7,.85,.78],[0,1.05,0],body);
+  if(b.belly){ box(g,[1.1,.18,.7],[.1,.66,0],face); box(g,[.3,.5,.72],[.72,.95,0],face); }
+  if(b.hump) box(g,[.36,.28,.42],[.55,1.58,0],body);
+  box(g,[.5,.5,.44],[1.05,1.18,0],face); box(g,[.22,.24,.34],[1.36,1.04,0],M('#3a2d2a'));
+  for(const s of [-1,1]) box(g,[.1,b.hump?.26:.12,.3],[1,b.hump?1.2:1.38,s*.34],body,b.hump?0:0);
+  for(const [x,z] of [[.62,.26],[.62,-.26],[-.62,.26],[-.62,-.26]]) box(g,[.18,.66,.18],[x,.33,z],b.belly?face:body);
+  box(g,[.06,.62,.06],[-.88,.82,0],body);
+  return g; }
+function sheep(b){ const g=new THREE.Group(); const wool=new THREE.Mesh(new THREE.IcosahedronGeometry(.55,1),M(b.body,{roughness:1})); wool.scale.set(1.35,.9,1); wool.position.y=.78; wool.castShadow=true; g.add(wool);
+  const big=b.name==='Texel'; box(g,[big?.36:.3,big?.34:.3,big?.3:.26],[.78,.9,0],M(b.face));
+  for(const s of [-1,1]) box(g,[.08,.06,.2],[.72,1.02,s*.2],M(b.face));
+  for(const [x,z] of [[.35,.2],[.35,-.2],[-.35,.2],[-.35,-.2]]) box(g,[.1,.46,.1],[x,.23,z],M(big?'#F4F1EA':'#E4DDCF'));
+  return g; }
+const COATS=[{n:'gateado',b:'#B99056',m:'#2E2118'},{n:'tordilho',b:'#B6B6B1',m:'#6d6d6d'},{n:'zaino',b:'#4A2A1A',m:'#1d120c'},{n:'colorado',b:'#8E4A26',m:'#3a1d10'},{n:'baio',b:'#D4B06F',m:'#5a3d1e'}];
+function horse(c){ const g=new THREE.Group(), body=M(c.b), mane=M(c.m);
+  box(g,[1.5,.62,.5],[0,1.3,0],body); box(g,[.32,.8,.3],[.78,1.72,0],body,-.5); box(g,[.08,.7,.1],[.66,1.82,0],mane,-.5);
+  box(g,[.56,.25,.25],[1.12,1.98,0],body,-.8);
+  for(const [x,z] of [[.58,.17],[.58,-.17],[-.58,.17],[-.58,-.17]]) box(g,[.14,.98,.14],[x,.49,z],c.n==='gateado'?mane:body);
+  box(g,[.1,.75,.14],[-.82,1.05,0],mane,.35);
+  return g; }
+
+const animals=[], pickables=[];
+function herd(bandId,list){ const b=bands.find(x=>x.it.id===bandId); if(!b) return; const span=b.a1-b.a0;
+  list.forEach((grp,gi)=>{ const anchor=b.a0+span*(gi+.5)/list.length;
+    for(let i=0;i<grp.n;i++){ const g=grp.make(i); const rm=R(b.r0+1.8,b.r1-1.8), a=anchor+R(-1,1)*span/list.length*.35; const [x,z]=P(rm,a); g.position.set(x,0,z); g.rotation.y=R(0,6);
+      g.userData.tip=grp.tip(i); scene.add(g); pickables.push(g);
+      animals.push({g,b,anchor,spread:span/list.length*.4,tx:x,tz:z,wait:R(0,4),speed:grp.speed,heading:g.rotation.y}); } }); }
+const bov=GROUPS.find(g=>g.id==='pecuaria').items;
+herd('bovinos',bov[0].breeds.map(br=>({n:3,speed:.7,make:()=>{const g=cow(br); g.scale.setScalar(R(.92,1.05)); return g;},tip:()=>`${br.name}<small>bovino · ${br.origin}</small>`})));
+herd('ovinos',bov[1].breeds.map(br=>({n:4,speed:.6,make:()=>sheep(br),tip:()=>`${br.name}<small>ovino · ${br.origin}</small>`})));
+herd('equinos',[{n:5,speed:.9,make:i=>horse(COATS[i%COATS.length]),tip:i=>`Crioulo · ${COATS[i%COATS.length].n}<small>equino</small>`}]);
+
+function updateAnimals(dt){ animals.forEach(o=>{ const p=o.g.position;
+  if(o.wait>0){ o.wait-=dt; if(o.wait<=0){ const a=o.anchor+R(-1,1)*o.spread, r=R(o.b.r0+1.6,o.b.r1-1.6); [o.tx,o.tz]=P(r,a); } return; }
+  const dx=o.tx-p.x, dz=o.tz-p.z, d=Math.hypot(dx,dz); if(d<.1){ o.wait=R(2,7); return; }
+  const h=Math.atan2(-dz,dx); let dh=h-o.heading; dh=Math.atan2(Math.sin(dh),Math.cos(dh)); o.heading+=dh*Math.min(1,dt*3); o.g.rotation.y=o.heading;
+  if(Math.abs(dh)<.6){ const st=Math.min(d,o.speed*dt); p.x+=dx/d*st; p.z+=dz/d*st; } }); }
+
+/* =========================================================
+   CÂMERA, INTERAÇÃO, RÓTULOS
+   ========================================================= */
+const controls=new OrbitControls(camera,canvas);
+controls.enableDamping=true; controls.dampingFactor=.08; controls.maxPolarAngle=1.36; controls.minDistance=10; controls.maxDistance=230;
+controls.autoRotate=!matchMedia('(prefers-reduced-motion: reduce)').matches; controls.autoRotateSpeed=.35;
+const HOME={pos:new THREE.Vector3(0,100,112),tgt:new THREE.Vector3(0,0,3)};
+camera.position.copy(HOME.pos); controls.target.copy(HOME.tgt);
+let fly=null;
+function flyTo(gi){ const {ca}=wedgeInfo[gi]; const rc=(RIN+ROUT)/2+1; const c=new THREE.Vector3(rc*Math.cos(ca),0,rc*Math.sin(ca));
+  const out=new THREE.Vector3(Math.cos(ca),0,Math.sin(ca)); const pos=c.clone().addScaledVector(out,40).add(new THREE.Vector3(0,40,0));
+  fly={pos,tgt:c}; controls.autoRotate=false; }
+document.getElementById('reset').onclick=()=>{ fly={pos:HOME.pos.clone(),tgt:HOME.tgt.clone()}; cur=-1; highlight(-1); renderEmpty(); [...chips.children].forEach(c=>c.classList.remove('on')); wlEls.forEach(w=>w.classList.remove('on')); history.replaceState(null,'',location.pathname); };
+controls.addEventListener('start',()=>{ fly=null; controls.autoRotate=false; });
+
+function highlight(gi){ bandMeshes.forEach(m=>{ m.material.emissiveIntensity=m.userData.gi===gi?.14:0; }); }
+
+const labelsEl=document.getElementById('labels');
+const wlEls=GROUPS.map((g,gi)=>{ const b=document.createElement('button'); b.className='wl'; b.innerHTML=`<span class="n" style="background:${g.color}">${pad2(gi+1)}</span>${g.short}`; b.onclick=()=>select(gi); labelsEl.appendChild(b); return b; });
+const wlPos=wedgeInfo.map(w=>new THREE.Vector3((ROUT+1)*Math.cos(w.ca),3,(ROUT+1)*Math.sin(w.ca)));
+
+const ray=new THREE.Raycaster(), ptr=new THREE.Vector2(); let hoverBand=null, down=null;
+const tip=document.getElementById('tip');
+canvas.addEventListener('pointermove',e=>{ const r=canvas.getBoundingClientRect(); ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(ptr,camera);
+  const ha=ray.intersectObjects(pickables,true)[0];
+  if(ha){ let o=ha.object; while(o && !o.userData.tip) o=o.parent; tip.innerHTML=o.userData.tip; tip.style.opacity=1; tip.style.transform=`translate(${e.clientX-r.left+14}px,${e.clientY-r.top-10}px)`; }
+  else tip.style.opacity=0;
+  const hb=ray.intersectObjects(bandMeshes,false)[0]; const nb=hb?hb.object:null;
+  if(nb!==hoverBand){ if(hoverBand && hoverBand.userData.gi!==cur) hoverBand.material.emissiveIntensity=0; hoverBand=nb; if(nb && nb.userData.gi!==cur) nb.material.emissiveIntensity=.07; }
+  canvas.classList.toggle('hover',!!(nb||ha)); });
+canvas.addEventListener('pointerleave',()=>{ tip.style.opacity=0; });
+canvas.addEventListener('pointerdown',e=>{ down=[e.clientX,e.clientY]; });
+canvas.addEventListener('pointerup',e=>{ if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5) return; if(hoverBand) select(hoverBand.userData.gi,hoverBand.userData.ii); });
+
+function resize(){ const w=stage.clientWidth, h=stage.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stage); resize();
+
+const clock=new THREE.Clock(), tmp=new THREE.Vector3(); let t=0;
+function frame(){ const dt=Math.min(clock.getDelta(),.05); t+=dt;
+  if(fly){ const k=1-Math.exp(-dt*3.2); camera.position.lerp(fly.pos,k); controls.target.lerp(fly.tgt,k); if(camera.position.distanceTo(fly.pos)<.3) fly=null; }
+  controls.update(); updateAnimals(dt);
+  water.forEach(w=>w.material.opacity=.68+Math.sin(t*1.3)*.05);
+  const W=stage.clientWidth,H=stage.clientHeight;
+  wlPos.forEach((v,i)=>{ tmp.copy(v).project(camera); const vis=tmp.z<1; const el=wlEls[i]; el.style.opacity=vis?1:0; el.style.transform=`translate(${(tmp.x*.5+.5)*W}px,${(-tmp.y*.5+.5)*H}px) translate(-50%,-50%)`; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+frame(); document.getElementById('loader').classList.add('gone');
+
+// abrir por link: #arroz, #pecuaria-1 …
+const mh=location.hash.slice(1).match(/^([a-z]+)(?:-(\d+))?$/); const gi0=mh?GROUPS.findIndex(g=>g.id===mh[1]):-1;
+if(gi0>=0) select(gi0,mh[2]!=null?+mh[2]:undefined); else renderEmpty();
+window.select=select;
+</script>
+</body>
+</html>

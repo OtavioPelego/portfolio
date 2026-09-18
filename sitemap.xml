@@ -82,8 +82,13 @@
   </url>
   <url>
     <loc>https://otaviopelego.pages.dev/websites/</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-09-18</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://otaviopelego.pages.dev/websites/cidade-do-agro/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://otaviopelego.pages.dev/workflows/</loc>

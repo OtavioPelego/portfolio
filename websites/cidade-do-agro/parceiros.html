@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parceiros — Cidade do Agro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2EEE7; --paper:#FBF9F4; --post:#DCDEC7; --ink:#072F2A; --ink-2:#5E6B66; --deep:#0E4038; --acc:#7CC65E;
+    --line:rgba(7,47,42,.14); --display:'Manrope',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px clamp(16px,3vw,36px);flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+  .brand img{height:46px;display:block}
+  .brand small{font:500 12px/1.3 var(--body);color:var(--ink-2);border-left:1px solid var(--line);padding-left:14px}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  .btn{font:500 13px/1 var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+  .btn:hover{background:rgba(7,47,42,.06)}
+  .btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+  .hero{max-width:1300px;margin:0 auto;padding:clamp(24px,6vh,64px) clamp(16px,3vw,36px) 18px;display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:end}
+  .kick{font:600 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(52px,8.4vw,128px);line-height:.86;letter-spacing:-.055em;margin:14px 0 18px}
+  .hero p{max-width:560px;font-size:17px;line-height:1.55;margin:0;color:#16312D}
+  .count{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px 26px}
+  .count .big{font-family:var(--display);font-weight:800;font-size:clamp(56px,6vw,84px);line-height:.9;letter-spacing:-.04em}
+  .count .big span{color:var(--acc)}
+  .count .big small{font-size:.42em;letter-spacing:-.01em;opacity:.7;font-weight:700}
+  .count p{margin:10px 0 14px;font-size:14px;line-height:1.45;color:rgba(242,238,231,.82)}
+  .bar{height:10px;border-radius:999px;background:rgba(242,238,231,.16);overflow:hidden;display:flex;gap:2px}
+  .bar i{flex:1;background:rgba(242,238,231,.14)}
+  .bar i.on{background:var(--acc)}
+
+  .tools{max-width:1300px;margin:0 auto;padding:18px clamp(16px,3vw,36px) 6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .tools .lbl{font:600 10.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-right:6px}
+  .chip{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font:500 13px/1 var(--body);padding:9px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(251,249,244,.6)}
+  .chip b{font-weight:600;font-size:11px;color:var(--ink-2)}
+  .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip.on b{color:var(--acc)}
+  .chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  .grid{max-width:1300px;margin:0 auto;padding:14px clamp(16px,3vw,36px) 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+  .card{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .25s,box-shadow .25s;position:relative}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(7,47,42,.14)}
+  .card:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+  .card .logo{background:var(--post);border-bottom:6px solid var(--deep);height:150px;display:grid;place-items:center;padding:24px 28px;position:relative}
+  .card .logo img{max-width:100%;max-height:92px;object-fit:contain}
+  .card .dia{position:absolute;top:10px;right:12px;display:flex;align-items:center;gap:5px;font:600 10px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--deep);background:rgba(251,249,244,.85);padding:5px 8px;border-radius:999px}
+  .card .dia svg{width:12px;height:12px}
+  .card .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .card .area{font:600 10.5px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:#1E5B4E}
+  .card h2{font-family:var(--display);font-weight:800;font-size:25px;letter-spacing:-.03em;line-height:1;margin:0}
+  .card q{font:italic 500 15px/1.4 var(--body);color:#16312D}
+  .card .more{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font:500 12px/1 var(--body);color:var(--ink-2);padding-top:6px}
+  .card .more span:last-child{font-weight:600;color:var(--ink)}
+
+  .ghost{border:1.5px dashed rgba(7,47,42,.22);border-radius:20px;min-height:120px;display:grid;place-items:center;text-align:center;padding:16px;color:var(--ink-2);font:500 12.5px/1.4 var(--body)}
+  .ghost b{display:block;font-family:var(--display);font-size:22px;color:rgba(7,47,42,.28);letter-spacing:-.02em}
+  .ghost.first{grid-column:span 2;background:rgba(251,249,244,.5)}
+  .ghost.first b{color:var(--ink);font-size:24px}
+  .empty{grid-column:1/-1;text-align:center;color:var(--ink-2);padding:40px}
+
+  dialog{border:none;border-radius:24px;padding:0;max-width:min(1040px,94vw);width:100%;background:var(--paper);color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.3)}
+  dialog::backdrop{background:rgba(7,47,42,.55);backdrop-filter:blur(4px)}
+  .dlg{display:grid;grid-template-columns:1fr 1fr;max-height:90vh}
+  .dlg .art{background:var(--post);display:grid;place-items:center}
+  .dlg .art img{width:100%;height:100%;object-fit:contain;display:block;max-height:90vh}
+  .dlg .txt{padding:28px 30px;overflow:auto;position:relative}
+  .dlg h3{font-family:var(--display);font-weight:800;font-size:36px;letter-spacing:-.035em;line-height:1;margin:10px 0 14px}
+  .dlg .cap{white-space:pre-line;font-size:15px;line-height:1.6;color:#16312D;margin:0 0 18px}
+  .dlg .cap .h{color:#1E5B4E;font-weight:600}
+  .dlg .cap .at{color:var(--deep);font-weight:600}
+  .dlg .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .dlg .close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--paper);cursor:pointer;font-size:18px;color:var(--ink)}
+  .dlg .nav{display:flex;gap:6px;margin-top:4px}
+  .src{font:500 11.5px/1.4 var(--body);color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px;margin-top:16px}
+
+  footer{max-width:1300px;margin:0 auto;padding:0 clamp(16px,3vw,36px) 40px;font:400 12px/1.5 var(--body);color:var(--ink-2)}
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr}
+    .ghost.first{grid-column:auto}
+    .dlg{grid-template-columns:1fr;max-height:none}
+    .dlg .art img{max-height:50vh}
+    .brand small{display:none}
+  }
+
+  /* rótulo com tracinho, como no site oficial */
+  .kick,.card .kicker{display:inline-flex;align-items:center;gap:10px;font-weight:800!important;letter-spacing:.16em!important}
+  .kick::before,.card .kicker::before{content:"";width:28px;height:2px;background:#7CC65E;flex:none}
+  h1,h2,h3{font-weight:800}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html"><img src="assets/logo-cidade-do-agro.png" alt="Cidade do Agro"><small>maquete digital<br>protótipo v0.3</small></a>
+  <nav>
+    <a class="btn" href="index.html">Maquete</a>
+    <a class="btn" href="campo-experimental.html">Campo experimental</a>
+    <a class="btn on" href="parceiros.html" aria-current="page">Parceiros</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="kick">Negócios · Metade Sul do RS</div>
+    <h1>quem já está<br>no campo</h1>
+    <p>Empresas que se juntaram à Cidade do Agro para desenvolver as cadeias produtivas do sul do estado. Toque num cartão para ver o post completo.</p>
+  </div>
+  <div class="count" id="count"></div>
+</section>
+
+<div class="tools" id="tools"></div>
+<main class="grid" id="grid"></main>
+
+<dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
+
+<footer>Conteúdo dos posts oficiais do Instagram <a href="https://www.instagram.com/cidadedoagro_/" target="_blank" rel="noopener">@cidadedoagro_</a>, coletado em set/2026. Logos e marcas pertencem às respectivas empresas.</footer>
+
+<script src="dados/empresas.js"></script>
+<script>
+const E=window.EMPRESAS||[], META=window.CIDADE_DO_AGRO||{totalOficiais:E.length};
+const TOTAL=Math.max(META.totalOficiais,E.length);
+const SELOS={
+  diamante:{nome:'diamante',svg:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 2.5h8l2.5 3.5L8 13.5 1.5 6z"/><path d="M1.5 6h13M6 2.5 5 6l3 7.5L11 6l-1-3.5"/></svg>'},
+  estrela:{nome:'estrela',svg:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#E9CF7A" stroke="#B8923A" stroke-width="1.2"/><path d="M8 3.8l1.2 2.6 2.8.3-2.1 1.9.6 2.8L8 10l-2.5 1.4.6-2.8L4 6.7l2.8-.3z" fill="#9A7424"/></svg>'},
+};
+const selo=e=>SELOS[e.selo]?`<span class="dia" title="Ícone de ${SELOS[e.selo].nome} no post — categoria de parceria a confirmar">${SELOS[e.selo].svg}${SELOS[e.selo].nome}</span>`:'';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// contador
+document.getElementById('count').innerHTML=`
+  <div class="big"><span>${E.length}</span> <small>de</small> ${TOTAL}</div>
+  <p>empresas oficiais apresentadas aqui, de ${TOTAL} anunciadas nos posts até agora. A lista cresce a cada post novo.</p>
+  <div class="bar">${Array.from({length:TOTAL},(_,i)=>`<i class="${i<E.length?'on':''}"></i>`).join('')}</div>`;
+
+// filtros
+const areas=[...new Set(E.map(e=>e.area))];
+let filtro=null;
+const tools=document.getElementById('tools');
+function renderTools(){
+  tools.innerHTML=`<span class="lbl">Área</span>`+[[null,'Todas',E.length],...areas.map(a=>[a,a,E.filter(e=>e.area===a).length])]
+    .map(([k,l,n])=>`<button class="chip${filtro===k?' on':''}" data-a="${k===null?'':esc(k)}">${esc(l)} <b>${n}</b></button>`).join('');
+}
+tools.addEventListener('click',ev=>{ const b=ev.target.closest('.chip'); if(!b) return; filtro=b.dataset.a||null; renderTools(); renderGrid(); });
+
+// cartões
+const grid=document.getElementById('grid');
+function renderGrid(){
+  const list=E.filter(e=>!filtro||e.area===filtro);
+  let html=list.map(e=>`
+    <button class="card" data-id="${e.id}" aria-label="${esc(e.nome)} — abrir post">
+      <div class="logo"><img src="${esc(e.logo)}" alt="${esc(e.nome)}">${selo(e)}</div>
+      <div class="body"><div class="area">${esc(e.area)}</div><h2>${esc(e.nome)}</h2>${e.frase?`<q>${esc(e.frase)}</q>`:`<p style="margin:0;font-size:14px;line-height:1.45;color:var(--ink-2)">${esc(e.texto)}</p>`}
+        <div class="more"><span>Post ${String(e.post).padStart(2,'0')}</span><span>ver post →</span></div></div>
+    </button>`).join('');
+  if(!list.length) html=`<p class="empty">Nenhuma empresa nesta área ainda.</p>`;
+  if(!filtro){ const rest=TOTAL-E.length;
+    if(rest>0){ html+=`<div class="ghost first"><div><b>+${rest} empresas</b>já anunciadas, entrando aqui conforme os posts forem coletados</div></div>`;
+      html+=Array.from({length:Math.min(rest,10)},(_,i)=>`<div class="ghost"><div><b>${String(E.length+i+1).padStart(2,'0')}</b>em breve</div></div>`).join(''); } }
+  grid.innerHTML=html;
+}
+grid.addEventListener('click',ev=>{ const c=ev.target.closest('.card'); if(c) open(c.dataset.id); });
+
+// modal
+const dlg=document.getElementById('dlg');
+function fmt(t){ return esc(t).replace(/#[\wÀ-ú]+/g,m=>`<span class="h">${m}</span>`).replace(/@[\w.]+/g,m=>`<span class="at">${m}</span>`); }
+function open(id){
+  const i=E.findIndex(e=>e.id===id), e=E[i]; if(!e) return;
+  dlg.innerHTML=`<div class="dlg">
+    <div class="art"><img src="${esc(e.arte)}" alt="Arte do post ${e.post}: ${esc(e.nome)}"></div>
+    <div class="txt">
+      <button class="close" aria-label="Fechar" data-close>×</button>
+      <div class="kick">Post ${String(e.post).padStart(2,'0')} · ${esc(e.area)}</div>
+      <h3 id="dlgTitle">${esc(e.nome)}</h3>
+      <div class="meta">
+        ${e.instagram?`<a class="btn" href="https://www.instagram.com/${esc(e.instagram)}/" target="_blank" rel="noopener">@${esc(e.instagram)}</a>`:''}
+        <a class="btn" href="https://www.instagram.com/cidadedoagro_/" target="_blank" rel="noopener">@cidadedoagro_</a>
+      </div>
+      <p class="kick" style="margin:18px 0 8px">Legenda</p>
+      <p class="cap">${fmt(e.legenda)}</p>
+      <div class="nav"><button class="btn" data-go="${(i+E.length-1)%E.length}">← anterior</button><button class="btn" data-go="${(i+1)%E.length}">próxima →</button></div>
+      <p class="src">Arte e legenda do post oficial no Instagram @cidadedoagro_.${SELOS[e.selo]?` O ícone de ${SELOS[e.selo].nome} aparece no post; a categoria de parceria ainda está a confirmar.`:''}</p>
+    </div></div>`;
+  if(!dlg.open) dlg.showModal();
+  history.replaceState(null,'','#'+e.id);
+}
+dlg.addEventListener('click',ev=>{
+  if(ev.target===dlg||ev.target.closest('[data-close]')){ dlg.close(); return; }
+  const g=ev.target.closest('[data-go]'); if(g) open(E[+g.dataset.go].id);
+});
+dlg.addEventListener('close',()=>history.replaceState(null,'',location.pathname));
+addEventListener('keydown',ev=>{ if(!dlg.open) return; const i=E.findIndex(e=>'#'+e.id===location.hash); if(i<0) return;
+  if(ev.key==='ArrowRight') open(E[(i+1)%E.length].id); if(ev.key==='ArrowLeft') open(E[(i+E.length-1)%E.length].id); });
+
+renderTools(); renderGrid();
+if(location.hash) open(location.hash.slice(1));
+</script>
+</body>
+</html>

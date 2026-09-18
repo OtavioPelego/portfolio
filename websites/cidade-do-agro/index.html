@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cidade do Agro — maquete digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2EEE7;
+    --ink:#072F2A;
+    --ink-2:#5E6B66;
+    --acc:#7CC65E;
+    --line:rgba(7,47,42,.14);
+    --glass:rgba(251,249,244,.84);
+    --display:'Manrope', system-ui, sans-serif;
+    --body:'Inter', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-snap-type:y proximity}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  body.explore{overflow:hidden}
+  a{color:inherit}
+
+  #scene{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:default}
+  body.explore #scene{cursor:grab}
+  body.explore #scene:active{cursor:grabbing}
+
+  .sec{height:100vh;scroll-snap-align:start}
+
+  /* ---------- header ---------- */
+  header{position:fixed;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:22px clamp(16px,3vw,36px);z-index:20;pointer-events:none}
+  header > *{pointer-events:auto}
+  .brand{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.04em;line-height:1;text-decoration:none;cursor:pointer}
+  .brand img{height:46px;display:block}
+  .brand small{display:block;font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:0;margin-top:8px;color:var(--ink-2)}
+  nav.top{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  nav.top button, .btn{font:500 13px/1 var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 13px;cursor:pointer;transition:background .2s,border-color .2s}
+  nav.top button:hover, .btn:hover{background:rgba(7,47,42,.06)}
+  nav.top button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .btn.primary:hover{background:#1E5B4E}
+
+  /* ---------- rail ---------- */
+  .rail{position:fixed;left:clamp(16px,2vw,28px);top:50%;transform:translateY(-50%);z-index:15;display:flex;flex-direction:column;gap:14px}
+  .rail button{all:unset;display:flex;align-items:center;gap:10px;cursor:pointer;height:12px}
+  .rail .dot{width:6px;height:6px;border-radius:50%;background:rgba(7,47,42,.28);transition:all .25s;margin-left:3px}
+  .rail .lbl{font:600 10px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateX(-4px);transition:all .25s;white-space:nowrap}
+  .rail button:hover .lbl, .rail button.on .lbl{opacity:1;transform:none}
+  .rail button.on .dot{width:12px;height:12px;margin-left:0;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+
+  /* ---------- cards ---------- */
+  .card{position:fixed;left:clamp(56px,8vw,130px);top:50%;width:min(430px,calc(100vw - 40px));z-index:10;opacity:0;pointer-events:none;will-change:transform,opacity;
+        background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:24px 26px}
+  .card .kicker{font:600 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+  .card h2{font-family:var(--display);font-weight:800;font-size:clamp(30px,3.4vw,44px);line-height:.98;letter-spacing:-.035em;margin:12px 0 14px;text-wrap:balance}
+  .card p{font-size:15.5px;line-height:1.55;margin:0;color:#16312D;text-wrap:pretty}
+  .tag{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font:500 11.5px/1 var(--body);color:var(--ink-2);border:1px dashed rgba(7,47,42,.3);border-radius:999px;padding:6px 10px;text-decoration:none}
+  .tag i{width:7px;height:7px;border-radius:50%;background:#7aa04a;display:inline-block}
+  .tag.guess i{background:#e0a33a}
+  .tag.mix i{background:linear-gradient(90deg,#7aa04a 50%,#e0a33a 50%)}
+  .card .ctas{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+
+  .card.intro{background:none;border:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;top:auto;bottom:clamp(90px,14vh,150px);width:auto;max-width:92vw}
+  .card.intro h1{font-family:var(--display);font-weight:800;font-size:clamp(64px,11.5vw,176px);line-height:.84;letter-spacing:-.055em;margin:14px 0 18px}
+  .card.intro p{max-width:420px;font-size:16px;background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:12px 16px;border-radius:14px;border:1px solid var(--line)}
+  .card.intro h1{text-shadow:0 0 30px rgba(242,238,231,.9)}
+
+  /* ---------- hotspots ---------- */
+  #labels{position:fixed;inset:0;pointer-events:none;z-index:8}
+  .hs{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:7px;padding:6px 11px 6px 6px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(251,249,244,.9);font:600 12px/1 var(--body);color:var(--ink);cursor:pointer;white-space:nowrap;transition:background .2s,opacity .25s,transform .08s linear;box-shadow:0 4px 14px rgba(7,47,42,.08)}
+  .hs .n{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:10px}
+  .hs::after{content:"";position:absolute;left:50%;bottom:-9px;width:1px;height:9px;background:var(--ink);opacity:.5}
+  .hs.on{background:var(--acc);border-color:var(--ink)}
+  .hs:hover{background:#fff}
+
+  /* ---------- hud ---------- */
+  .hud{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(16px,3vw,36px);z-index:20;pointer-events:none}
+  .hud > *{pointer-events:auto}
+  .count{font:600 12px/1 var(--body);letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+  .count b{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+  .count span{color:var(--ink-2)}
+  .next{display:flex;align-items:center;gap:10px;font:600 10px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;background:none;border:none;color:var(--ink);cursor:pointer}
+  .round{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:rgba(251,249,244,.6);cursor:pointer;color:var(--ink);padding:0}
+  .round:hover{background:#fff}
+  .round svg{width:16px;height:16px}
+  .hud .right{display:flex;gap:8px}
+
+  .explore-hint{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:20;font:500 13px/1.3 var(--body);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .3s;white-space:nowrap}
+  body.explore .explore-hint{opacity:1}
+  body.explore .card{opacity:0!important;pointer-events:none!important}
+  body.explore .rail, body.explore .next{opacity:.25;pointer-events:none}
+
+  .credit{position:fixed;right:clamp(16px,3vw,36px);bottom:70px;z-index:20;font:400 11px/1.4 var(--body);color:var(--ink-2);text-align:right;max-width:260px}
+
+  #loader{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:50;transition:opacity .6s;font:600 13px/1.5 var(--body);letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:24px}
+  #loader.gone{opacity:0;pointer-events:none}
+
+  @media (max-width:760px){
+    nav.top .chap{display:none}
+    .rail{display:none}
+    .card{left:16px;right:16px;width:auto;top:auto!important;bottom:74px;padding:18px 18px}
+    .card h2{font-size:28px}
+    .card p{font-size:14.5px}
+    .card.intro{bottom:90px}
+    .credit{display:none}
+    .hs{font-size:11px}
+    .next .t{display:none}
+  }
+
+  /* rótulo com tracinho, como no site oficial */
+  .kick,.card .kicker{display:inline-flex;align-items:center;gap:10px;font-weight:800!important;letter-spacing:.16em!important}
+  .kick::before,.card .kicker::before{content:"";width:28px;height:2px;background:#7CC65E;flex:none}
+  h1,h2,h3{font-weight:800}
+</style>
+</head>
+<body>
+<div id="loader">montando a maquete…</div>
+<canvas id="scene"></canvas>
+<div id="labels"></div>
+
+<header>
+  <a class="brand" id="brand"><img src="assets/logo-cidade-do-agro.png" alt="Cidade do Agro"><small>maquete digital · protótipo v0.3</small></a>
+  <nav class="top" id="topnav"></nav>
+</header>
+
+<nav class="rail" id="rail" aria-label="Capítulos"></nav>
+<div id="cards"></div>
+<main id="story"></main>
+
+<div class="explore-hint">arraste para girar · roda/pinça para zoom · <b>Esc</b> para voltar</div>
+<div class="credit">Protótipo conceitual, baseado na representação do projeto publicada pela <a href="https://agfeed.com.br/esg/da-tragedia-das-enchentes-ao-desenvolvimento-gauchos-lancam-sementes-para-criar-a-cidade-do-agro-no-rs/" target="_blank" rel="noopener">AgFeed</a> (jun/2026). Site oficial: <a href="https://cidadedoagro.agr.br/" target="_blank" rel="noopener">cidadedoagro.agr.br</a> · maquete por <a href="https://otaviopelego.pages.dev/websites/" target="_blank" rel="noopener">Otávio Pelego</a></div>
+
+<footer class="hud">
+  <div class="count"><b></b><span id="cnt">00 / 07</span></div>
+  <button class="next" id="next"><span class="t" id="nextT">role</span><span class="round"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></span></button>
+  <div class="right">
+    <button class="round" id="explore" title="Explorar livremente (girar/zoom)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><ellipse cx="8" cy="8" rx="2.6" ry="6"/><path d="M2 8h12"/></svg></button>
+    <button class="round" id="pause" title="Pausar animação"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3" width="2.6" height="10" rx="1"/><rect x="9.4" y="3" width="2.6" height="10" rx="1"/></svg></button>
+  </div>
+</footer>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script>
+  setTimeout(()=>{const l=document.getElementById('loader'); if(l && !l.classList.contains('gone')) l.innerHTML='a maquete precisa de internet para carregar o Three.js<br><span style="font-weight:400;text-transform:none;letter-spacing:0">(se estiver online, recarregue a página)</span>';},9000);
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* =========================================================
+   CONTEÚDO — edite aqui conforme chegarem informações
+   src: 'agfeed' (fonte confirmada) · 'mix' (parte fonte, parte ideia) · 'guess' (ilustrativo)
+   ========================================================= */
+const AGFEED = 'https://agfeed.com.br/esg/da-tragedia-das-enchentes-ao-desenvolvimento-gauchos-lancam-sementes-para-criar-a-cidade-do-agro-no-rs/';
+const CH = [
+  { rail:'Início', intro:true, kicker:'Capão do Leão · Rio Grande do Sul', title:'cidade<br>do agro',
+    body:'Uma maquete digital do ecossistema que fortalece as cadeias produtivas do agronegócio e conecta o campo à cidade, ao conhecimento e ao futuro. Role para percorrer.',
+    src:'site', cam:{pos:[118,98,138], tgt:[-8,-4,4]} },
+  { rail:'O lugar', kicker:'01 · O lugar', title:'Capão do Leão, vizinho de Pelotas',
+    body:'A metade sul do estado historicamente apoiou a economia na pecuária e no arroz irrigado. A soja e o milho avançaram, mas a região ainda tem menos diversificação e tecnologia que outras partes do RS.',
+    src:'agfeed', cam:{pos:[0,196,40], tgt:[0,0,3]} },
+  { rail:'A origem', kicker:'02 · A origem', title:'Nasceu na enchente',
+    body:'Maio de 2024. Com a água subindo, produtores rurais, engenheiros e empresários do sul do RS montaram uma força-tarefa improvisada e ajudaram a erguer barreiras de sacos de areia em Pelotas. Passada a emergência, ficou a vontade de construir algo permanente.',
+    src:'agfeed', cam:{pos:[-30,44,2], tgt:[0,0,-42]} },
+  { rail:'O hub', kicker:'03 · O hub', title:'Tudo converge para o círculo',
+    body:'Na representação do projeto, um grande anel ocupa o centro: o hub de inovação, ponto de encontro de produtores, empresas, universidades e instituições. Em volta, parcelas em faixas — cara de campo experimental.',
+    src:'agfeed', cam:{pos:[50,44,24], tgt:[4,0,-12]} },
+  { rail:'P&D', kicker:'04 · Pesquisa', title:'Uma estação de P&D a céu aberto',
+    body:'O projeto prevê uma estação de pesquisa e desenvolvimento, com setores que vão do arroz irrigado e das pastagens de inverno às frutíferas nativas, oliveiras, parreiras e ao gado.',
+    src:'mix', link:{href:'campo-experimental.html', label:'Ver os 8 setores do campo →'}, cam:{pos:[74,21,-2], tgt:[45,0,-12]} },
+  { rail:'Negócios', kicker:'05 · Negócios', title:'Empresas perto do campo',
+    body:'33 empresas já aparecem como oficiais nos posts da Cidade do Agro, de multinacionais como BASF, Corteva e FMC a revendas da região como Agrofel, Planfer e Fronteira Agro. A lista segue crescendo. (Os prédios da maquete ainda são ilustrativos.)',
+    src:'insta', link:{href:'parceiros.html', label:'Conhecer os parceiros →'}, cam:{pos:[-54,27,44], tgt:[-20,0,12]} },
+  { rail:'Educação', kicker:'06 · Educação', title:'O campo como sala de aula',
+    body:'Universidades e instituições fazem parte da proposta. Nesta versão, um campus com auditório, laboratórios e estufas — no lugar certo pra trocar pelo que for real.',
+    src:'mix', cam:{pos:[30,22,64], tgt:[-2,0,33]} },
+  { rail:'Futuro', kicker:'07 · O que vem aí', title:'Uma plataforma para a metade sul',
+    body:'“Não é uma feira. É um ecossistema vivo e permanente, pensado para gerar conexão, relacionamento e desenvolvimento ao longo de todo o ano.” Esta maquete cresce junto: fotos, plantas e informações do projeto entram aqui.',
+    src:'site', cta:true, cam:{pos:[-94,92,98], tgt:[0,-2,4]} },
+];
+const HOTSPOTS = [
+  { ch:2, label:'Origem',          p:[6,3.5,-47] },
+  { ch:3, label:'Hub de inovação', p:[10,7,-12] },
+  { ch:4, label:'Estação de P&D',  p:[48,5,-30] },
+  { ch:5, label:'Empresas',        p:[-27,8,12] },
+  { ch:5, label:'Agroindústria',   p:[21,10,16] },
+  { ch:6, label:'Campus',          p:[-1,8,29] },
+];
+const TAGS = {
+  agfeed:`<a class="tag" href="${AGFEED}" target="_blank" rel="noopener"><i></i>Fonte: AgFeed · jun/2026</a>`,
+  mix:`<span class="tag mix"><i></i>Parte fonte, parte ideia · a confirmar</span>`,
+  guess:`<span class="tag guess"><i></i>Ilustrativo · a confirmar</span>`,
+  site:`<a class="tag" href="https://cidadedoagro.agr.br/" target="_blank" rel="noopener"><i></i>Fonte: cidadedoagro.agr.br</a>`,
+  insta:`<a class="tag" href="https://www.instagram.com/cidadedoagro_/" target="_blank" rel="noopener"><i></i>Fonte: @cidadedoagro_ · set/2026</a>`,
+};
+
+/* =========================================================
+   DOM
+   ========================================================= */
+const N = CH.length;
+const pad2 = n => String(n).padStart(2,'0');
+const $ = id => document.getElementById(id);
+const story=$('story'), cardsEl=$('cards'), rail=$('rail'), topnav=$('topnav'), labelsEl=$('labels');
+
+CH.forEach((c,i)=>{
+  const s=document.createElement('section'); s.className='sec'; story.appendChild(s);
+  const d=document.createElement('article'); d.className='card'+(c.intro?' intro':'');
+  d.innerHTML = c.intro
+    ? `<div class="kicker">${c.kicker}</div><h1>${c.title}</h1><p>${c.body}</p>`
+    : `<div class="kicker">${c.kicker}</div><h2>${c.title}</h2><p>${c.body}</p>${TAGS[c.src]||''}`+
+      (c.link?`<div class="ctas"><a class="btn primary" href="${c.link.href}">${c.link.label}</a></div>`:'')+
+      (c.cta?`<div class="ctas"><button class="btn primary" data-act="explore">Explorar a maquete</button><a class="btn" href="https://www.instagram.com/cidadedoagro_/" target="_blank" rel="noopener">@cidadedoagro_</a></div>`:'');
+  cardsEl.appendChild(d);
+  const r=document.createElement('button'); r.innerHTML=`<span class="dot"></span><span class="lbl">${c.rail}</span>`; r.onclick=()=>goTo(i); r.setAttribute('aria-label',c.rail); rail.appendChild(r);
+  if(i>0 && i<N-1){ const b=document.createElement('button'); b.className='chap'; b.textContent=c.rail; b.onclick=()=>goTo(i); topnav.appendChild(b); }
+});
+const campoTop=document.createElement('button'); campoTop.textContent='Campo experimental ↗'; campoTop.onclick=()=>location.href='campo-experimental.html'; topnav.appendChild(campoTop);
+const parcTop=document.createElement('button'); parcTop.textContent='Parceiros ↗'; parcTop.onclick=()=>location.href='parceiros.html'; topnav.appendChild(parcTop);
+const exploreTop=document.createElement('button'); exploreTop.textContent='Explorar 3D'; exploreTop.onclick=()=>toggleExplore(); topnav.appendChild(exploreTop);
+const cards=[...cardsEl.children], railBtns=[...rail.children], navBtns=[...topnav.querySelectorAll('.chap')];
+cardsEl.addEventListener('click',e=>{ if(e.target.closest('[data-act=explore]')) toggleExplore(true); });
+
+function goTo(i){ if(explore) toggleExplore(false); scrollTo({top:i*innerHeight,behavior:'smooth'}); }
+$('brand').onclick=()=>goTo(0);
+$('next').onclick=()=>{ const i=Math.round(p); goTo(i>=N-1?0:i+1); };
+
+/* =========================================================
+   UTIL
+   ========================================================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng=mulberry32(11);
+const R=(a,b)=>a+(b-a)*rng();
+const pick=a=>a[Math.floor(rng()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const matCache={};
+const M=(c,o={})=>{const k=c+JSON.stringify(o); return matCache[k]||(matCache[k]=new THREE.MeshStandardMaterial({color:c,roughness:.85,flatShading:true,...o}));};
+
+/* =========================================================
+   RENDERER / CENA
+   ========================================================= */
+const BG=0xF2EEE7;
+const canvas=$('scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(BG);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.05;
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.Fog(BG,260,560);
+const camera=new THREE.PerspectiveCamera(35,innerWidth/innerHeight,1,1200);
+
+scene.add(new THREE.HemisphereLight(0xfff7e8,0x8a7a58,1.35));
+const sun=new THREE.DirectionalLight(0xfff0d4,2.6);
+sun.position.set(70,110,45);
+sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-95,right:95,top:95,bottom:-95,near:10,far:320});
+sun.shadow.bias=-0.0004; sun.shadow.normalBias=0.04;
+scene.add(sun);
+
+const world=new THREE.Group(); scene.add(world);
+
+/* =========================================================
+   MAPA (textura desenhada) — coordenadas do mundo x,z ∈ [-60,60]
+   ========================================================= */
+const MAP=120, TEX=2048, S=TEX/MAP;
+const P=v=>(v+MAP/2)*S;
+const H={x:10,z:-12,r:19.6}; // hub
+
+// eixo da via diagonal (D) e zona de empresas
+const D0=[-60,25], D1=[-8,-4];
+const dl=Math.hypot(D1[0]-D0[0],D1[1]-D0[1]);
+const U=[(D1[0]-D0[0])/dl,(D1[1]-D0[1])/dl], V=[-U[1],U[0]];
+const thA=Math.atan2(-U[1],U[0]);
+const O=[D0[0]+U[0]*34, D0[1]+U[1]*34];
+const F=(u,v)=>[O[0]+u*U[0]+v*V[0], O[1]+u*U[1]+v*V[1]];
+
+const PIVOTS=[{x:48,z:-30,r:10},{x:48,z:20,r:10},{x:-42,z:-38,r:12}];
+const LAKE={x:6,z:-47,rx:15,rz:6};
+const lakePts=[]; for(let i=0;i<40;i++){const a=i/40*Math.PI*2, n=1+Math.sin(a*3+1)*.08+Math.sin(a*5)*.05; lakePts.push([LAKE.x+Math.cos(a)*LAKE.rx*n, LAKE.z+Math.sin(a)*LAKE.rz*n]);}
+
+const ROADS=[
+  {pts:[D0,D1],w:2.2,main:true},
+  {pts:[[10,H.z+H.r],[10,60]],w:2.2,main:true},
+  {pts:[[37,-60],[37,60]],w:2,main:true},
+  {pts:[[-60,53],[37,53]],w:1.8},
+  {pts:[[H.x+H.r,-12],[37,-12]],w:1.6},
+  {pts:[[10,H.z-H.r],[10,-40]],w:1.4},
+  {pts:[F(-20,0),F(-20,39)],w:1.6},
+  {pts:[[10,27],[37,27]],w:1.6},
+];
+const LOTS=[
+  {c:F(16,16),w:8,d:6,rot:thA},{c:F(-18,-7),w:8,d:5,rot:thA},
+  {c:[-24,46],w:9,d:6,rot:0},{c:[23,46],w:18,d:6,rot:0},{c:[18,22.5],w:10,d:5,rot:0},
+];
+
+function buildMapTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=TEX; const x=c.getContext('2d');
+  const rr=8*S; x.beginPath(); x.moveTo(rr,0); x.arcTo(TEX,0,TEX,TEX,rr); x.arcTo(TEX,TEX,0,TEX,rr); x.arcTo(0,TEX,0,0,rr); x.arcTo(0,0,TEX,0,rr); x.closePath(); x.clip();
+  x.fillStyle='#B8A978'; x.fillRect(0,0,TEX,TEX);
+  const poly=(pts)=>{x.beginPath(); pts.forEach(([a,b],i)=>i?x.lineTo(P(a),P(b)):x.moveTo(P(a),P(b))); x.closePath();};
+  const circ=(cx,cz,r)=>{x.beginPath(); x.arc(P(cx),P(cz),r*S,0,Math.PI*2);};
+
+  // lavouras
+  const xs=[-60,-42,-26,-12,4,20,37,60], zs=[-60,-40,-24,-8,10,28,44,60];
+  const cols=['#7FA653','#8DB25C','#6F984A','#A2B964','#94AE52','#C4B770','#86A94F','#789F4C'];
+  for(let i=0;i<xs.length-1;i++) for(let j=0;j<zs.length-1;j++){
+    const x0=xs[i]+.35,z0=zs[j]+.35,w=xs[i+1]-xs[i]-.7,d=zs[j+1]-zs[j]-.7;
+    x.fillStyle=pick(cols); x.fillRect(P(x0),P(z0),w*S,d*S);
+    x.save(); x.beginPath(); x.rect(P(x0),P(z0),w*S,d*S); x.clip();
+    x.strokeStyle='rgba(30,50,15,.10)'; x.lineWidth=.2*S; const vert=rng()<.5;
+    for(let k=0;k<(vert?w:d);k+=.75){x.beginPath(); if(vert){x.moveTo(P(x0+k),P(z0));x.lineTo(P(x0+k),P(z0+d));}else{x.moveTo(P(x0),P(z0+k));x.lineTo(P(x0+w),P(z0+k));} x.stroke();}
+    x.restore();
+  }
+  // pivôs
+  PIVOTS.forEach(pv=>{
+    circ(pv.x,pv.z,pv.r); x.fillStyle='#8CB75B'; x.fill();
+    for(let r=1.6;r<pv.r;r+=1.6){circ(pv.x,pv.z,r); x.strokeStyle='rgba(40,70,20,.16)'; x.lineWidth=.25*S; x.stroke();}
+    circ(pv.x,pv.z,pv.r); x.strokeStyle='rgba(255,250,230,.35)'; x.lineWidth=.3*S; x.stroke();
+  });
+  // lago e arroio
+  x.lineCap='round'; x.lineJoin='round';
+  const river=(pts,w)=>{x.beginPath(); pts.forEach(([a,b],i)=>i?x.lineTo(P(a),P(b)):x.moveTo(P(a),P(b))); x.strokeStyle='#C9C29E'; x.lineWidth=(w+1)*S; x.stroke(); x.strokeStyle='#5E97AE'; x.lineWidth=w*S; x.stroke();};
+  river([[19,-47],[27,-50],[36,-49],[46,-53],[60,-51]],2.4);
+  river([[-8,-46],[-18,-44],[-30,-47],[-44,-45],[-60,-48]],2);
+  poly(lakePts); x.fillStyle='#C9C29E'; x.lineWidth=1.6*S; x.strokeStyle='#C9C29E'; x.stroke(); x.fillStyle='#5E97AE'; x.fill();
+  poly(lakePts.map(([a,b])=>[LAKE.x+(a-LAKE.x)*.7,LAKE.z+(b-LAKE.z)*.6])); x.fillStyle='#6FA6BB'; x.fill();
+
+  // áreas construídas
+  x.fillStyle='#D8D1B8';
+  poly([[-49,19],[-8,-1.5],[9,9],[9,52],[-29,52]]); x.fill();
+  poly([F(-24,-2.5),F(17,-2.5),F(17,-11.5),F(-24,-11.5)]); x.fill();
+  poly([[11,9.5],[35.8,9.5],[35.8,51.8],[11,51.8]]); x.fill();
+  x.fillStyle='#E7E0CD'; x.fillRect(P(-9),P(21),16*S,16*S); // pátio do campus
+  poly([[-27,-45],[-19,-45],[-19,-52],[-27,-52]]); x.fillStyle='#CFC6A6'; x.fill(); // sede de fazenda
+
+  // hub
+  circ(H.x,H.z,H.r-.8); x.fillStyle='#8DB45E'; x.fill();
+  const plot=['#9CC46A','#7FAE55','#B6CC72','#6F9C4B','#C9C77A','#88B860','#A9C066'];
+  for(let k=0;k<10;k++){const r0=4.6+k*1.42, r1=r0+1.3; for(let s=0;s<16;s++){const a0=s/16*Math.PI*2, a1=(s+1)/16*Math.PI*2; x.beginPath(); x.arc(P(H.x),P(H.z),r1*S,a0,a1); x.arc(P(H.x),P(H.z),r0*S,a1,a0,true); x.closePath(); x.fillStyle=pick(plot); x.fill();}}
+  x.strokeStyle='#E6DFCB'; x.lineWidth=.8*S;
+  for(let s=0;s<8;s++){const a=s/8*Math.PI*2+Math.PI/16*0; x.beginPath(); x.moveTo(P(H.x+Math.cos(a)*4.5),P(H.z+Math.sin(a)*4.5)); x.lineTo(P(H.x+Math.cos(a)*(H.r-.8)),P(H.z+Math.sin(a)*(H.r-.8))); x.stroke();}
+  [4.6,11.8].forEach(r=>{circ(H.x,H.z,r); x.lineWidth=.6*S; x.stroke();});
+  circ(H.x,H.z,4.5); x.fillStyle='#EAE4D3'; x.fill();
+  circ(H.x,H.z,3.3); x.fillStyle='#D7CFB9'; x.fill();
+
+  // vias
+  const road=(pts,w,main)=>{x.beginPath(); pts.forEach(([a,b],i)=>i?x.lineTo(P(a),P(b)):x.moveTo(P(a),P(b)));
+    x.strokeStyle='#ADA38B'; x.lineWidth=(w+.5)*S; x.stroke(); x.strokeStyle='#DDD7C6'; x.lineWidth=w*S; x.stroke();
+    if(main){x.setLineDash([.9*S,1.2*S]); x.strokeStyle='rgba(255,255,255,.8)'; x.lineWidth=.12*S; x.stroke(); x.setLineDash([]);}};
+  ROADS.forEach(r=>road(r.pts,r.w,r.main));
+  circ(H.x,H.z,H.r); x.strokeStyle='#ADA38B'; x.lineWidth=2.3*S; x.stroke(); x.strokeStyle='#DDD7C6'; x.lineWidth=1.8*S; x.stroke();
+
+  // estacionamentos
+  LOTS.forEach(l=>{ x.save(); x.translate(P(l.c[0]),P(l.c[1])); x.rotate(-l.rot);
+    x.fillStyle='#9E9C94'; x.fillRect(-l.w/2*S,-l.d/2*S,l.w*S,l.d*S);
+    x.strokeStyle='rgba(255,255,255,.75)'; x.lineWidth=.1*S;
+    for(let k=-l.w/2;k<=l.w/2;k+=1.1){ x.beginPath(); x.moveTo(k*S,-l.d/2*S); x.lineTo(k*S,-l.d/2*S+l.d*.36*S); x.moveTo(k*S,l.d/2*S); x.lineTo(k*S,l.d/2*S-l.d*.36*S); x.stroke(); }
+    x.restore(); });
+
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=renderer.capabilities.getMaxAnisotropy(); return t;
+}
+
+/* =========================================================
+   ILHA (base da maquete)
+   ========================================================= */
+function rrect(w,h,r){const s=new THREE.Shape(),x=-w/2,y=-h/2; s.moveTo(x+r,y); s.lineTo(x+w-r,y); s.quadraticCurveTo(x+w,y,x+w,y+r); s.lineTo(x+w,y+h-r); s.quadraticCurveTo(x+w,y+h,x+w-r,y+h); s.lineTo(x+r,y+h); s.quadraticCurveTo(x,y+h,x,y+h-r); s.lineTo(x,y+r); s.quadraticCurveTo(x,y,x+r,y); return s;}
+function slab(size,r,depth,top,side,y){
+  const g=new THREE.ExtrudeGeometry(rrect(size,size,r),{depth,bevelEnabled:true,bevelSize:.6,bevelThickness:.6,bevelSegments:2,curveSegments:10});
+  g.rotateX(-Math.PI/2); g.translate(0,-depth-.6+y,0);
+  const m=new THREE.Mesh(g,[M(top),M(side)]); m.receiveShadow=true; m.castShadow=true; world.add(m); return m;
+}
+slab(120,8,5,'#6F8F4C','#9A7550',0);
+slab(113,7.5,4,'#7C5C3E','#7C5C3E',-6.2);
+slab(104,7,3.5,'#5F4630','#5F4630',-11.4);
+
+const mapPlane=new THREE.Mesh(new THREE.PlaneGeometry(MAP,MAP),new THREE.MeshStandardMaterial({map:buildMapTexture(),roughness:.95,alphaTest:.5}));
+mapPlane.rotation.x=-Math.PI/2; mapPlane.position.y=.03; mapPlane.receiveShadow=true; world.add(mapPlane);
+
+// sombra suave embaixo da ilha
+{ const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d'); const g=x.createRadialGradient(128,128,20,128,128,128); g.addColorStop(0,'rgba(60,50,30,.35)'); g.addColorStop(1,'rgba(60,50,30,0)'); x.fillStyle=g; x.fillRect(0,0,256,256);
+  const sh=new THREE.Mesh(new THREE.PlaneGeometry(230,230),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false}));
+  sh.rotation.x=-Math.PI/2; sh.position.y=-34; scene.add(sh); }
+
+/* =========================================================
+   CONSTRUÇÕES
+   ========================================================= */
+function add(obj,x,z,rot=0,y=0){obj.position.set(x,y,z); obj.rotation.y=rot; world.add(obj); return obj;}
+function warehouse(w,d,h,{wall='#F1EFE8',roof='#A9B3BF'}={}){
+  const g=new THREE.Group();
+  const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(wall)); b.position.y=h/2; g.add(b);
+  const r=Math.min(d*.18,1.4), s=new THREE.Shape(); s.moveTo(-d/2-.2,0); s.lineTo(d/2+.2,0); s.lineTo(0,r); s.closePath();
+  const rg=new THREE.ExtrudeGeometry(s,{depth:w+.3,bevelEnabled:false}); rg.translate(0,0,-(w+.3)/2); rg.rotateY(Math.PI/2);
+  const rm=new THREE.Mesh(rg,M(roof)); rm.position.y=h; g.add(rm);
+  const door=new THREE.Mesh(new THREE.BoxGeometry(w*.5,h*.55,.1),M('#8E97A3')); door.position.set(0,h*.275,d/2+.05); g.add(door);
+  return g;
+}
+function office(w,d,h,{wall='#F4F2EC',glass='#3C5A8C',floors=3}={}){
+  const g=new THREE.Group();
+  const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(wall)); b.position.y=h/2; g.add(b);
+  for(let f=0;f<floors;f++){const band=new THREE.Mesh(new THREE.BoxGeometry(w+.06,h/floors*.38,d+.06),M(glass,{roughness:.3,metalness:.2})); band.position.y=h/floors*(f+.55); g.add(band);}
+  const top=new THREE.Mesh(new THREE.BoxGeometry(w*.35,.6,d*.35),M('#C9CCD1')); top.position.set(w*.2,h+.3,0); g.add(top);
+  return g;
+}
+function silo(r,h){const g=new THREE.Group(); const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,18),M('#D5D9DD',{metalness:.35,roughness:.5})); c.position.y=h/2; g.add(c);
+  const t=new THREE.Mesh(new THREE.ConeGeometry(r*1.06,r*.7,18),M('#B8BFC6',{metalness:.35,roughness:.5})); t.position.y=h+r*.35; g.add(t);
+  for(let k=1;k<4;k++){const ring=new THREE.Mesh(new THREE.CylinderGeometry(r*1.01,r*1.01,.08,18),M('#AEB5BC')); ring.position.y=h*k/4; g.add(ring);} return g;}
+function tunnel(len,r){const g=new THREE.CylinderGeometry(r,r,len,12,1,true,0,Math.PI); g.rotateZ(Math.PI/2);
+  return new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#FAFAF6',roughness:.35,transparent:true,opacity:.82,side:THREE.DoubleSide}));}
+
+// --- Zona de empresas (ao longo da via diagonal)
+[[warehouse(12,7,3.6),-12,7],[warehouse(10,6,3.2,{roof:'#8FA1B5'}),2,7],[office(7,6,5.6),14,7],
+ [warehouse(14,6,3),-10,16],[warehouse(9,6,3,{roof:'#C07B55'}),4,16],
+ [warehouse(12,6,3.4),-6,-7],[warehouse(10,6,3,{roof:'#8FA1B5'}),8,-7],[office(5,5,4,{floors:2}),-18,-7.5+0*1]
+].forEach(([o,u,v],i)=>{ if(i===7) return; const [x,z]=F(u,v); add(o,x,z,thA); });
+
+// --- Campus (educação)
+add(office(14,5,4.6,{glass:'#2F4E7E'}),-1,24.5);
+add(office(4,9,4.2,{glass:'#2F4E7E',floors:2}),-6,31.5);
+add(office(4,9,4.2,{glass:'#2F4E7E',floors:2}),4,31.5);
+{ const aud=new THREE.Group(); const c=new THREE.Mesh(new THREE.CylinderGeometry(3.2,3.4,2.6,24),M('#F2EFE6')); c.position.y=1.3; aud.add(c);
+  const roof=new THREE.Mesh(new THREE.CylinderGeometry(3.5,3.3,.35,24),M('#6F8FA8')); roof.position.y=2.75; aud.add(roof); add(aud,-15,31); }
+[-18,-11,-4].forEach(x=>add(warehouse(5,4,2.8,{roof:'#B8C2CC'}),x,40.5));
+for(let k=0;k<4;k++) add(tunnel(12,1.05),-3,44.6+k*2.35);
+
+// --- Agroindústria / logística
+for(let i=0;i<3;i++) for(let j=0;j<2;j++) add(silo(1.6,6.5),16+i*3.6,14+j*3.6);
+{ const tw=new THREE.Mesh(new THREE.BoxGeometry(1.2,10,1.2),M('#C4A45A')); tw.position.set(25.6,5,21); tw.castShadow=true; world.add(tw);
+  const belt=new THREE.Mesh(new THREE.BoxGeometry(8,.35,.5),M('#9EA6AE')); belt.position.set(21.6,8.6,17.8); belt.rotation.z=-.12; world.add(belt); }
+add(warehouse(8,12,4.2,{roof:'#8FA1B5'}),30.5,18.5,Math.PI/2);
+add(warehouse(20,10,5,{roof:'#A0AAB6'}),23,36);
+
+// --- Hub central
+{ const g=new THREE.Group();
+  const dome=new THREE.Mesh(new THREE.SphereGeometry(3,28,12,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:'#EAF2F5',roughness:.2,metalness:.1,transparent:true,opacity:.92}));
+  g.add(dome);
+  const ribs=new THREE.Mesh(new THREE.SphereGeometry(3.03,12,6,0,Math.PI*2,0,Math.PI/2),new THREE.MeshBasicMaterial({color:'#9FB0BE',wireframe:true})); g.add(ribs);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(4.1,.32,8,48),M('#F5F3EC')); ring.rotation.x=Math.PI/2; ring.position.y=.4; g.add(ring);
+  const mast=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,7,6),M('#5A6270')); mast.position.set(3.2,3.5,-2.5); g.add(mast);
+  add(g,H.x,H.z);
+  // estufa em arco
+  for(let a=3.55;a<4.95;a+=.135){ const r=16.2, t=tunnel(2.3,1); t.position.set(H.x+Math.cos(a)*r,0,H.z+Math.sin(a)*r); t.rotation.y=-Math.atan2(-Math.sin(a)*0+Math.cos(a), -Math.sin(a)) ; t.rotation.y=Math.atan2(-Math.cos(a),-Math.sin(a)); world.add(t); }
+  // estações nas radiais
+  for(let s=0;s<8;s++){ if(s===5||s===6) continue; const a=s/8*Math.PI*2; const b=new THREE.Mesh(new THREE.BoxGeometry(1.3,.9,1.3),M('#FBF9F4')); b.position.set(H.x+Math.cos(a)*11.8,.45,H.z+Math.sin(a)*11.8); b.rotation.y=-a; world.add(b); }
+}
+
+// --- Sede de fazenda
+{ const h=warehouse(4,3.4,2.2,{wall:'#F3EBDD',roof:'#B5563C'}); add(h,-23,-48.5);
+  add(warehouse(5,4,2.6,{wall:'#C9B28C',roof:'#8C6A48'}),-24,-51.3+0.3);
+}
+
+// --- Pivôs (braço girando)
+const pivotArms=PIVOTS.map((pv,i)=>{ const g=new THREE.Group();
+  const c=new THREE.Mesh(new THREE.CylinderGeometry(.35,.45,2.2,8),M('#8C949E')); c.position.y=1.1; g.add(c);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(pv.r,.12,.12),M('#B7BEC6',{metalness:.4})); arm.position.set(pv.r/2,2.1,0); g.add(arm);
+  for(let k=2.4;k<pv.r;k+=2.4){ const t=new THREE.Mesh(new THREE.ConeGeometry(.35,2.1,4),M('#9AA2AB')); t.position.set(k,1.05,0); g.add(t);
+    const w=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.14,10),M('#2B2F36')); w.rotation.x=Math.PI/2; w.position.set(k,.28,0); g.add(w); }
+  g.rotation.y=i*2.1; add(g,pv.x,pv.z,i*2.1); return g; });
+
+/* =========================================================
+   ÁRVORES, CARROS, NUVENS
+   ========================================================= */
+const treePts=[];
+lakePts.forEach(([a,b],i)=>{ for(let k=0;k<2;k++){const s=R(1.2,1.55); treePts.push([LAKE.x+(a-LAKE.x)*s+R(-1,1),LAKE.z+(b-LAKE.z)*s+R(-1,1),R(.9,1.6)]);} });
+for(let a=0;a<Math.PI*2;a+=.2){ if(Math.abs(Math.sin(a)-1)<.05) continue; const r=H.r+2.3+R(-.3,.5); const x=H.x+Math.cos(a)*r, z=H.z+Math.sin(a)*r;
+  if(Math.abs(x-10)<2.5||Math.abs(z+12)<2.5 && x>H.x) continue; if(Math.hypot(x-D1[0],z-D1[1])<4) continue; treePts.push([x,z,R(.8,1.2)]); }
+for(let x=-58;x<35;x+=2.3) if(rng()<.8) treePts.push([x,55.6+R(-.3,.3),R(.8,1.3)]);
+for(let z=-58;z<-16;z+=2.4) treePts.push([34.6,z,R(.8,1.2)]);
+for(let k=0;k<14;k++) treePts.push([R(-30,-15),R(-58,-43),R(.9,1.7)]);
+for(let k=0;k<10;k++) treePts.push([R(-58,-52),R(-10,12),R(.9,1.5)]);
+{ const crown=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,0),M('#3E6B35'),treePts.length);
+  const trunk=new THREE.InstancedMesh(new THREE.CylinderGeometry(.14,.18,1,5),M('#6B4E33'),treePts.length);
+  const m=new THREE.Matrix4(), q=new THREE.Quaternion(), c=new THREE.Color();
+  treePts.forEach(([x,z,s],i)=>{ m.compose(new THREE.Vector3(x,1+s*.9,z),q.setFromEuler(new THREE.Euler(0,R(0,6),0)),new THREE.Vector3(s,s*1.15,s)); crown.setMatrixAt(i,m);
+    c.set(pick(['#3E6B35','#4C7B3B','#35602F','#5A8540'])); crown.setColorAt(i,c);
+    m.compose(new THREE.Vector3(x,.5,z),q.identity(),new THREE.Vector3(1,1,1)); trunk.setMatrixAt(i,m); });
+  crown.castShadow=trunk.castShadow=true; world.add(crown,trunk); }
+
+{ const cars=[]; LOTS.forEach(l=>{ for(let k=-l.w/2+.55;k<l.w/2;k+=1.1) for(const side of [-1,1]) if(rng()<.7){ const lz=side*l.d*.3;
+    const cx=l.c[0]+k*Math.cos(l.rot)+lz*Math.sin(l.rot), cz=l.c[1]-k*Math.sin(l.rot)+lz*Math.cos(l.rot); cars.push([cx,cz,l.rot+Math.PI/2]); } });
+  const inst=new THREE.InstancedMesh(new THREE.BoxGeometry(1.5,.6,.75),M('#ffffff'),cars.length);
+  const m=new THREE.Matrix4(), q=new THREE.Quaternion(), c=new THREE.Color();
+  cars.forEach(([x,z,r],i)=>{ m.compose(new THREE.Vector3(x,.32,z),q.setFromEuler(new THREE.Euler(0,r,0)),new THREE.Vector3(1,1,1)); inst.setMatrixAt(i,m); c.set(pick(['#E4572E','#F2F2F2','#2E4057','#F0B429','#6C8EAD','#C8C8C8','#F2F2F2'])); inst.setColorAt(i,c); });
+  inst.castShadow=true; world.add(inst); }
+
+// veículos em movimento
+function vehicle(type){ const g=new THREE.Group();
+  if(type==='truck'){ const cab=new THREE.Mesh(new THREE.BoxGeometry(1.1,1.1,1),M('#D8452B')); cab.position.set(1.6,.75,0); const tr=new THREE.Mesh(new THREE.BoxGeometry(3,1.3,1.05),M('#EDEDED')); tr.position.set(-.5,.85,0); g.add(cab,tr); }
+  else if(type==='tractor'){ const b=new THREE.Mesh(new THREE.BoxGeometry(1.6,.8,.9),M('#2F7D3B')); b.position.y=.8; const cab=new THREE.Mesh(new THREE.BoxGeometry(.8,.8,.8),M('#DDE6EA',{roughness:.3})); cab.position.set(-.3,1.55,0); g.add(b,cab);
+    for(const [x,r] of [[-.55,.6],[.6,.38]]) for(const s of [-1,1]){ const w=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.3,12),M('#23262B')); w.rotation.x=Math.PI/2; w.position.set(x,r,s*.55); g.add(w);} }
+  else { const b=new THREE.Mesh(new THREE.BoxGeometry(1.6,.5,.8),M(pick(['#1F4E8C','#F2F2F2','#E4572E','#F0B429']))); b.position.y=.42; const t=new THREE.Mesh(new THREE.BoxGeometry(.8,.4,.7),M('#CFE0EA',{roughness:.3})); t.position.set(-.1,.85,0); g.add(b,t); }
+  g.traverse(o=>o.castShadow=true); world.add(g); return g; }
+function mover(mesh,pts,speed,loop,lane=.5){ const seg=[]; let tot=0; for(let i=0;i<pts.length-1;i++){const l=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]); seg.push(l); tot+=l;}
+  return {mesh,pts,seg,tot,speed,loop,lane,s:rng()*tot,dir:1}; }
+const ring=[]; for(let i=0;i<=64;i++){const a=i/64*Math.PI*2; ring.push([H.x+Math.cos(a)*H.r,H.z+Math.sin(a)*H.r]);}
+const movers=[
+  mover(vehicle('truck'),[D0,D1],7,false), mover(vehicle('truck'),[[10,H.z+H.r],[10,60]],6,false),
+  mover(vehicle('car'),[[10,60],[10,H.z+H.r]],9,false), mover(vehicle('tractor'),[[37,-60],[37,60]],3.2,false),
+  mover(vehicle('car'),[[-60,53],[37,53]],8,false), mover(vehicle('car'),ring,7,true), mover(vehicle('car'),[...ring].reverse(),6,true),
+  mover(vehicle('truck'),[[10,27],[37,27]],5,false),
+];
+function updateMover(o,dt){
+  o.s+=o.dir*o.speed*dt;
+  if(o.loop) o.s=((o.s%o.tot)+o.tot)%o.tot; else if(o.s>o.tot){o.s=o.tot;o.dir=-1;} else if(o.s<0){o.s=0;o.dir=1;}
+  let s=o.s,i=0; while(i<o.seg.length-1 && s>o.seg[i]){s-=o.seg[i];i++;}
+  const a=o.pts[i],b=o.pts[i+1],t=o.seg[i]?s/o.seg[i]:0; let dx=(b[0]-a[0])/o.seg[i], dz=(b[1]-a[1])/o.seg[i]; dx*=o.dir; dz*=o.dir;
+  o.mesh.position.set(a[0]+(b[0]-a[0])*t - dz*o.lane, .02, a[1]+(b[1]-a[1])*t + dx*o.lane);
+  o.mesh.rotation.y=Math.atan2(-dz,dx);
+}
+
+const clouds=[]; for(let k=0;k<7;k++){ const g=new THREE.Group(); const n=4+Math.floor(rng()*3);
+  for(let i=0;i<n;i++){ const s=R(1.6,3); const m=new THREE.Mesh(new THREE.IcosahedronGeometry(s,1),M('#FFFFFF',{roughness:1})); m.position.set(i*3-n*1.5+R(-1,1),R(-.6,1),R(-1.5,1.5)); m.scale.y=.75; m.castShadow=true; g.add(m); }
+  g.position.set(R(-95,95),R(44,56),R(-60,60)); scene.add(g); clouds.push(g); }
+
+/* ---------- enchente + sacos de areia (capítulo 2) ---------- */
+const water=(()=>{ const s=new THREE.Shape(); lakePts.forEach(([a,b],i)=>{const X=a-LAKE.x, Y=-(b-LAKE.z); i?s.lineTo(X,Y):s.moveTo(X,Y);});
+  const g=new THREE.ShapeGeometry(s,24); g.rotateX(-Math.PI/2);
+  const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#5C98B2',roughness:.15,metalness:.15,transparent:true,opacity:.9})); m.position.set(LAKE.x,.09,LAKE.z); m.receiveShadow=true; world.add(m); return m; })();
+const sandbags=(()=>{ const g=new THREE.Group(); const pts=[]; for(let a=.55;a<=2.6;a+=.035){ pts.push([LAKE.x+Math.cos(a)*LAKE.rx*1.75, LAKE.z+Math.sin(a)*LAKE.rz*1.95]); }
+  const inst=new THREE.InstancedMesh(new THREE.BoxGeometry(.95,.42,.6),M('#CDB787'),pts.length*3); const m=new THREE.Matrix4(),q=new THREE.Quaternion(); let n=0;
+  pts.forEach(([x,z],i)=>{ const nx=pts[Math.min(i+1,pts.length-1)], pv=pts[Math.max(i-1,0)]; const r=Math.atan2(-(nx[1]-pv[1]),nx[0]-pv[0]);
+    for(let l=0;l<3;l++){ const off=l===2?.25:0; m.compose(new THREE.Vector3(x+off*Math.cos(r),.21+l*.4,z-off*Math.sin(r)),q.setFromEuler(new THREE.Euler(0,r+R(-.1,.1),0)),new THREE.Vector3(1,1,1)); inst.setMatrixAt(n++,m);} });
+  inst.count=n; inst.castShadow=true; g.add(inst); g.visible=false; world.add(g); return g; })();
+
+world.traverse(o=>{ if(o.isMesh && o!==mapPlane && o!==water){ o.castShadow=true; o.receiveShadow=true; } });
+
+/* =========================================================
+   HOTSPOTS
+   ========================================================= */
+const hsEls=HOTSPOTS.map(h=>{ const b=document.createElement('button'); b.className='hs'; b.innerHTML=`<span class="n">${pad2(h.ch)}</span>${h.label}`; b.onclick=()=>goTo(h.ch); labelsEl.appendChild(b); h.v=new THREE.Vector3(...h.p); return b; });
+
+/* =========================================================
+   CÂMERA / SCROLL / EXPLORAR
+   ========================================================= */
+const K=CH.map(c=>({pos:new THREE.Vector3(...c.cam.pos),tgt:new THREE.Vector3(...c.cam.tgt)}));
+const curPos=K[0].pos.clone(), curTgt=K[0].tgt.clone(), dPos=new THREE.Vector3(), dTgt=new THREE.Vector3();
+camera.position.copy(curPos); camera.lookAt(curTgt);
+let p=0, explore=false, playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mouse={x:0,y:0};
+addEventListener('scroll',()=>{ p=clamp(scrollY/innerHeight,0,N-1); },{passive:true});
+addEventListener('pointermove',e=>{ mouse.x=e.clientX/innerWidth*2-1; mouse.y=e.clientY/innerHeight*2-1; });
+
+const controls=new OrbitControls(camera,canvas);
+controls.enabled=false; controls.enableDamping=true; controls.dampingFactor=.08;
+controls.maxPolarAngle=1.42; controls.minDistance=14; controls.maxDistance=280; controls.screenSpacePanning=false;
+
+function toggleExplore(force){
+  explore = force ?? !explore;
+  document.body.classList.toggle('explore',explore);
+  exploreTop.classList.toggle('on',explore); exploreTop.textContent=explore?'Voltar à história':'Explorar 3D';
+  $('explore').style.background=explore?'var(--acc)':'';
+  if(explore){ controls.target.copy(curTgt); controls.enabled=true; }
+  else { controls.enabled=false; curPos.copy(camera.position); curTgt.copy(controls.target); }
+}
+$('explore').onclick=()=>toggleExplore();
+addEventListener('keydown',e=>{ if(e.key==='Escape' && explore) toggleExplore(false); });
+
+const pauseBtn=$('pause');
+const setPauseIcon=()=>{ pauseBtn.innerHTML=playing?'<svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3" width="2.6" height="10" rx="1"/><rect x="9.4" y="3" width="2.6" height="10" rx="1"/></svg>':'<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L12.8 8z"/></svg>'; pauseBtn.title=playing?'Pausar animação':'Retomar animação'; };
+pauseBtn.onclick=()=>{ playing=!playing; setPauseIcon(); }; setPauseIcon();
+
+addEventListener('resize',()=>{ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); p=clamp(scrollY/innerHeight,0,N-1); });
+camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+
+/* =========================================================
+   LOOP
+   ========================================================= */
+const clock=new THREE.Clock(); let time=0, lastActive=-1; const tmp=new THREE.Vector3();
+function frame(){
+  const dt=Math.min(clock.getDelta(),.05); if(playing) time+=dt; const adt=playing?dt:0;
+
+  if(!explore){
+    if(!Number.isFinite(p)) p=0;
+    const i=clamp(Math.floor(p),0,N-2), f=ease(clamp(p-i,0,1));
+    dPos.lerpVectors(K[i].pos,K[i+1].pos,f); dTgt.lerpVectors(K[i].tgt,K[i+1].tgt,f);
+    const spin=Math.max(0,1-p*1.4)*Math.sin(time*.12)*.45;
+    if(spin){ tmp.subVectors(dPos,dTgt).applyAxisAngle(THREE.Object3D.DEFAULT_UP,spin); dPos.copy(dTgt).add(tmp); }
+    const aspect=innerWidth/innerHeight; if(aspect<1){ tmp.subVectors(dPos,dTgt).multiplyScalar(1+(1-aspect)*1.15); dPos.copy(dTgt).add(tmp); }
+    dPos.x+=mouse.x*3; dPos.y-=mouse.y*2;
+    const k=1-Math.exp(-dt*4.5); curPos.lerp(dPos,k); curTgt.lerp(dTgt,k);
+    camera.position.copy(curPos); camera.lookAt(curTgt);
+  } else controls.update();
+
+  // cartões
+  cards.forEach((c,i)=>{ const w=clamp(1-Math.abs(p-i)*1.8,0,1); c.style.opacity=w; c.style.pointerEvents=w>.6?'auto':'none';
+    c.style.transform=`translateY(calc(${c.classList.contains('intro')?'0px':'-50%'} + ${(i-p)*46}px))`; });
+  const active=clamp(Math.round(p),0,N-1);
+  if(active!==lastActive){ lastActive=active;
+    railBtns.forEach((b,i)=>b.classList.toggle('on',i===active));
+    navBtns.forEach((b,i)=>b.classList.toggle('on',i+1===active));
+    $('cnt').textContent=`${pad2(active)} / ${pad2(N-1)}`;
+    $('nextT').textContent=active>=N-1?'voltar ao início':'role';
+    $('next').querySelector('svg').style.transform=active>=N-1?'rotate(180deg)':''; }
+
+  // enchente
+  const wFlood=explore?0:clamp(1-Math.abs(p-2)*1.3,0,1), fl=ease(wFlood);
+  water.scale.set(1+fl*.75,1,1+fl*.95); water.material.color.set(fl>.01?new THREE.Color('#5C98B2').lerp(new THREE.Color('#7E8F7A'),fl*.55):'#5C98B2');
+  sandbags.visible=fl>.02; sandbags.scale.y=Math.max(fl,.001);
+
+  // animações
+  pivotArms.forEach((g,i)=>g.rotation.y+=adt*(.12+i*.03)*(i%2?-1:1));
+  movers.forEach(o=>updateMover(o,adt));
+  clouds.forEach((c,i)=>{ c.position.x+=adt*(1.2+i*.15); if(c.position.x>110) c.position.x=-110; });
+
+  // hotspots
+  const W=innerWidth,Hh=innerHeight;
+  HOTSPOTS.forEach((h,i)=>{ const el=hsEls[i]; tmp.copy(h.v).project(camera);
+    const vis=tmp.z<1 && Math.abs(tmp.x)<1.05 && Math.abs(tmp.y)<1.05 && (explore || p>.55);
+    el.style.opacity=vis?(explore||h.ch===active?1:.72):0; el.style.pointerEvents=vis?'auto':'none';
+    el.classList.toggle('on',!explore && h.ch===active);
+    el.style.transform=`translate(${(tmp.x*.5+.5)*W}px,${(-tmp.y*.5+.5)*Hh}px) translate(-50%,calc(-100% - 10px))`; });
+
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+p=clamp(scrollY/innerHeight,0,N-1);
+frame();
+requestAnimationFrame(()=>$('loader').classList.add('gone'));
+</script>
+</body>
+</html>
