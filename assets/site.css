@@ -174,6 +174,14 @@ h2.big{font-size:clamp(22px,3.2vw,30px);letter-spacing:-.02em;margin:18px 0 10px
   .proof.shot{grid-template-columns:1fr;gap:16px}
   .proof.shot .shot{order:-1}
 }
+/* selo de status do case: no ar, ferramenta interna, conceitual */
+.st{display:inline-flex;align-items:center;gap:5px;margin-left:10px;padding:2px 8px;border-radius:20px;
+  font-size:9.5px;letter-spacing:.1em;vertical-align:1px;white-space:nowrap;color:var(--c);
+  border:1px solid color-mix(in srgb,var(--c) 38%,transparent);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.st.live{--c:var(--green)}
+.st.live::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st.int{--c:var(--blue)}
+.st.concept{--c:var(--amber)}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
 .chip{font-family:var(--mono);font-size:10.5px;padding:4px 9px;border-radius:20px;
   background:var(--panel2);color:var(--mut);border:1px solid var(--line)}
