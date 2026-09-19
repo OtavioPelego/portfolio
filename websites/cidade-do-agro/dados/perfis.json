@@ -1,6 +1,4 @@
-/* Gerado por ferramentas/perfis.py a partir de dados/perfis.json.
-   Perfis dos parceiros com texto próprio, pesquisado em fontes públicas (nada copiado dos posts). */
-window.PERFIS = {
+{
  "corteva": {
   "sobre": "Multinacional de insumos agrícolas de capital aberto. Reúne sementes, proteção de cultivos e soluções digitais: no Brasil é dona das marcas de sementes Pioneer® e Brevant™ e oferece fungicidas, herbicidas, inseticidas, biológicos e tratamento de sementes.",
   "sede": "Multinacional · atua em todo o Brasil",
@@ -1281,4 +1279,4 @@ window.PERFIS = {
   ],
   "pesquisado": "2026-09-19"
  }
-};
+}

@@ -138,7 +138,7 @@
 <script src="dados/perfis.js"></script>
 <script>
 const RAW=window.EMPRESAS||[], META=window.CIDADE_DO_AGRO||{totalOficiais:RAW.length}, PERFIS=window.PERFIS||{};
-RAW.forEach(e=>{ if(PERFIS[e.id]) e.perfil=PERFIS[e.id]; });
+RAW.forEach(e=>{ const pf=PERFIS[e.id]; if(pf){ e.perfil=pf; if(pf.area) e.area=pf.area; } });
 RAW.forEach(e=>{ if(!e.selo) e.selo='institucional'; });
 const ORD={diamante:0,ouro:1,prata:2,bronze:3,institucional:4};
 const E=[...RAW].sort((a,b)=>(ORD[a.selo]??9)-(ORD[b.selo]??9)||parseFloat(a.post)-parseFloat(b.post)||String(a.post).localeCompare(String(b.post),undefined,{numeric:true}));
