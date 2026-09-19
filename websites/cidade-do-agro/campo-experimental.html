@@ -126,7 +126,7 @@
       <div class="tip" id="tip"></div>
       <div id="loader">montando o campo…</div>
       <div class="hud">
-        <span class="hint">arraste para girar · roda/pinça para zoom · passe o mouse nos animais</span>
+        <span class="hint" id="hint">arraste para mover · botão direito gira · roda para zoom · passe o mouse nos animais</span>
         <button class="btn" id="reset">Ver tudo</button>
       </div>
     </div>
@@ -507,6 +507,12 @@ function updateAnimals(dt){ animals.forEach(o=>{ const p=o.g.position;
 const controls=new OrbitControls(camera,canvas);
 controls.enableDamping=true; controls.dampingFactor=.08; controls.maxPolarAngle=1.36; controls.minDistance=10; controls.maxDistance=230;
 controls.autoRotate=!matchMedia('(prefers-reduced-motion: reduce)').matches; controls.autoRotateSpeed=.35;
+controls.screenSpacePanning=false;
+// como num mapa: arrastar move; botão direito / dois dedos giram; roda / pinça dão zoom
+controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
+controls.touches={ONE:THREE.TOUCH.PAN,TWO:THREE.TOUCH.DOLLY_ROTATE};
+canvas.addEventListener('contextmenu',e=>e.preventDefault());
+if(matchMedia('(pointer: coarse)').matches) document.getElementById('hint').textContent='um dedo move · dois dedos giram e dão zoom · toque numa fatia';
 const HOME={pos:new THREE.Vector3(0,100,112),tgt:new THREE.Vector3(0,0,3)};
 camera.position.copy(HOME.pos); controls.target.copy(HOME.tgt);
 let fly=null;

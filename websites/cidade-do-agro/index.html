@@ -94,6 +94,15 @@
   body.explore .card{opacity:0!important;pointer-events:none!important}
   body.explore .rail, body.explore .next{opacity:.25;pointer-events:none}
 
+  #scene{cursor:grab} #scene.drag{cursor:grabbing}
+  .hud .mid{display:flex;align-items:center;gap:10px}
+  .prev{display:none}
+  body.touch .prev{display:grid}
+  .prev:disabled{opacity:.3;cursor:default}
+  .drag-hint{position:fixed;left:50%;bottom:78px;transform:translate(-50%,8px);z-index:21;font:500 13px/1.35 var(--body);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s;text-align:center;max-width:calc(100vw - 32px)}
+  .drag-hint b{color:var(--acc)}
+  .drag-hint.on{opacity:1;transform:translate(-50%,0)}
+  body.explore .drag-hint{display:none}
   .credit{position:fixed;right:clamp(16px,3vw,36px);bottom:70px;z-index:20;font:400 11px/1.4 var(--body);color:var(--ink-2);text-align:right;max-width:260px}
 
   #loader{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:50;transition:opacity .6s;font:600 13px/1.5 var(--body);letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:24px}
@@ -108,7 +117,8 @@
     .card.intro{bottom:90px}
     .credit{display:none}
     .hs{font-size:11px}
-    .next .t{display:none}
+    .explore-hint{white-space:normal;text-align:center;width:calc(100vw - 32px)}
+    .drag-hint{bottom:auto;top:92px}
   }
 
   /* rótulo com tracinho, como no site oficial */
@@ -131,12 +141,16 @@
 <div id="cards"></div>
 <main id="story"></main>
 
-<div class="explore-hint">arraste para girar · roda/pinça para zoom · <b>Esc</b> para voltar</div>
+<div class="explore-hint">arraste para mover · botão direito ou dois dedos giram · roda/pinça para zoom · <b>Esc</b> volta</div>
+<div class="drag-hint" id="dragHint"></div>
 <div class="credit">Protótipo conceitual, baseado na representação do projeto publicada pela <a href="https://agfeed.com.br/esg/da-tragedia-das-enchentes-ao-desenvolvimento-gauchos-lancam-sementes-para-criar-a-cidade-do-agro-no-rs/" target="_blank" rel="noopener">AgFeed</a> (jun/2026). Site oficial: <a href="https://cidadedoagro.agr.br/" target="_blank" rel="noopener">cidadedoagro.agr.br</a> · maquete por <a href="https://otaviopelego.pages.dev/websites/" target="_blank" rel="noopener">Otávio Pelego</a></div>
 
 <footer class="hud">
   <div class="count"><b></b><span id="cnt">00 / 07</span></div>
+  <div class="mid">
+  <button class="round prev" id="prev" title="Capítulo anterior" aria-label="Capítulo anterior"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 14V3M3.5 7.5 8 3l4.5 4.5"/></svg></button>
   <button class="next" id="next"><span class="t" id="nextT">role</span><span class="round"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></span></button>
+  </div>
   <div class="right">
     <button class="round" id="explore" title="Explorar livremente (girar/zoom)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><ellipse cx="8" cy="8" rx="2.6" ry="6"/><path d="M2 8h12"/></svg></button>
     <button class="round" id="pause" title="Pausar animação"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3" width="2.6" height="10" rx="1"/><rect x="9.4" y="3" width="2.6" height="10" rx="1"/></svg></button>
@@ -178,7 +192,7 @@ const CH = [
     body:'O projeto prevê uma estação de pesquisa e desenvolvimento, com setores que vão do arroz irrigado e das pastagens de inverno às frutíferas nativas, oliveiras, parreiras e ao gado.',
     src:'mix', link:{href:'campo-experimental.html', label:'Ver os 8 setores do campo →'}, cam:{pos:[74,21,-2], tgt:[45,0,-12]} },
   { rail:'Negócios', kicker:'05 · Negócios', title:'Empresas perto do campo',
-    body:'33 empresas já aparecem como oficiais nos posts da Cidade do Agro, de multinacionais como BASF, Corteva e FMC a revendas da região como Agrofel, Planfer e Fronteira Agro. A lista segue crescendo. (Os prédios da maquete ainda são ilustrativos.)',
+    body:'Dezenas de empresas já foram apresentadas como parceiras nos posts da Cidade do Agro, de multinacionais como Bayer, BASF, Corteva e Yara a revendas da região como Agrofel, 3tentos e Semear. A lista segue crescendo. (Os prédios da maquete ainda são ilustrativos.)',
     src:'insta', link:{href:'parceiros.html', label:'Conhecer os parceiros →'}, cam:{pos:[-54,27,44], tgt:[-20,0,12]} },
   { rail:'Educação', kicker:'06 · Educação', title:'O campo como sala de aula',
     body:'Universidades e instituições fazem parte da proposta. Nesta versão, um campus com auditório, laboratórios e estufas — no lugar certo pra trocar pelo que for real.',
@@ -232,6 +246,7 @@ cardsEl.addEventListener('click',e=>{ if(e.target.closest('[data-act=explore]'))
 function goTo(i){ if(explore) toggleExplore(false); scrollTo({top:i*innerHeight,behavior:'smooth'}); }
 $('brand').onclick=()=>goTo(0);
 $('next').onclick=()=>{ const i=Math.round(p); goTo(i>=N-1?0:i+1); };
+$('prev').onclick=()=>{ const i=Math.round(p); if(i>0) goTo(i-1); };
 
 /* =========================================================
    UTIL
@@ -557,14 +572,53 @@ addEventListener('pointermove',e=>{ mouse.x=e.clientX/innerWidth*2-1; mouse.y=e.
 const controls=new OrbitControls(camera,canvas);
 controls.enabled=false; controls.enableDamping=true; controls.dampingFactor=.08;
 controls.maxPolarAngle=1.42; controls.minDistance=14; controls.maxDistance=280; controls.screenSpacePanning=false;
+// como num mapa: arrastar move; botão direito / dois dedos giram; roda / pinça dão zoom
+controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
+controls.touches={ONE:THREE.TOUCH.PAN,TWO:THREE.TOUCH.DOLLY_ROTATE};
+
+/* ---- arrastar o mapa também no modo história ---- */
+const TOUCH=matchMedia('(pointer: coarse)').matches;
+document.body.classList.toggle('touch',TOUCH);
+if(TOUCH){ const ip=document.querySelector('.card.intro p'); ip.innerHTML=ip.innerHTML.replace('Role para percorrer.','Toque em ↓ para percorrer e arraste o mapa para explorar.'); }
+const UP=THREE.Object3D.DEFAULT_UP;
+const user={pan:new THREE.Vector3(),yaw:0,zoom:1,reset:false};
+const ptrs=new Map(); let last={n:0}, dragging=false;
+canvas.style.touchAction='none';
+function snap(){ const a=[...ptrs.values()]; if(!a.length) return {n:0};
+  const x=a.reduce((s,q)=>s+q.x,0)/a.length, y=a.reduce((s,q)=>s+q.y,0)/a.length; if(a.length<2) return {n:1,x,y};
+  const dx=a[1].x-a[0].x, dy=a[1].y-a[0].y; return {n:2,x,y,d:Math.hypot(dx,dy)||1,a:Math.atan2(dy,dx)}; }
+const fwd=new THREE.Vector3(), right=new THREE.Vector3();
+function panBy(dx,dy){
+  const dist=camera.position.distanceTo(curTgt), s=2*dist*Math.tan(camera.fov*Math.PI/360)/innerHeight;
+  camera.getWorldDirection(fwd); fwd.y=0; fwd.normalize(); right.set(-fwd.z,0,fwd.x);
+  user.pan.addScaledVector(right,-dx*s).addScaledVector(fwd,dy*s*1.6);   // câmera inclinada: profundidade anda mais
+  if(user.pan.length()>75) user.pan.setLength(75);
+}
+canvas.addEventListener('pointerdown',e=>{ if(explore) return; ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY}); canvas.setPointerCapture(e.pointerId);
+  last=snap(); dragging=true; user.reset=false; canvas.classList.add('drag'); hideHint(); });
+canvas.addEventListener('pointermove',e=>{ if(explore||!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY}); const now=snap();
+  if(now.n===1&&last.n===1){ if(e.buttons&2||e.shiftKey) user.yaw-=(now.x-last.x)*.006; else panBy(now.x-last.x,now.y-last.y); }
+  else if(now.n===2&&last.n===2){ user.zoom=clamp(user.zoom*last.d/now.d,.35,1.8); user.yaw-=now.a-last.a; panBy(now.x-last.x,now.y-last.y); }
+  last=now; });
+const endPtr=e=>{ ptrs.delete(e.pointerId); last=snap(); if(!ptrs.size){ dragging=false; canvas.classList.remove('drag'); } };
+canvas.addEventListener('pointerup',endPtr); canvas.addEventListener('pointercancel',endPtr);
+canvas.addEventListener('contextmenu',e=>e.preventDefault());
+
+/* ---- dica de uso na abertura ---- */
+const hint=$('dragHint');
+hint.innerHTML=TOUCH?'arraste com um dedo para mover o mapa · pinça para zoom · <b>toque ↓</b> para avançar'
+                    :'clique e arraste para mover o mapa · botão direito gira · <b>role</b> para avançar';
+let hintTimer=setTimeout(()=>hint.classList.add('on'),1400), hintOff=setTimeout(hideHint,9000);
+function hideHint(){ clearTimeout(hintTimer); clearTimeout(hintOff); hint.classList.remove('on'); }
 
 function toggleExplore(force){
   explore = force ?? !explore;
   document.body.classList.toggle('explore',explore);
   exploreTop.classList.toggle('on',explore); exploreTop.textContent=explore?'Voltar à história':'Explorar 3D';
   $('explore').style.background=explore?'var(--acc)':'';
+  ptrs.clear(); dragging=false; hideHint();
   if(explore){ controls.target.copy(curTgt); controls.enabled=true; }
-  else { controls.enabled=false; curPos.copy(camera.position); curTgt.copy(controls.target); }
+  else { controls.enabled=false; curPos.copy(camera.position); curTgt.copy(controls.target); user.reset=true; }
 }
 $('explore').onclick=()=>toggleExplore();
 addEventListener('keydown',e=>{ if(e.key==='Escape' && explore) toggleExplore(false); });
@@ -590,20 +644,24 @@ function frame(){
     const spin=Math.max(0,1-p*1.4)*Math.sin(time*.12)*.45;
     if(spin){ tmp.subVectors(dPos,dTgt).applyAxisAngle(THREE.Object3D.DEFAULT_UP,spin); dPos.copy(dTgt).add(tmp); }
     const aspect=innerWidth/innerHeight; if(aspect<1){ tmp.subVectors(dPos,dTgt).multiplyScalar(1+(1-aspect)*1.15); dPos.copy(dTgt).add(tmp); }
-    dPos.x+=mouse.x*3; dPos.y-=mouse.y*2;
-    const k=1-Math.exp(-dt*4.5); curPos.lerp(dPos,k); curTgt.lerp(dTgt,k);
+    // deslocamento feito pelo usuário (arrastar/pinça); volta suave ao trocar de capítulo
+    if(user.reset&&!dragging){ const d=1-Math.exp(-dt*2.2); user.pan.multiplyScalar(1-d); user.yaw*=1-d; user.zoom+=(1-user.zoom)*d; }
+    tmp.subVectors(dPos,dTgt).applyAxisAngle(UP,user.yaw).multiplyScalar(user.zoom); dTgt.add(user.pan); dPos.copy(dTgt).add(tmp);
+    if(!TOUCH&&!dragging){ dPos.x+=mouse.x*3; dPos.y-=mouse.y*2; }
+    const k=1-Math.exp(-dt*(dragging?12:4.5)); curPos.lerp(dPos,k); curTgt.lerp(dTgt,k);
     camera.position.copy(curPos); camera.lookAt(curTgt);
   } else controls.update();
 
   // cartões
   cards.forEach((c,i)=>{ const w=clamp(1-Math.abs(p-i)*1.8,0,1); c.style.opacity=w; c.style.pointerEvents=w>.6?'auto':'none';
-    c.style.transform=`translateY(calc(${c.classList.contains('intro')?'0px':'-50%'} + ${(i-p)*46}px))`; });
+    c.style.transform=`translateY(calc(${c.classList.contains('intro')||innerWidth<=760?'0px':'-50%'} + ${(i-p)*46}px))`; });
   const active=clamp(Math.round(p),0,N-1);
-  if(active!==lastActive){ lastActive=active;
+  if(active!==lastActive){ if(lastActive>=0) user.reset=true; lastActive=active;
+    $('prev').disabled=active===0;
     railBtns.forEach((b,i)=>b.classList.toggle('on',i===active));
     navBtns.forEach((b,i)=>b.classList.toggle('on',i+1===active));
     $('cnt').textContent=`${pad2(active)} / ${pad2(N-1)}`;
-    $('nextT').textContent=active>=N-1?'voltar ao início':'role';
+    $('nextT').textContent=active>=N-1?'voltar ao início':(TOUCH?'toque':'role');
     $('next').querySelector('svg').style.transform=active>=N-1?'rotate(180deg)':''; }
 
   // enchente
