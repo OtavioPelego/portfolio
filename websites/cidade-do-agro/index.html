@@ -255,6 +255,7 @@ CH.forEach((c,i)=>{
 });
 const campoTop=document.createElement('button'); campoTop.textContent='Campo experimental ↗'; campoTop.onclick=()=>location.href='campo-experimental.html'; topnav.appendChild(campoTop);
 const parcTop=document.createElement('button'); parcTop.textContent='Parceiros ↗'; parcTop.onclick=()=>location.href='parceiros.html'; topnav.appendChild(parcTop);
+const mascTop=document.createElement('button'); mascTop.textContent='Mascote ↗'; mascTop.onclick=()=>location.href='mascote.html'; topnav.appendChild(mascTop);
 const exploreTop=document.createElement('button'); exploreTop.textContent='Explorar 3D'; exploreTop.onclick=()=>toggleExplore(); topnav.appendChild(exploreTop);
 const cards=[...cardsEl.children], railBtns=[...rail.children], navBtns=[...topnav.querySelectorAll('.chap')];
 cardsEl.addEventListener('click',e=>{ if(e.target.closest('[data-act=explore]')) toggleExplore(true); });

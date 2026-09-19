@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mascote — Cidade do Agro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Gochi+Hand&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2EEE7; --paper:#FBF9F4; --ink:#072F2A; --ink-2:#5E6B66; --deep:#0E4038; --acc:#7CC65E;
+    --line:rgba(7,47,42,.14); --glass:rgba(251,249,244,.84);
+    --display:'Manrope',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px clamp(16px,3vw,36px);flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+  .brand img{height:46px;display:block}
+  .brand small{font:500 12px/1.3 var(--body);color:var(--ink-2);border-left:1px solid var(--line);padding-left:14px}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  .btn{font:500 13px/1 var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+  .btn:hover{background:rgba(7,47,42,.06)}
+  .btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .kick{display:inline-flex;align-items:center;gap:10px;font:800 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+  .kick::before{content:"";width:28px;height:2px;background:var(--acc)}
+
+  .hero{max-width:1400px;margin:0 auto;padding:4px clamp(16px,3vw,36px) 28px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:clamp(16px,3vw,44px);align-items:center}
+  .stage{position:relative;height:min(82vh,780px);border-radius:28px;overflow:hidden;background:#dfe9ec;box-shadow:0 26px 60px rgba(7,47,42,.14)}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+  #scene:active{cursor:grabbing}
+  #scene.hover{cursor:pointer}
+  .bubble{position:absolute;left:0;top:0;max-width:260px;background:#fff;color:var(--ink);font:500 14.5px/1.4 var(--body);padding:12px 15px;border-radius:16px;box-shadow:0 10px 30px rgba(7,47,42,.18);opacity:0;transform:translate(-50%,calc(-100% - 14px)) scale(.9);transition:opacity .25s,transform .25s;pointer-events:none}
+  .bubble::after{content:"";position:absolute;left:50%;bottom:-8px;width:16px;height:16px;background:#fff;transform:translateX(-50%) rotate(45deg);border-radius:3px}
+  .bubble.on{opacity:1;transform:translate(-50%,calc(-100% - 14px)) scale(1)}
+  .hud{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;pointer-events:none}
+  .hud > *{pointer-events:auto}
+  .hint{font:500 12px/1.3 var(--body);color:var(--ink);background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 12px;border-radius:999px}
+  .opts{display:flex;gap:6px;flex-wrap:wrap}
+  .opts .btn.on{background:var(--ink);color:var(--bg)}
+  .opts .btn{background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .opts .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  #loader{position:absolute;inset:0;display:grid;place-items:center;font:600 12px/1.5 var(--body);letter-spacing:.1em;text-transform:uppercase;transition:opacity .5s;background:#dfe9ec}
+  #loader.gone{opacity:0;pointer-events:none}
+
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,6.4vw,92px);line-height:.9;letter-spacing:-.045em;margin:14px 0 16px}
+  .intro p{font-size:16.5px;line-height:1.6;color:#16312D;margin:0 0 14px}
+  .tag{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--body);color:var(--ink-2);border:1px dashed rgba(7,47,42,.3);border-radius:999px;padding:7px 11px}
+  .tag i{width:7px;height:7px;border-radius:50%;background:#e0a33a}
+  .facts{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+  .facts div{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 14px;min-width:120px}
+  .facts b{display:block;font-family:var(--display);font-size:24px;letter-spacing:-.03em}
+  .facts span{font-size:12.5px;color:var(--ink-2)}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:30px clamp(16px,3vw,36px)}
+  .sec{display:grid;grid-template-columns:260px 1fr;gap:clamp(16px,4vw,56px);padding:34px 0;border-top:1px solid var(--line)}
+  .sec h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,2.6vw,36px);letter-spacing:-.035em;line-height:1.05;margin:12px 0 0}
+  .sec p{font-size:16px;line-height:1.7;color:#16312D;margin:0 0 14px;max-width:720px}
+  .draft{background:#fbf3e3;border:1px dashed #d9b36a;border-radius:18px;padding:20px 22px}
+  .draft .tag{margin-bottom:12px;background:#fff}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+  .cards article{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px}
+  .cards h3{font-family:var(--display);font-size:18px;letter-spacing:-.02em;margin:8px 0 6px}
+  .cards p{font-size:14.5px;line-height:1.55;margin:0;color:#16312D}
+  .cards .ico{font-size:24px}
+  .wear{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .wear article{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:8px}
+  .wear .sw{width:34px;height:34px;border-radius:10px;border:1px solid var(--line)}
+  .wear h3{font-family:var(--display);font-size:17px;margin:0}
+  .wear p{font-size:14px;line-height:1.55;margin:0}
+  .gallery{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .gallery figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+  .gallery img{width:100%;display:block}
+  .gallery figcaption{font-size:13px;color:var(--ink-2);padding:12px 16px}
+  footer{max-width:1200px;margin:0 auto;padding:10px clamp(16px,3vw,36px) 40px;font:400 12px/1.5 var(--body);color:var(--ink-2)}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .stage{height:64vh}
+    .sec{grid-template-columns:1fr}
+    .gallery{grid-template-columns:1fr}
+    .brand small{display:none}
+  }
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html"><img src="assets/logo-cidade-do-agro.png" alt="Cidade do Agro"><small>maquete digital<br>protótipo v0.4</small></a>
+  <nav>
+    <a class="btn" href="index.html">Maquete</a>
+    <a class="btn" href="campo-experimental.html">Campo experimental</a>
+    <a class="btn" href="parceiros.html">Parceiros</a>
+    <a class="btn on" href="mascote.html" aria-current="page">Mascote</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="stage" id="stage">
+    <canvas id="scene" aria-label="Capivara mascote da Cidade do Agro em 3D"></canvas>
+    <div class="bubble" id="bubble"></div>
+    <div id="loader">chamando a capivara…</div>
+    <div class="hud">
+      <span class="hint" id="hint">arraste para girar · toque na capivara</span>
+      <div class="opts">
+        <button class="btn on" data-lenco="#B3261E"><span class="dot" style="background:#B3261E"></span>lenço vermelho</button>
+        <button class="btn" data-lenco="#4E9A2E"><span class="dot" style="background:#4E9A2E"></span>lenço verde</button>
+        <button class="btn" id="fact">💬 curiosidade</button>
+      </div>
+    </div>
+  </div>
+  <div class="intro">
+    <div class="kick">Mascote · Cidade do Agro</div>
+    <h1>a capivara<br>do agro</h1>
+    <p>Colete verde com o logo, blusa de lã e lenço no pescoço: a mascote da Cidade do Agro está pronta para a lida — e para receber a gurizada.</p>
+    <p>Gira ela, passa o dedo por perto (ela acompanha com o olhar) e toca nela para ouvir uma curiosidade.</p>
+    <span class="tag"><i></i>Nome oficial: a definir</span>
+    <div class="facts">
+      <div><b>~1,2 m</b><span>de comprimento, adulta</span></div>
+      <div><b>até 65 kg</b><span>o maior roedor do mundo</span></div>
+      <div><b>5 min</b><span>debaixo d'água</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <section class="sec">
+    <div><div class="kick">01 · Quem é</div><h2>Uma capivara vestida para o campo</h2></div>
+    <div>
+      <p>A mascote apareceu na divulgação da <b>Fazendinha da 100ª ExpoFeira Pelotas</b>, que a Cidade do Agro apoia: um espaço para as crianças viverem de perto o campo, os animais e tudo o que o agro ensina. O recado dela está na placa da cerca: <b>“o campo também é para os pequenos”</b>.</p>
+      <div class="draft">
+        <span class="tag"><i></i>Proposta de história — aprovar com a equipe</span>
+        <p>Ela nasceu nos banhados do sul, entre as várzeas onde hoje cresce o arroz irrigado. Cresceu vendo o campo mudar: a soja chegando às terras baixas, as pastagens de inverno, o gado no piquete. Curiosa como toda capivara, resolveu sair da beira d'água para conhecer quem faz o agro acontecer — e acabou virando a anfitriã da Cidade do Agro.</p>
+        <p style="margin:0">Hoje ela recebe as visitas, apresenta o campo experimental para a gurizada e não perde uma roda de conversa. Nome? Ainda não tem. Quem sabe as crianças da Fazendinha escolhem?</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div><div class="kick">02 · Por que uma capivara</div><h2>Bicho daqui, de beira d'água e campo</h2></div>
+    <div class="cards">
+      <article><div class="ico">🌾</div><h3>Comedora de capim</h3><p>O nome vem do tupi e quer dizer algo como “comedora de capim”. É herbívora: pasta gramíneas e plantas aquáticas.</p></article>
+      <article><div class="ico">💧</div><h3>Nadadora de primeira</h3><p>Tem membranas entre os dedos e consegue ficar alguns minutos debaixo d'água para escapar de predadores.</p></article>
+      <article><div class="ico">👀</div><h3>Tudo no alto da cabeça</h3><p>Olhos, orelhas e narinas ficam no topo: dá para ficar quase toda submersa e ainda enxergar, ouvir e respirar.</p></article>
+      <article><div class="ico">👨‍👩‍👧‍👦</div><h3>Vive em grupo</h3><p>Capivaras são sociáveis e andam em bandos — combina com um projeto que nasceu para juntar gente.</p></article>
+      <article><div class="ico">🦫</div><h3>Nativa da América do Sul</h3><p>No Rio Grande do Sul é vista nos banhados e beiras de rio, como na Estação Ecológica do Taim, no extremo sul do estado.</p></article>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div><div class="kick">03 · O que ela veste</div><h2>Cada peça tem um porquê</h2></div>
+    <div class="wear">
+      <article><div class="sw" style="background:#1E4A3A"></div><h3>Colete acolchoado</h3><p>Verde da marca, com o logo da Cidade do Agro no peito. Roupa de quem trabalha no campo.</p></article>
+      <article><div class="sw" style="background:#B3261E"></div><h3>Lenço no pescoço</h3><p>Tradição gaúcha. Na primeira arte é vermelho; no cartaz da Fazendinha, verde. Aqui dá para trocar.</p></article>
+      <article><div class="sw" style="background:#EDE3CD"></div><h3>Blusa de lã</h3><p>Porque o inverno no sul não é brincadeira — e a lã é produto da nossa ovinocultura.</p></article>
+      <article><div class="sw" style="background:#B98A5A"></div><h3>A cerca e a placa</h3><p>Cerca de madeira de piquete e a placa com o recado: o campo também é para os pequenos ♥.</p></article>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div><div class="kick">04 · Onde já apareceu</div><h2>A arte original</h2></div>
+    <div class="gallery">
+      <figure><img src="assets/mascote/capivara-arte.jpg" alt="Capivara de colete verde da Cidade do Agro apoiada numa cerca com a placa 'O campo também é para os pequenos'" loading="lazy"><figcaption>A mascote com lenço vermelho — arte da Cidade do Agro.</figcaption></figure>
+      <figure><img src="assets/mascote/fazendinha-expofeira.jpg" alt="Cartaz da Fazendinha da ExpoFeira Pelotas com a capivara de lenço verde, apoio Cidade do Agro" loading="lazy"><figcaption>Cartaz da Fazendinha da 100ª ExpoFeira Pelotas (apoio Cidade do Agro). Inscrições até 21/09; ExpoFeira de 5 a 12 de outubro.</figcaption></figure>
+    </div>
+  </section>
+</main>
+
+<footer>A capivara 3D é uma reconstrução a partir das artes da Cidade do Agro. Curiosidades sobre capivaras: informação geral. A história da personagem é uma proposta, ainda sem aprovação da equipe.</footer>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const FACTS=[
+  'Sabia que eu sou o maior roedor do mundo? Adulta, passo de 1 metro!',
+  'Meu nome vem do tupi e quer dizer algo como “comedora de capim”. 🌾',
+  'Tenho membranas entre os dedos: sou ótima nadadora!',
+  'Olhos, orelhas e narinas no alto da cabeça: fico quase toda na água e ainda enxergo tudo.',
+  'Aguento alguns minutos debaixo d\'água quando preciso me esconder.',
+  'Vivo em grupo — gosto de gente reunida, igual a Cidade do Agro.',
+  'Aqui no sul eu adoro os banhados, como os do Taim.',
+  'O campo também é para os pequenos! 💚',
+];
+
+/* ---------- utilidades ---------- */
+const rnd=(a,b)=>a+(b-a)*Math.random();
+const stage=document.getElementById('stage'), canvas=document.getElementById('scene');
+const TOUCH=matchMedia('(pointer: coarse)').matches;
+if(TOUCH) document.getElementById('hint').textContent='arraste para girar · toque na capivara';
+
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0;
+const scene=new THREE.Scene();
+const pmrem=new THREE.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;
+
+// céu
+{ const c=document.createElement('canvas'); c.width=4; c.height=512; const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,0,512); g.addColorStop(0,'#bcd8e8'); g.addColorStop(.55,'#e4eee9'); g.addColorStop(1,'#f3ecd9'); x.fillStyle=g; x.fillRect(0,0,4,512);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; scene.background=t; }
+scene.fog=new THREE.Fog(0xe6eee6,9,30);
+
+const camera=new THREE.PerspectiveCamera(32,1,.05,120);
+camera.position.set(2.3,1.45,3.25);
+const controls=new OrbitControls(camera,canvas);
+controls.target.set(.3,1.02,.15); controls.enableDamping=true; controls.dampingFactor=.07; controls.enablePan=false;
+controls.minDistance=1.5; controls.maxDistance=6.5; controls.minPolarAngle=.55; controls.maxPolarAngle=1.62;
+controls.autoRotate=false; controls.autoRotateSpeed=.6;
+
+scene.add(new THREE.HemisphereLight(0xe3f0ff,0x5f7d3c,.75));
+const sun=new THREE.DirectionalLight(0xfff0d6,2.3); sun.position.set(3,5.5,4); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-3,right:3,top:3,bottom:-2,near:1,far:15}); sun.shadow.bias=-0.0006; sun.shadow.normalBias=.02;
+scene.add(sun);
+const rim=new THREE.DirectionalLight(0xffe2b8,1.3); rim.position.set(-2.5,2.6,-3); scene.add(rim);
+
+/* ---------- texturas desenhadas ---------- */
+function canvasTex(w,h,draw,{rep=[1,1],srgb=true}={}){ const c=document.createElement('canvas'); c.width=w; c.height=h; draw(c.getContext('2d'),w,h);
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(...rep); if(srgb) t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=8; return t; }
+// tricô da blusa
+const knit=canvasTex(256,256,(x,w,h)=>{ x.fillStyle='#ece2cb'; x.fillRect(0,0,w,h);
+  for(let i=0;i<w;i+=16){ for(let j=0;j<h;j+=12){ x.fillStyle='rgba(120,95,60,.18)'; x.beginPath(); x.moveTo(i,j); x.lineTo(i+8,j+12); x.lineTo(i+16,j); x.lineTo(i+14,j); x.lineTo(i+8,j+9); x.lineTo(i+2,j); x.fill(); } }
+},{rep:[4,4]});
+// acolchoado do colete
+const quilt=canvasTex(64,256,(x,w,h)=>{ const n=5; for(let k=0;k<n;k++){ const y0=k*h/n, hh=h/n; const g=x.createLinearGradient(0,y0,0,y0+hh);
+  g.addColorStop(0,'#5a5a5a'); g.addColorStop(.18,'#bdbdbd'); g.addColorStop(.5,'#ffffff'); g.addColorStop(.82,'#bdbdbd'); g.addColorStop(1,'#4a4a4a'); x.fillStyle=g; x.fillRect(0,y0,w,hh); } },{rep:[1,5],srgb:false});
+// madeira
+function woodDraw(x,w,h,base='#b8895a'){ x.fillStyle=base; x.fillRect(0,0,w,h);
+  for(let i=0;i<70;i++){ const y=Math.random()*h; x.strokeStyle=`rgba(${80+Math.random()*30},${50+Math.random()*20},25,${.12+Math.random()*.2})`; x.lineWidth=.6+Math.random()*2.2; x.beginPath();
+    for(let X=0;X<=w;X+=8){ const Y=y+Math.sin(X*.018+i)*4+Math.sin(X*.07+i*3)*1.2; X?x.lineTo(X,Y):x.moveTo(X,Y);} x.stroke(); }
+  for(let k=0;k<3;k++){ const cx=Math.random()*w, cy=Math.random()*h; for(let r=10;r>1;r-=2){ x.strokeStyle='rgba(70,40,20,.25)'; x.beginPath(); x.ellipse(cx,cy,r*2.2,r,0,0,Math.PI*2); x.stroke(); } } }
+const wood=canvasTex(512,128,(x,w,h)=>woodDraw(x,w,h),{rep:[1,1]});
+// ruído do pelo
+const furNoise=(()=>{ const S=256, d=new Uint8Array(S*S*4); for(let i=0;i<S*S;i++){ const v=Math.random()*255; d[i*4]=d[i*4+1]=d[i*4+2]=v; d[i*4+3]=255; }
+  const t=new THREE.DataTexture(d,S,S); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.magFilter=THREE.NearestFilter; t.needsUpdate=true; return t; })();
+// grama do chão
+const groundTex=canvasTex(512,512,(x,w,h)=>{ x.fillStyle='#6f9446'; x.fillRect(0,0,w,h); for(let i=0;i<5000;i++){ x.fillStyle=`hsla(${80+Math.random()*25},${35+Math.random()*25}%,${28+Math.random()*22}%,.5)`; x.fillRect(Math.random()*w,Math.random()*h,1.5,4); } },{rep:[14,14]});
+
+/* ---------- materiais ---------- */
+const M=(c,o={})=>new THREE.MeshStandardMaterial({color:c,roughness:.85,...o});
+const matKnit=M('#ffffff',{map:knit,bumpMap:knit,bumpScale:.6,roughness:.95});
+const matVest=new THREE.MeshPhysicalMaterial({color:'#1E4A3A',roughness:.55,sheen:.6,sheenColor:new THREE.Color('#5d8a73'),bumpMap:quilt,bumpScale:1.1,side:THREE.DoubleSide});
+const matLenco=new THREE.MeshPhysicalMaterial({color:'#B3261E',roughness:.8,sheen:1,sheenColor:new THREE.Color('#ff8f84')});
+const matWood=M('#ffffff',{map:wood,bumpMap:wood,bumpScale:1.2,roughness:.9});
+const matDark=M('#2a211d',{roughness:.45});
+const matClaw=M('#1b1512',{roughness:.35});
+
+// pelo por camadas (shell fur): cada camada é uma casca empurrada pela normal, com fios recortados pelo ruído
+const FUR_SHELLS=TOUCH?12:18;
+function furMat(color,h,len,den){
+  const m=new THREE.MeshStandardMaterial({color,roughness:1});
+  m.defines={USE_UV:''};
+  m.onBeforeCompile=s=>{
+    Object.assign(s.uniforms,{uH:{value:h},uLen:{value:len},uDen:{value:den},uNoise:{value:furNoise}});
+    s.vertexShader=s.vertexShader.replace('void main() {','uniform float uH; uniform float uLen;\nvoid main() {')
+      .replace('#include <begin_vertex>','#include <begin_vertex>\n transformed += normal * uLen * uH; transformed.y -= uH*uH*uLen*.45;');
+    s.fragmentShader=s.fragmentShader.replace('void main() {','uniform float uH; uniform float uDen; uniform sampler2D uNoise;\nvoid main() {')
+      .replace('#include <map_fragment>','#include <map_fragment>\n float nz=texture2D(uNoise,vUv*uDen).r; if(uH>0.0 && nz<uH*.92+.04) discard; diffuseColor.rgb *= mix(.55,1.1,uH);');
+  };
+  m.customProgramCacheKey=()=>'fur';
+  return m;
+}
+function furry(geo,color,{len=.02,den=70}={}){
+  const g=new THREE.Group(); const base=new THREE.Mesh(geo,M(color,{roughness:.95})); base.castShadow=true; base.receiveShadow=true; g.add(base);
+  for(let i=1;i<=FUR_SHELLS;i++){ const s=new THREE.Mesh(geo,furMat(color,i/FUR_SHELLS,len,den)); s.castShadow=i<3; g.add(s); }
+  return g;
+}
+
+/* ---------- cenário ---------- */
+const ground=new THREE.Mesh(new THREE.CircleGeometry(40,64),M('#ffffff',{map:groundTex,roughness:1}));
+ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+
+// grama que balança
+const grassMat=M('#ffffff',{side:THREE.DoubleSide,roughness:.9});
+const grassU={value:0};
+grassMat.onBeforeCompile=s=>{ s.uniforms.uTime=grassU;
+  s.vertexShader=s.vertexShader.replace('void main() {','uniform float uTime;\nvoid main() {').replace('#include <begin_vertex>',
+  `#include <begin_vertex>
+   vec4 ip=instanceMatrix[3]; float k=uv.y*uv.y;
+   float sw=sin(uTime*1.6+ip.x*1.3+ip.z*.9)*.07+sin(uTime*3.3+ip.x*4.1)*.018;
+   transformed.x+=sw*k; transformed.z+=sw*.4*k;`); };
+{ const geo=new THREE.PlaneGeometry(.035,.34,1,4); geo.translate(0,.17,0);
+  const N=TOUCH?5000:9000; const inst=new THREE.InstancedMesh(geo,grassMat,N); const m=new THREE.Matrix4(), q=new THREE.Quaternion(), c=new THREE.Color(); let n=0;
+  while(n<N){ const r=Math.sqrt(Math.random())*7.5+.2, a=Math.random()*Math.PI*2, x=Math.cos(a)*r, z=Math.sin(a)*r*.9+.6;
+    if(Math.abs(x)<.5&&z>-.45&&z<.42) continue;
+    const s=rnd(.5,1.25)*(z>.4&&z<1.6&&Math.abs(x)<2.6?.75:1);
+    m.compose(new THREE.Vector3(x,0,z),q.setFromEuler(new THREE.Euler(rnd(-.25,.25),rnd(0,6.28),rnd(-.25,.25))),new THREE.Vector3(1,s,1)); inst.setMatrixAt(n,m);
+    c.setHSL(rnd(.22,.29),rnd(.35,.6),rnd(.26,.44)); inst.setColorAt(n,c); n++; }
+  inst.receiveShadow=true; scene.add(inst); }
+
+// cerca de madeira
+function woodBox(w,h,d,x,y,z,ry=0){ const g=new RoundedBoxGeometry(w,h,d,3,.012); const m=new THREE.Mesh(g,matWood); m.position.set(x,y,z); m.rotation.y=ry; m.castShadow=m.receiveShadow=true; scene.add(m); return m; }
+woodBox(4.4,.13,.07,-.3,1.0,.46);   // travessa de cima (onde a capivara se apoia)
+woodBox(4.4,.12,.07,-.3,.58,.46);
+[-2.3,-.95,1.7].forEach(x=>woodBox(.13,1.22,.11,x,.61,.52));
+
+// placa entalhada
+let signMesh;
+async function makeSign(){
+  try{ await document.fonts.load('80px "Gochi Hand"'); }catch(e){}
+  const t=canvasTex(1024,700,(x,w,h)=>{ woodDraw(x,w,h,'#c69a68');
+    x.fillStyle='rgba(60,35,15,.12)'; x.fillRect(0,0,w,14); x.fillRect(0,h-14,w,14);
+    x.fillStyle='#3a2414'; x.textAlign='center'; x.font='96px "Gochi Hand", "Comic Sans MS", cursive';
+    ['O CAMPO','TAMBÉM É PARA','OS PEQUENOS'].forEach((s,i)=>x.fillText(s,w/2,180+i*140));
+    x.lineWidth=9; x.strokeStyle='#3a2414'; x.beginPath(); const cx=w/2, cy=600;
+    x.moveTo(cx,cy+30); x.bezierCurveTo(cx-60,cy-10,cx-40,cy-55,cx,cy-25); x.bezierCurveTo(cx+40,cy-55,cx+60,cy-10,cx,cy+30); x.stroke();
+    for(const [px,py] of [[40,40],[w-40,40],[40,h-40],[w-40,h-40]]){ x.fillStyle='#6d6a64'; x.beginPath(); x.arc(px,py,11,0,7); x.fill(); x.fillStyle='#9a968d'; x.beginPath(); x.arc(px-3,py-3,5,0,7); x.fill(); }
+  });
+  t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;
+  const g=new RoundedBoxGeometry(.96,.66,.04,3,.01);
+  const front=new THREE.MeshStandardMaterial({map:t,bumpMap:t,bumpScale:.8,roughness:.9});
+  signMesh=new THREE.Mesh(g,[matWood,matWood,matWood,matWood,front,matWood]);
+  signMesh.position.set(.9,.74,.515); signMesh.rotation.z=.035; signMesh.castShadow=signMesh.receiveShadow=true; scene.add(signMesh);
+}
+makeSign();
+
+// cata-vento e celeiro ao fundo
+const windmill=new THREE.Group(); windmill.position.set(-3.6,0,-6.5); scene.add(windmill);
+{ const metal=M('#7d8286',{metalness:.5,roughness:.5});
+  for(const [x,z] of [[-.35,-.35],[.35,-.35],[-.35,.35],[.35,.35]]){ const leg=new THREE.Mesh(new THREE.CylinderGeometry(.025,.03,4.2,6),metal); leg.position.set(x*.55,2.1,z*.55); leg.rotation.set(z*.16,0,-x*.16); windmill.add(leg); }
+  for(let y=.6;y<3.8;y+=.8){ const r=new THREE.Mesh(new THREE.TorusGeometry(.4-(y/4.2)*.28,.012,4,4),metal); r.rotation.set(Math.PI/2,0,Math.PI/4); r.position.y=y; windmill.add(r); }
+  const rotor=new THREE.Group(); rotor.position.set(0,4.25,.12); windmill.add(rotor); windmill.userData.rotor=rotor;
+  for(let i=0;i<14;i++){ const b=new THREE.Mesh(new THREE.BoxGeometry(.13,.85,.012),M('#9aa0a4',{metalness:.4,roughness:.45})); b.position.set(0,.55,0); const p=new THREE.Group(); p.rotation.z=i/14*Math.PI*2; b.rotation.y=.35; p.add(b); rotor.add(p); }
+  const tail=new THREE.Mesh(new THREE.BoxGeometry(.02,.45,.9),metal); tail.position.set(0,4.25,-.55); windmill.add(tail); }
+{ const barn=new THREE.Group(); barn.position.set(4.6,0,-7.5); barn.rotation.y=-.5; scene.add(barn);
+  const body=new THREE.Mesh(new THREE.BoxGeometry(2.6,1.9,2.2),M('#a8322a')); body.position.y=.95; barn.add(body);
+  const s=new THREE.Shape(); s.moveTo(-1.45,0); s.lineTo(1.45,0); s.lineTo(0,1.1); s.closePath();
+  const roofEnd=new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:2.3,bevelEnabled:false}),M('#a8322a')); roofEnd.position.set(0,1.9,-1.15); barn.add(roofEnd);
+  const trimM=M('#f3efe6'); [[0,.95,1.11,1.2,1.5],[0,1.85,1.11,2.62,.06]].forEach(([x,y,z,w,h])=>{ const t=new THREE.Mesh(new THREE.BoxGeometry(w,h,.03),trimM); t.position.set(x,y,z); barn.add(t); });
+  for(const r of [.9,-.9]){ const d=new THREE.Mesh(new THREE.BoxGeometry(1.5,.06,.03),trimM); d.position.set(0,.95,1.12); d.rotation.z=r; barn.add(d); } }
+// árvores
+for(let i=0;i<26;i++){ const a=rnd(-2.6,2.6)+Math.PI*1.5, r=rnd(14,24); const x=Math.cos(a)*r*1.3, z=Math.sin(a)*r;
+  const t=new THREE.Group(); t.position.set(x,0,z); scene.add(t); const h=rnd(1.6,3);
+  const tr=new THREE.Mesh(new THREE.CylinderGeometry(.08,.14,h,6),M('#5d4430')); tr.position.y=h/2; t.add(tr);
+  for(let k=0;k<4;k++){ const c=new THREE.Mesh(new THREE.IcosahedronGeometry(rnd(.8,1.4),1),M(new THREE.Color().setHSL(rnd(.24,.3),.4,rnd(.25,.36)),{flatShading:true})); c.position.set(rnd(-.6,.6),h+rnd(0,.9),rnd(-.6,.6)); t.add(c);} }
+
+/* ---------- a capivara ---------- */
+const capy=new THREE.Group(); scene.add(capy);
+const FUR='#9B6036', FUR_LIGHT='#B07A4A', FUR_DARK='#6E4226';
+
+// cabeça: esfera deformada até virar o "tijolo" arredondado típico da capivara
+function capyHeadGeo(){ const g=new THREE.SphereGeometry(1,72,56); const p=g.attributes.position, v=new THREE.Vector3();
+  for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); const P=3.2;
+    const n=Math.pow(Math.pow(Math.abs(v.x),P)+Math.pow(Math.abs(v.y),P)+Math.pow(Math.abs(v.z),P),1/P); v.divideScalar(n);
+    const f=Math.max(0,v.z);                       // frente
+    v.x*=1-.12*f;                                  // focinho um pouco mais estreito
+    if(v.y>0) v.y*=.82+.14*f; else v.y*=1.0-.04*f;  // topo achatado, focinho alto
+    if(v.z<0) v.z*=.8;                              // nuca mais curta
+    v.x*=.165; v.y*=.185; v.z*=.35; p.setXYZ(i,v.x,v.y,v.z); }
+  g.computeVertexNormals(); return g; }
+
+const torsoY=.98;
+// corpo (sentado sobre as patas de trás) — quase todo coberto pela roupa
+const hips=furry(new THREE.SphereGeometry(1,40,30).scale(.36,.3,.33),FUR,{len:.02,den:60}); hips.position.set(0,.56,-.02); capy.add(hips);
+const torso=new THREE.Mesh(new THREE.SphereGeometry(1,48,36).scale(.33,.43,.28),matKnit); torso.position.y=torsoY; torso.castShadow=true; capy.add(torso);
+
+// colete: casca aberta em cima (gola) e embaixo
+const vestGeo=new THREE.SphereGeometry(1,64,48,0,Math.PI*2,.52,2.1).scale(.352,.452,.305);
+const vest=new THREE.Mesh(vestGeo,matVest); vest.position.y=torsoY-.01; vest.castShadow=true; capy.add(vest);
+{ // zíper e gola
+  const pts=[]; for(let t=.55;t<=2.6;t+=.05){ pts.push(new THREE.Vector3(0,Math.cos(t)*.452+torsoY-.01,Math.sin(t)*.305+.004)); }
+  const zip=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),60,.006,6),M('#3b3f3e',{metalness:.85,roughness:.28})); capy.add(zip);
+  const pull=new THREE.Mesh(new RoundedBoxGeometry(.028,.05,.01,2,.004),M('#2f3332',{metalness:.9,roughness:.25})); pull.position.set(.012,torsoY+.2,.29); pull.rotation.x=-.35; capy.add(pull);
+  const collar=new THREE.Mesh(new THREE.TorusGeometry(.17,.042,16,48),matVest); collar.rotation.x=Math.PI/2; collar.scale.set(1,.85,1); collar.position.set(0,torsoY+.39,.0); capy.add(collar);
+}
+// logo no peito (decal sobre o colete)
+new THREE.TextureLoader().load('assets/logo-cidade-do-agro-claro.png',tex=>{ tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=8;
+  vest.updateMatrixWorld(true);
+  const ray=new THREE.Raycaster(new THREE.Vector3(-.15,torsoY+.13,2),new THREE.Vector3(0,0,-1)); const hit=ray.intersectObject(vest)[0]; if(!hit) return;
+  const n=hit.face.normal.clone().transformDirection(vest.matrixWorld);
+  const o=new THREE.Object3D(); o.position.copy(hit.point); o.lookAt(hit.point.clone().add(n));
+  const dg=new DecalGeometry(vest,hit.point,o.rotation,new THREE.Vector3(.2,.08,.2));
+  const dm=new THREE.MeshStandardMaterial({map:tex,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,roughness:.7});
+  const decal=new THREE.Mesh(dg,dm); capy.add(decal); capy.worldToLocal; });
+
+// pescoço + lenço
+const neck=furry(new THREE.CylinderGeometry(.14,.16,.2,32,1,true),FUR,{len:.018,den:40}); neck.position.set(0,torsoY+.46,.02); capy.add(neck);
+const lenco=new THREE.Group(); capy.add(lenco);
+{ const band=new THREE.Mesh(new THREE.TorusGeometry(.152,.036,16,56),matLenco); band.rotation.x=Math.PI/2+.12; band.position.set(0,torsoY+.42,.03); lenco.add(band);
+  const knot=new THREE.Mesh(new THREE.SphereGeometry(.042,20,16).scale(1.2,.9,.8),matLenco); knot.position.set(.055,torsoY+.37,.2); lenco.add(knot);
+  for(const [rz,dx] of [[.5,.02],[-.35,.1]]){ const tail=new THREE.Mesh(new THREE.ConeGeometry(.055,.2,3,1).scale(1,1,.35),matLenco); tail.position.set(.055+dx,torsoY+.27,.215); tail.rotation.set(-.15,0,Math.PI+rz); lenco.add(tail); }
+  const flap=new THREE.Mesh(new THREE.ConeGeometry(.12,.2,3).scale(1,1,.25),matLenco); flap.position.set(-.02,torsoY+.3,.2); flap.rotation.set(-.2,0,Math.PI); lenco.add(flap); }
+
+// braços (mangas de lã) apoiados na cerca + patas com garras
+const paws=[];
+for(const s of [-1,1]){
+  const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(s*.27,torsoY+.2,.02),new THREE.Vector3(s*.36,torsoY+.02,.16),new THREE.Vector3(s*.33,1.03,.36),new THREE.Vector3(s*.31,1.07,.42)]);
+  const sleeve=new THREE.Mesh(new THREE.TubeGeometry(curve,40,.078,20),matKnit); sleeve.castShadow=true; capy.add(sleeve);
+  const cuff=new THREE.Mesh(new THREE.TorusGeometry(.075,.018,10,28),matKnit); cuff.position.set(s*.315,1.065,.4); cuff.rotation.x=Math.PI/2+.25; capy.add(cuff);
+  const paw=furry(new THREE.SphereGeometry(1,32,24).scale(.078,.05,.085),FUR_DARK,{len:.012,den:40}); paw.position.set(s*.31,1.1,.45); capy.add(paw); paws.push(paw);
+  for(let k=0;k<4;k++){ const fx=s*.31+(k-1.5)*.034; const claw=new THREE.Mesh(new THREE.ConeGeometry(.011,.055,8),matClaw); claw.position.set(fx,1.07,.515); claw.rotation.x=Math.PI*.82; capy.add(claw);
+    const toe=new THREE.Mesh(new THREE.SphereGeometry(.02,12,10),M(FUR_DARK,{roughness:.95})); toe.position.set(fx,1.09,.5); capy.add(toe); }
+}
+
+// cabeça
+const head=new THREE.Group(); head.position.set(0,torsoY+.56,.04); capy.add(head);
+const headFur=furry(capyHeadGeo(),FUR,{len:.016,den:85}); headFur.position.z=.1; head.add(headFur);
+// focinho mais claro por cima (máscara)
+const muzzle=furry(new THREE.SphereGeometry(1,40,30).scale(.12,.11,.09),FUR_LIGHT,{len:.01,den:60}); muzzle.position.set(0,-.045,.37); head.add(muzzle);
+// nariz (rinário) e narinas
+const nose=new THREE.Group(); nose.position.set(0,.045,.44); head.add(nose);
+{ const rh=new THREE.Mesh(new THREE.SphereGeometry(1,32,20).scale(.085,.045,.035),M('#2b221e',{roughness:.35,metalness:.05})); nose.add(rh);
+  for(const s of [-1,1]){ const n=new THREE.Mesh(new THREE.CapsuleGeometry(.009,.035,4,8),M('#0e0b0a',{roughness:.6})); n.position.set(s*.05,.004,.03); n.rotation.set(Math.PI/2,0,s*.9); nose.add(n); }
+  const lip=new THREE.Mesh(new THREE.BoxGeometry(.006,.05,.01),matDark); lip.position.set(0,-.05,.028); nose.add(lip);
+  const mouth=new THREE.Mesh(new THREE.TorusGeometry(.055,.004,6,24,Math.PI),matDark); mouth.position.set(0,-.085,.005); mouth.rotation.set(-.2,0,Math.PI); nose.add(mouth); }
+// olhos (no alto e de lado) com pálpebra para piscar
+const lids=[];
+for(const s of [-1,1]){ const e=new THREE.Group(); e.position.set(s*.142,.1,.06); e.rotation.y=s*.75; head.add(e);
+  const ball=new THREE.Mesh(new THREE.SphereGeometry(.032,32,24),new THREE.MeshPhysicalMaterial({color:'#120d0b',roughness:.05,clearcoat:1,clearcoatRoughness:.02})); e.add(ball);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.033,.007,10,32),M('#3a261a',{roughness:.7})); ring.position.z=.004; e.add(ring);
+  const lid=new THREE.Mesh(new THREE.SphereGeometry(.036,24,16,0,Math.PI*2,0,Math.PI/2),M(FUR,{roughness:.95})); lid.rotation.x=Math.PI/2*0; lid.scale.set(1,.02,1); lid.position.y=.001; e.add(lid); lids.push(lid);
+  const brow=furry(new THREE.SphereGeometry(1,20,14).scale(.05,.02,.04),FUR_DARK,{len:.008,den:40}); brow.position.set(0,.03,-.005); e.add(brow); }
+// orelhas pequenas e arredondadas
+const ears=[];
+for(const s of [-1,1]){ const ear=new THREE.Group(); ear.position.set(s*.115,.155,-.16); ear.rotation.set(-.3,s*.6,s*-.35); head.add(ear); ears.push(ear);
+  const outer=furry(new THREE.SphereGeometry(1,24,18).scale(.042,.048,.018),FUR_DARK,{len:.008,den:30}); ear.add(outer);
+  const inner=new THREE.Mesh(new THREE.SphereGeometry(1,20,14).scale(.028,.033,.008),M('#4a2f22',{roughness:.9})); inner.position.z=.012; ear.add(inner); }
+// bigodes
+{ const wm=new THREE.MeshStandardMaterial({color:'#1e1714',roughness:.6,transparent:true,opacity:.75});
+  for(const s of [-1,1]) for(let k=0;k<6;k++){ const y0=-.01-k*.015, a=(k-2.5)*.12;
+    const c=new THREE.CatmullRomCurve3([new THREE.Vector3(s*.085,y0+.01,.4),new THREE.Vector3(s*(.18+k*.01),y0+a*.25,.44),new THREE.Vector3(s*(.28+k*.012),y0+a*.6-.03,.42)]);
+    head.add(new THREE.Mesh(new THREE.TubeGeometry(c,12,.0016,4),wm)); } }
+
+capy.traverse(o=>{ if(o.isMesh && !o.material.transparent){ o.receiveShadow=true; } });
+
+/* ---------- interação ---------- */
+document.querySelectorAll('[data-lenco]').forEach(b=>b.onclick=()=>{ matLenco.color.set(b.dataset.lenco); matLenco.sheenColor.set(b.dataset.lenco).offsetHSL(0,0,.25);
+  document.querySelectorAll('[data-lenco]').forEach(x=>x.classList.toggle('on',x===b)); happy(); });
+const bubble=document.getElementById('bubble'); let bubbleT=0, factI=Math.floor(Math.random()*FACTS.length);
+function say(){ factI=(factI+1)%FACTS.length; bubble.textContent=FACTS[factI]; bubble.classList.add('on'); bubbleT=5; }
+document.getElementById('fact').onclick=()=>{ say(); happy(); };
+let happyT=0; function happy(){ happyT=1.2; }
+
+const ptr=new THREE.Vector2(), look=new THREE.Vector2(); let down=null, lastInteract=performance.now();
+const ray=new THREE.Raycaster();
+canvas.addEventListener('pointermove',e=>{ const r=canvas.getBoundingClientRect(); ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); lastInteract=performance.now();
+  ray.setFromCamera(ptr,camera); canvas.classList.toggle('hover',ray.intersectObject(capy,true).length>0); });
+canvas.addEventListener('pointerdown',e=>{ down=[e.clientX,e.clientY]; controls.autoRotate=false; });
+canvas.addEventListener('pointerup',e=>{ if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6) return; const r=canvas.getBoundingClientRect();
+  ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(ptr,camera);
+  if(ray.intersectObject(capy,true).length){ say(); happy(); } });
+
+function resize(){ const w=stage.clientWidth, h=stage.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h;
+  camera.setViewOffset(w,h,0,0,w,h); camera.updateProjectionMatrix(); if(w<600){ const d=camera.position.clone().sub(controls.target); d.setLength(Math.max(d.length(),4.4)); camera.position.copy(controls.target).add(d); } }
+new ResizeObserver(resize).observe(stage); resize();
+
+/* ---------- animação ---------- */
+const clock=new THREE.Clock(); let t=0, blinkIn=2, blinkT=0, earIn=3, earT=0, earSide=0, noseT=0;
+const tmp=new THREE.Vector3(), headWorld=new THREE.Vector3();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function frame(){ const dt=Math.min(clock.getDelta(),.05); t+=dt; grassU.value=reduce?0:t;
+  // respiração
+  const br=1+Math.sin(t*1.7)*.012; torso.scale.set(1,br,1); vest.scale.set(1,br,1);
+  // cabeça acompanha o ponteiro (ou o olhar da câmera quando parado)
+  const idle=(performance.now()-lastInteract)>4000;
+  const tx=idle?Math.sin(t*.35)*.25:ptr.x*.45, ty=idle?Math.sin(t*.5)*.05+.02:ptr.y*.25;
+  look.x+=(tx-look.x)*Math.min(1,dt*3); look.y+=(ty-look.y)*Math.min(1,dt*3);
+  let nod=0; if(happyT>0){ happyT-=dt; nod=Math.sin((1.2-happyT)*14)*.12*Math.min(1,happyT*2); }
+  head.rotation.y=look.x; head.rotation.x=-look.y+nod; head.rotation.z=-look.x*.08;
+  // piscar
+  blinkIn-=dt; if(blinkIn<=0){ blinkT=.16; blinkIn=rnd(2.2,5); }
+  if(blinkT>0){ blinkT-=dt; const k=Math.sin(Math.max(0,blinkT)/.16*Math.PI); lids.forEach(l=>l.scale.y=.02+k*.98); } else lids.forEach(l=>l.scale.y=.02);
+  // orelhas
+  earIn-=dt; if(earIn<=0){ earT=.35; earSide=Math.random()<.5?0:1; earIn=rnd(2.5,6); }
+  ears.forEach((e,i)=>{ const base=i?-.25:.25; const w=(earT>0&&(i===earSide||happyT>0))?Math.sin(earT*40)*.25:0; e.rotation.z=base*-1+w; }); if(earT>0) earT-=dt;
+  if(happyT>0) ears.forEach((e,i)=>e.rotation.z+=Math.sin(t*30+i)*.15);
+  // focinho mexendo
+  noseT+=dt; const nt=(noseT%3.2)<.6?Math.sin(noseT*40)*.03:0; nose.scale.set(1+nt,1-nt*.5,1);
+  // cata-vento
+  if(!reduce) windmill.userData.rotor.rotation.z-=dt*1.4;
+  // balão
+  if(bubbleT>0){ bubbleT-=dt; if(bubbleT<=0) bubble.classList.remove('on');
+    head.getWorldPosition(headWorld); tmp.copy(headWorld).add(new THREE.Vector3(0,.33,0)).project(camera);
+    bubble.style.left=((tmp.x*.5+.5)*stage.clientWidth)+'px'; bubble.style.top=((-tmp.y*.5+.5)*stage.clientHeight)+'px'; }
+  controls.update(); renderer.render(scene,camera); requestAnimationFrame(frame); }
+frame();
+setTimeout(()=>{ document.getElementById('loader').classList.add('gone'); },300);
+setTimeout(()=>{ if(!bubble.classList.contains('on')){ bubble.textContent='Oi! Eu sou a capivara da Cidade do Agro. Toca em mim! 👋'; bubble.classList.add('on'); bubbleT=5; } },1600);
+</script>
+</body>
+</html>
