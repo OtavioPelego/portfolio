@@ -80,7 +80,17 @@
   /* ---------- hud ---------- */
   .hud{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(16px,3vw,36px);z-index:20;pointer-events:none}
   .hud > *{pointer-events:auto}
-  .count{font:600 12px/1 var(--body);letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+  .count{font:600 12px/1 var(--body);letter-spacing:.08em;display:flex;align-items:center;gap:8px;color:var(--ink);background:var(--glass);border:1px solid var(--line);border-radius:999px;padding:9px 12px;cursor:pointer;white-space:nowrap;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .count svg{width:13px;height:13px;transition:transform .2s}
+  .count[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .chapmenu{position:fixed;left:clamp(16px,3vw,36px);bottom:70px;z-index:30;background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:18px;padding:6px;display:grid;min-width:220px;box-shadow:0 14px 40px rgba(7,47,42,.16)}
+  .chapmenu[hidden]{display:none}
+  .chapmenu button{all:unset;cursor:pointer;display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:12px;font:500 15px/1 var(--body);color:var(--ink)}
+  .chapmenu button span{font:700 11px/1 var(--body);letter-spacing:.08em;color:var(--ink-2);width:20px}
+  .chapmenu button:hover{background:rgba(7,47,42,.06)}
+  .chapmenu button.on{background:var(--ink);color:var(--bg)}
+  .chapmenu button.on span{color:var(--acc)}
+  nav.top button{background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .count b{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
   .count span{color:var(--ink-2)}
   .next{display:flex;align-items:center;gap:10px;font:600 10px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;background:none;border:none;color:var(--ink);cursor:pointer}
@@ -118,6 +128,11 @@
     .credit{display:none}
     .hs{font-size:11px}
     .explore-hint{white-space:normal;text-align:center;width:calc(100vw - 32px)}
+    header{background:linear-gradient(var(--bg) 62%,rgba(242,238,231,0));padding-bottom:26px}
+    .brand small{display:none}
+    .brand img{height:40px}
+    nav.top button{padding:8px 11px;font-size:12.5px}
+    .hud{padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
     .drag-hint{bottom:auto;top:92px}
   }
 
@@ -143,10 +158,11 @@
 
 <div class="explore-hint">arraste para mover · botão direito ou dois dedos giram · roda/pinça para zoom · <b>Esc</b> volta</div>
 <div class="drag-hint" id="dragHint"></div>
+<nav class="chapmenu" id="chapMenu" aria-label="Capítulos" hidden></nav>
 <div class="credit">Protótipo conceitual, baseado na representação do projeto publicada pela <a href="https://agfeed.com.br/esg/da-tragedia-das-enchentes-ao-desenvolvimento-gauchos-lancam-sementes-para-criar-a-cidade-do-agro-no-rs/" target="_blank" rel="noopener">AgFeed</a> (jun/2026). Site oficial: <a href="https://cidadedoagro.agr.br/" target="_blank" rel="noopener">cidadedoagro.agr.br</a> · maquete por <a href="https://otaviopelego.pages.dev/websites/" target="_blank" rel="noopener">Otávio Pelego</a></div>
 
 <footer class="hud">
-  <div class="count"><b></b><span id="cnt">00 / 07</span></div>
+  <button class="count" id="cntBtn" aria-haspopup="true" aria-expanded="false" title="Ir para um capítulo"><b></b><span id="cnt">00 / 07</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg></button>
   <div class="mid">
   <button class="round prev" id="prev" title="Capítulo anterior" aria-label="Capítulo anterior"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 14V3M3.5 7.5 8 3l4.5 4.5"/></svg></button>
   <button class="next" id="next"><span class="t" id="nextT">role</span><span class="round"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></span></button>
@@ -243,10 +259,31 @@ const exploreTop=document.createElement('button'); exploreTop.textContent='Explo
 const cards=[...cardsEl.children], railBtns=[...rail.children], navBtns=[...topnav.querySelectorAll('.chap')];
 cardsEl.addEventListener('click',e=>{ if(e.target.closest('[data-act=explore]')) toggleExplore(true); });
 
-function goTo(i){ if(explore) toggleExplore(false); scrollTo({top:i*innerHeight,behavior:'smooth'}); }
+// No celular a história anda por botões/gestos (sem rolar a página): no Safari a barra de endereço
+// muda a altura da janela e a rolagem com encaixe travava entre dois capítulos.
+const TOUCH_NAV=matchMedia('(pointer: coarse)').matches;
+let pT=0;                                                   // capítulo-alvo no modo toque
+const secH=()=>(story.firstElementChild&&story.firstElementChild.offsetHeight)||innerHeight;
+function goTo(i){ if(explore) toggleExplore(false); i=Math.max(0,Math.min(N-1,i)); closeMenu();
+  if(TOUCH_NAV) pT=i; else scrollTo({top:i*secH(),behavior:'smooth'}); }
+const curChap=()=>TOUCH_NAV?pT:Math.round(p);
+if(TOUCH_NAV){ document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden'; story.style.display='none'; }
+// deslizar em cima do cartão troca de capítulo
+let swipeY=null;
+cardsEl.addEventListener('touchstart',e=>{ swipeY=e.touches[0].clientY; },{passive:true});
+cardsEl.addEventListener('touchend',e=>{ if(swipeY==null) return; const dy=e.changedTouches[0].clientY-swipeY; swipeY=null;
+  if(Math.abs(dy)>45){ const i=curChap(); if(dy<0&&i<N-1) goTo(i+1); if(dy>0&&i>0) goTo(i-1); } });
+// menu de capítulos (toque no "04 / 07")
+const chapMenu=$('chapMenu'), cntBtn=$('cntBtn');
+chapMenu.innerHTML=CH.map((c,i)=>`<button data-i="${i}"><span>${pad2(i)}</span>${c.rail}</button>`).join('');
+chapMenu.addEventListener('click',e=>{ const b=e.target.closest('[data-i]'); if(b) goTo(+b.dataset.i); });
+function closeMenu(){ chapMenu.hidden=true; cntBtn.setAttribute('aria-expanded','false'); }
+cntBtn.onclick=e=>{ e.stopPropagation(); const open=chapMenu.hidden; chapMenu.hidden=!open; cntBtn.setAttribute('aria-expanded',String(open));
+  [...chapMenu.children].forEach((b,i)=>b.classList.toggle('on',i===curChap())); };
+addEventListener('click',e=>{ if(!chapMenu.hidden&&!e.target.closest('#chapMenu')) closeMenu(); });
 $('brand').onclick=()=>goTo(0);
-$('next').onclick=()=>{ const i=Math.round(p); goTo(i>=N-1?0:i+1); };
-$('prev').onclick=()=>{ const i=Math.round(p); if(i>0) goTo(i-1); };
+$('next').onclick=()=>{ const i=curChap(); goTo(i>=N-1?0:i+1); };
+$('prev').onclick=()=>{ const i=curChap(); if(i>0) goTo(i-1); };
 
 /* =========================================================
    UTIL
@@ -566,7 +603,7 @@ const curPos=K[0].pos.clone(), curTgt=K[0].tgt.clone(), dPos=new THREE.Vector3()
 camera.position.copy(curPos); camera.lookAt(curTgt);
 let p=0, explore=false, playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 const mouse={x:0,y:0};
-addEventListener('scroll',()=>{ p=clamp(scrollY/innerHeight,0,N-1); },{passive:true});
+addEventListener('scroll',()=>{ if(!TOUCH_NAV) p=clamp(scrollY/secH(),0,N-1); },{passive:true});
 addEventListener('pointermove',e=>{ mouse.x=e.clientX/innerWidth*2-1; mouse.y=e.clientY/innerHeight*2-1; });
 
 const controls=new OrbitControls(camera,canvas);
@@ -627,7 +664,7 @@ const pauseBtn=$('pause');
 const setPauseIcon=()=>{ pauseBtn.innerHTML=playing?'<svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3" width="2.6" height="10" rx="1"/><rect x="9.4" y="3" width="2.6" height="10" rx="1"/></svg>':'<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6L12.8 8z"/></svg>'; pauseBtn.title=playing?'Pausar animação':'Retomar animação'; };
 pauseBtn.onclick=()=>{ playing=!playing; setPauseIcon(); }; setPauseIcon();
 
-addEventListener('resize',()=>{ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); p=clamp(scrollY/innerHeight,0,N-1); });
+addEventListener('resize',()=>{ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); if(!TOUCH_NAV) p=clamp(scrollY/secH(),0,N-1); });
 camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
 
 /* =========================================================
@@ -639,6 +676,7 @@ function frame(){
 
   if(!explore){
     if(!Number.isFinite(p)) p=0;
+    if(TOUCH_NAV){ const d=pT-p; p=Math.abs(d)<.002?pT:p+d*(1-Math.exp(-dt*3.2)); }
     const i=clamp(Math.floor(p),0,N-2), f=ease(clamp(p-i,0,1));
     dPos.lerpVectors(K[i].pos,K[i+1].pos,f); dTgt.lerpVectors(K[i].tgt,K[i+1].tgt,f);
     const spin=Math.max(0,1-p*1.4)*Math.sin(time*.12)*.45;
