@@ -214,10 +214,10 @@
     return soma;
   }
 
-  // Barra de contratados ÷ vagas e, abaixo, os percentuais sobre as demais
-  // bases. Os números ficam em <b> para o texto fixo continuar sendo um nó de
-  // texto próprio (é assim que a versão em inglês o traduz).
-  function blocoProgresso({ contratados, vagas, bases }) {
+  // Barra de contratados ÷ vagas e, abaixo, contratados ÷ convocados. Os
+  // números ficam em <b> para o texto fixo continuar sendo um nó de texto
+  // próprio (é assim que a versão em inglês o traduz).
+  function blocoProgresso({ contratados, vagas, convocados }) {
     let topo;
     if (vagas === null) {
       topo = '<span class="sem-base">vagas: não se aplica a estes filtros</span>';
@@ -226,11 +226,11 @@
     } else {
       const largura = Math.min(100, contratados / vagas * 100).toFixed(1);
       topo = `<span class="prog-barra" aria-hidden="true"><i style="width:${largura}%"></i></span>` +
-        `<span class="prog-vagas"><b>${porcento(contratados, vagas)}%</b> das ` +
-        `<b>${numero(vagas)}</b> vagas</span>`;
+        `<span class="prog-vagas"><b>${porcento(contratados, vagas)}%</b> das vagas preenchidas` +
+        `<small>${numero(contratados)} de ${numero(vagas)}</small></span>`;
     }
-    return topo + bases.map(([parte, todo, rotulo]) =>
-      `<span><b>${porcento(parte, todo)}%</b> ${rotulo}</span>`).join('');
+    return topo +
+      `<span><b>${porcento(contratados, convocados)}%</b> dos convocados já contratados</span>`;
   }
 
   function pintarKPIs(lista) {
@@ -241,7 +241,7 @@
       `${numero(efetivados.length)} já contratados`;
     $('#prog-total').innerHTML = blocoProgresso({
       contratados: efetivados.length, vagas: vagasDoRecorte(null),
-      bases: [[efetivados.length, lista.length, 'dos convocados']],
+      convocados: lista.length,
     });
 
     const ids = {
@@ -258,8 +258,7 @@
       // Sem convocado no recorte não há o que comparar: o bloco some.
       $(`#prog-${ids[cargo]}`).innerHTML = doCargo.length ? blocoProgresso({
         contratados, vagas: vagasDoRecorte(cargo),
-        bases: [[contratados, doCargo.length, 'dos convocados do cargo'],
-                [contratados, lista.length, 'do total de convocados']],
+        convocados: doCargo.length,
       }) : '';
     }
 

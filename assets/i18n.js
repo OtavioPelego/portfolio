@@ -2187,10 +2187,8 @@
 
     /* ---------- lote 11: contratados × vagas nos cartões (Embrapa) ---------- */
     "nenhum no recorte": "none in this selection",
-    "das": "of the",
-    "dos convocados do cargo": "of this role’s call-ups",
-    "dos convocados": "of all call-ups",
-    "do total de convocados": "of total call-ups",
+    "das vagas preenchidas": "of posts filled",
+    "dos convocados já contratados": "of those called up already hired",
     "vagas: não se aplica a estes filtros": "posts: not applicable to these filters",
     "sem vagas no edital neste recorte": "no posts in the notice for this selection",
     "Clique num cargo para filtrar o painel inteiro. O número grande é o total de convocações; abaixo, quantas já viraram contratação e quanto isso representa das vagas do edital.": "Click a role to filter the whole dashboard. The large number is the total of call-ups; below it, how many became hires and how much that represents of the posts in the notice."
@@ -2209,6 +2207,7 @@
   /* Regras para textos montados na hora (com numeros no meio). So entram
      quando o texto NAO bate exatamente com o dicionario. Os numeros ficam. */
   var RULES = [
+    [/^([\d.,]+) de ([\d.,]+)$/, "$1 of $2"],
     [/^Separando as 208 atua\u00e7\u00f5es pelo resultado, uma fase se destaca de todas: quem perdeu passou (.+)% do jogo em (.+), contra (.+)% de quem venceu\. No outro extremo, quem venceu construiu mais sem press\u00e3o e chegou mais ao \u00faltimo ter\u00e7o\. Nada disso surpreende \u2014 o que surpreende \u00e9 o que n\u00e3o aparece: contra-ataque e progress\u00e3o praticamente n\u00e3o distinguem vencedor de perdedor\.$/, "Split the 208 performances by result and one phase stands out from all the rest: teams that lost spent $1% of the match in $2, against $3% for teams that won. At the other end, winners built more without pressure and reached the final third more often. None of that surprises — what surprises is what does not show up: counter-attack and progression barely tell a winner from a loser."],
     [/^Com a bola elas somam (.+)% em m\u00e9dia; sem a bola, (.+)%\. As defini\u00e7\u00f5es da FIFA se sobrep\u00f5em \u2014 um mesmo trecho de jogo pode contar em mais de uma fase\. Por isso esta p\u00e1gina nunca empilha as fases como se fossem fatias de um bolo: compara cada uma com a m\u00e9dia do torneio, o que \u00e9 v\u00e1lido porque a mesma r\u00e9gua vale para todos\.$/, "With the ball they add up to $1% on average; without it, $2%. FIFA’s definitions overlap — the same passage of play can count in more than one phase. That is why this page never stacks the phases as if they were slices of a pie: it compares each one with the tournament average, which is valid because the same ruler applies to everyone."],
     [/^(.+) atingiu (.+) km\/h \u2014 a maior velocidade registrada na Copa\. Para efeito de compara\u00e7\u00e3o, o recorde mundial dos 100 m foi corrido a uma m\u00e9dia de 37,6 km\/h, com pico perto de 44\. Um jogador de futebol chega perto disso depois de j\u00e1 ter corrido dez quil\u00f4metros\.$/, "$1 hit $2 km/h — the highest speed recorded at the World Cup. For comparison, the 100 m world record was run at an average of 37.6 km/h, peaking near 44. A footballer gets close to that after already having run ten kilometres."],
