@@ -188,12 +188,61 @@
 
   /* ---------- KPIs ---------- */
 
+  const VAGAS = DADOS.vagas || {};
+  const CHAVE_VAGA = {
+    'Ampla Concorrência': 'AC', 'Pessoa com Deficiência': 'PcD', 'Pessoa Preta ou Parda': 'PPP',
+  };
+
+  // Vagas do edital que correspondem ao recorte atual (cargo, área, subárea,
+  // opção e modalidade). Devolve null quando há um filtro que as vagas não
+  // conhecem — unidade, cidade, situação, colocação, nome —: dividir contratados
+  // de um recorte por vagas de outro daria um percentual sem sentido.
+  function vagasDoRecorte(cargo) {
+    if (!Object.keys(VAGAS).length) return null;
+    if (filtros.nome || filtros.situacao || filtros.desfecho || filtros.unidade ||
+        filtros.lotacao || filtros.colMin != null || filtros.colMax != null) return null;
+    const campo = CHAVE_VAGA[filtros.modalidade] || 'total';
+    let soma = 0;
+    for (const [cod, v] of Object.entries(VAGAS)) {
+      if (cargo && v.cargo !== cargo) continue;
+      if (filtros.cargo && v.cargo !== filtros.cargo) continue;
+      if (filtros.area && v.area !== filtros.area) continue;
+      if (filtros.subarea && v.subarea !== filtros.subarea) continue;
+      if (filtros.opcao && cod !== filtros.opcao) continue;
+      soma += v[campo];
+    }
+    return soma;
+  }
+
+  // Barra de contratados ÷ vagas e, abaixo, os percentuais sobre as demais
+  // bases. Os números ficam em <b> para o texto fixo continuar sendo um nó de
+  // texto próprio (é assim que a versão em inglês o traduz).
+  function blocoProgresso({ contratados, vagas, bases }) {
+    let topo;
+    if (vagas === null) {
+      topo = '<span class="sem-base">vagas: não se aplica a estes filtros</span>';
+    } else if (!vagas) {
+      topo = '<span class="sem-base">sem vagas no edital neste recorte</span>';
+    } else {
+      const largura = Math.min(100, contratados / vagas * 100).toFixed(1);
+      topo = `<span class="prog-barra" aria-hidden="true"><i style="width:${largura}%"></i></span>` +
+        `<span class="prog-vagas"><b>${porcento(contratados, vagas)}%</b> das ` +
+        `<b>${numero(vagas)}</b> vagas</span>`;
+    }
+    return topo + bases.map(([parte, todo, rotulo]) =>
+      `<span><b>${porcento(parte, todo)}%</b> ${rotulo}</span>`).join('');
+  }
+
   function pintarKPIs(lista) {
     const efetivados = lista.filter((r) => r.desfecho === 'efetivado');
 
     $('#kpi-total').textContent = numero(lista.length);
     $('#kpi-total-det').textContent =
       `${numero(efetivados.length)} já contratados`;
+    $('#prog-total').innerHTML = blocoProgresso({
+      contratados: efetivados.length, vagas: vagasDoRecorte(null),
+      bases: [[efetivados.length, lista.length, 'dos convocados']],
+    });
 
     const ids = {
       Pesquisador: 'pesquisador', Analista: 'analista',
@@ -203,9 +252,15 @@
       const doCargo = lista.filter((r) => r.cargo === cargo);
       const contratados = doCargo.filter((r) => r.desfecho === 'efetivado').length;
       $(`#kpi-${ids[cargo]}`).textContent = numero(doCargo.length);
-      $(`#det-${ids[cargo]}`).textContent = doCargo.length
-        ? `${numero(contratados)} contratados · ${porcento(doCargo.length, lista.length)}% do total`
+      $(`#det-${ids[cargo]}`).innerHTML = doCargo.length
+        ? `<b>${numero(contratados)}</b> contratados`
         : 'nenhum no recorte';
+      // Sem convocado no recorte não há o que comparar: o bloco some.
+      $(`#prog-${ids[cargo]}`).innerHTML = doCargo.length ? blocoProgresso({
+        contratados, vagas: vagasDoRecorte(cargo),
+        bases: [[contratados, doCargo.length, 'dos convocados do cargo'],
+                [contratados, lista.length, 'do total de convocados']],
+      }) : '';
     }
 
     // O botão do cargo fica "ligado" quando aquele cargo é o filtro ativo.

@@ -2183,7 +2183,17 @@
     "Nova convocação": "New call-up",
     "Mudança de situação": "Status change",
     "Saída da fonte": "Removed from source",
-    "sem mudança visível": "no visible change"
+    "sem mudança visível": "no visible change",
+
+    /* ---------- lote 11: contratados × vagas nos cartões (Embrapa) ---------- */
+    "nenhum no recorte": "none in this selection",
+    "das": "of the",
+    "dos convocados do cargo": "of this role’s call-ups",
+    "dos convocados": "of all call-ups",
+    "do total de convocados": "of total call-ups",
+    "vagas: não se aplica a estes filtros": "posts: not applicable to these filters",
+    "sem vagas no edital neste recorte": "no posts in the notice for this selection",
+    "Clique num cargo para filtrar o painel inteiro. O número grande é o total de convocações; abaixo, quantas já viraram contratação e quanto isso representa das vagas do edital.": "Click a role to filter the whole dashboard. The large number is the total of call-ups; below it, how many became hires and how much that represents of the posts in the notice."
   };
 
   /* ---------------------------------------------------------------- estado */
